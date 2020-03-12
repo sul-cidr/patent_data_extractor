@@ -263,6 +263,7 @@ class DocdbToTabular:
                 writer.writerows(rows)
 
     def write_sqlitedb(self):
+        fieldnames = self.get_fieldnames()
         db_path = (self.output_path / "db.sqlite").resolve()
 
         if db_path.exists():
@@ -278,7 +279,11 @@ class DocdbToTabular:
             colored("Writing records to %s ...", "green"), db_path,
         )
         for tablename, rows in self.tables.items():
-            db[tablename].insert_all(rows)
+            params = {"column_order": fieldnames[tablename]}
+            if "id" in fieldnames[tablename]:
+                params["pk"] = "id"
+                params["not_null"] = {"id"}
+            db[tablename].insert_all(rows, **params)
 
 
 def main():
