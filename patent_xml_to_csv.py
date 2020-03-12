@@ -264,6 +264,15 @@ class DocdbToTabular:
 
     def write_sqlitedb(self):
         db_path = (self.output_path / "db.sqlite").resolve()
+
+        if db_path.exists():
+            logging.warning(
+                colored(
+                    "Sqlite data base %s  exists; records will be appended.", "yellow"
+                ),
+                db_path,
+            )
+
         db = SqliteDB(db_path)
         logging.info(
             colored("Writing records to %s ...", "green"), db_path,
