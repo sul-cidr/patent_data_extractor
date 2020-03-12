@@ -4,13 +4,13 @@
 
 import argparse
 import csv
-import json
 import logging
 import re
 from collections import defaultdict
 from io import BytesIO
 from pathlib import Path
 
+import yaml
 from lxml import etree
 
 try:
@@ -68,7 +68,7 @@ class DocdbToTabular:
         self.output_path = Path(output_path)
         self.output_path.mkdir(parents=True, exist_ok=True)
 
-        self.config = json.load(open(config))
+        self.config = yaml.safe_load(open(config))
 
         self.tables = defaultdict(list)
 
@@ -146,6 +146,8 @@ class DocdbToTabular:
                 if ":" in config:
                     record[config.split(":")[0]] = config.split(":")[1]
                     return
+
+                # we've only on elem, and it's a simple mapping to a fieldname
                 record[config] = self.get_text(elems[0])
             return
 
