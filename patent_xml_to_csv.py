@@ -23,6 +23,12 @@ except ImportError:
         return text
 
 
+try:
+    from sqlite_utils import Database as SqliteDB
+except ImportError:
+    logging.debug("sqlite_utils (pip install sqlite_utils) not available")
+
+
 def replace_missing_mathml_ents(doc):
     """ Substitute out some undefined entities that appear in the XML -- see notes
         for further details. """
@@ -256,6 +262,15 @@ class DocdbToTabular:
                 writer.writeheader()
                 writer.writerows(rows)
 
+    def write_sqlitedb(self):
+        db_path = (self.output_path / "db.sqlite").resolve()
+        db = SqliteDB(db_path)
+        logging.info(
+            colored("Writing records to %s ...", "green"), db_path,
+        )
+        for tablename, rows in self.tables.items():
+            db[tablename].insert_all(rows)
+
 
 def main():
     """ Command-line entry-point. """
@@ -300,6 +315,12 @@ def main():
     )
 
     arg_parser.add_argument(
+        "--no-validate",
+        action="store_true",
+        help="skip validation of input XML (for speed)",
+    )
+
+    arg_parser.add_argument(
         "-o",
         "--output-path",
         action="store",
@@ -308,9 +329,11 @@ def main():
     )
 
     arg_parser.add_argument(
-        "--no-validate",
-        action="store_true",
-        help="skip validation of input XML (for speed)",
+        "--output-type",
+        choices=["csv", "sqlite"],
+        action="store",
+        default="csv",
+        help="path to folder in which to save output (will be created if necessary)",
     )
 
     arg_parser.add_argument(
@@ -329,7 +352,12 @@ def main():
 
     convertor = DocdbToTabular(**vars(args), logger=logger)
     convertor.convert()
-    convertor.write_csv_files()
+
+    if args.output_type == "csv":
+        convertor.write_csv_files()
+
+    if args.output_type == "sqlite":
+        convertor.write_sqlitedb()
 
 
 if __name__ == "__main__":
