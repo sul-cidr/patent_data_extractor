@@ -49,15 +49,26 @@ class DTDResolver(etree.Resolver):
 
 class DocdbToTabular:
     def __init__(
-        self, xml_input, config, dtd_path, recurse, output_path, no_validate, **_kwargs
+        self,
+        xml_input,
+        config,
+        dtd_path,
+        recurse,
+        output_path,
+        no_validate,
+        logger,
+        **_kwargs,
     ):
+
+        self.logger = logger
+
         self.xml_files = Path(xml_input)
         if self.xml_files.is_file():
             self.xml_files = [self.xml_files]
         elif self.xml_files.is_dir():
             self.xml_files = self.xml_files.glob(f'{"**/" if recurse else ""}*.xml')
         else:
-            logging.fatal("specified input is invalid")
+            self.logger.fatal("specified input is invalid")
             exit(1)
 
         # do this now, because we don't want to process all that data and then find
@@ -130,8 +141,8 @@ class DocdbToTabular:
                 try:
                     assert len(elems) == 1
                 except AssertionError:
-                    logging.fatal("Multiple elements found for %s", path)
-                    logging.fatal([self.get_text(el) for el in elems])
+                    self.logger.fatal("Multiple elements found for %s", path)
+                    self.logger.fatal([self.get_text(el) for el in elems])
                     raise
 
                 # handle enum types
@@ -170,25 +181,27 @@ class DocdbToTabular:
     def convert(self):
         for input_file in self.xml_files:
 
-            logging.info(colored("Processing %s...", "green"), input_file.resolve())
+            self.logger.info(colored("Processing %s...", "green"), input_file.resolve())
 
             for i, doc in enumerate(self.yield_xml_doc(input_file)):
                 if i % 100 == 0:
-                    logging.debug(colored("Processing document %d...", "cyan"), i + 1)
+                    self.logger.debug(
+                        colored("Processing document %d...", "cyan"), i + 1
+                    )
                 try:
                     self.process_doc(doc)
                 except (AssertionError, etree.XMLSyntaxError) as exc:
-                    logging.debug(doc)
+                    self.logger.debug(doc)
                     p_id = re.search(
                         r"<B210><DNUM><PDAT>(\d+)<\/PDAT><\/DNUM><\/B210>", doc
                     ).group(1)
-                    logging.warning(
+                    self.logger.warning(
                         colored("ID %s: %s (record has not been parsed)", "red"),
                         p_id,
                         exc.msg,
                     )
 
-            logging.info(colored("...%d records processed!", "green"), i + 1)
+            self.logger.info(colored("...%d records processed!", "green"), i + 1)
 
     def get_fieldnames(self):
         """ On python >=3.7, dictionaries maintain key order, so fields are guaranteed to be
@@ -233,7 +246,7 @@ class DocdbToTabular:
 
         fieldnames = self.get_fieldnames()
 
-        logging.info(
+        self.logger.info(
             colored("Writing csv files to %s ...", "green"), self.output_path.resolve()
         )
         for tablename, rows in self.tables.items():
@@ -304,9 +317,11 @@ def main():
 
     log_level = logging.DEBUG if args.verbose else logging.INFO
     log_level = logging.CRITICAL if args.quiet else log_level
-    logging.basicConfig(level=log_level, format="%(message)s")
+    logger = logging.getLogger(__name__)
+    logger.setLevel(log_level)  # format="%(message)s")
+    logger.addHandler(logging.StreamHandler())
 
-    convertor = DocdbToTabular(**vars(args))
+    convertor = DocdbToTabular(**vars(args), logger=logger)
     convertor.convert()
     convertor.write_csv_files()
 
