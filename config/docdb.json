@@ -8,7 +8,12 @@
       "SDOBI/B500/B570/B577": "numClaims",
       "SDOBI/B500/B540/STEXT": "Title",
 
-      "SDOCL/CL/CLM": "|claimsText",
+      "SDOCL/CL/CLM": {
+          "entity": "claim",
+          "fields": {
+            "*": "|claimText"
+          }
+      },
 
       "SDOBI/B100/B110/DNUM": "docNumber",
       "SDOBI/B100/B130": "kindCode",
