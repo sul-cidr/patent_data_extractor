@@ -152,6 +152,7 @@ class DocdbToTabular:
                 record[config] = self.get_text(elems[0])
             return
 
+        # config is not a simple fieldname to write to, so we've got an entity type
         entity = config["entity"]
         for elem in elems:
             srecord = {}
