@@ -14,8 +14,14 @@
       "SDOBI/B100/B130": "kindCode",
       "SDOBI/B100/B190": "countryCode",
 
-      "SDOBI/B300/B330/CTRY": "|foreignCode",
-      "SDOBI/B300/B320/DATE": "|foreignFiling",
+      "SDOBI/B300": {
+          "entity": "foreignFiling",
+          "fields": {
+            "B310/DNUM": "docNumber",
+            "B320/DATE": "date",
+            "B330/CTRY": "countryCode"
+          }
+      },
 
       "SDOBI/B200/B220/DATE": "filingDate",
       "SDOBI/B100/B140/DATE": "docDate",
