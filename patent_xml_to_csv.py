@@ -49,15 +49,7 @@ class DTDResolver(etree.Resolver):
 
 class DocdbToTabular:
     def __init__(
-        self,
-        xml_input,
-        config,
-        dtd_path,
-        recurse,
-        output_path,
-        no_validate,
-        logger,
-        **_kwargs,
+        self, xml_input, config, dtd_path, recurse, output_path, logger, **kwargs,
     ):
 
         self.logger = logger
@@ -80,7 +72,7 @@ class DocdbToTabular:
 
         self.tables = defaultdict(list)
 
-        if no_validate:
+        if kwargs["no_validate"]:
             self.parser = etree.XMLParser(
                 load_dtd=True, resolve_entities=True, ns_clean=True
             )
@@ -88,6 +80,8 @@ class DocdbToTabular:
             self.parser = etree.XMLParser(
                 load_dtd=True, resolve_entities=True, ns_clean=True, dtd_validation=True
             )
+
+        self.continue_on_error = kwargs["continue_on_error"]
         self.parser.resolvers.add(DTDResolver(dtd_path))
 
     @staticmethod
@@ -140,9 +134,12 @@ class DocdbToTabular:
 
                 try:
                     assert len(elems) == 1
-                except AssertionError:
-                    self.logger.fatal("Multiple elements found for %s", path)
-                    self.logger.fatal([self.get_text(el) for el in elems])
+                except AssertionError as exc:
+                    exc.msg = (
+                        f"Multiple elements found for {path}!"
+                        + "Should your config file include a |, or new entity definition?\n\n- "
+                        + "\n- ".join(self.get_text(el) for el in elems)
+                    )
                     raise
 
                 # handle enum types
@@ -201,6 +198,8 @@ class DocdbToTabular:
                         p_id,
                         exc.msg,
                     )
+                    if not self.continue_on_error:
+                        raise SystemExit()
 
             self.logger.info(colored("...%d records processed!", "green"), i + 1)
 
@@ -312,6 +311,12 @@ def main():
         "--no-validate",
         action="store_true",
         help="skip validation of input XML (for speed)",
+    )
+
+    arg_parser.add_argument(
+        "--continue-on-error",
+        action="store_true",
+        help="output errors on parsing failure but don't exit",
     )
 
     args = arg_parser.parse_args()
