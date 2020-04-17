@@ -23,12 +23,6 @@ except ImportError:
         return text
 
 
-try:
-    from sqlite_utils import Database as SqliteDB
-except ImportError:
-    logging.debug("sqlite_utils (pip install sqlite_utils) not available")
-
-
 def replace_missing_mathml_ents(doc):
     """ Substitute out some undefined entities that appear in the XML -- see notes
         for further details. """
@@ -263,11 +257,17 @@ class DocdbToTabular:
                 writer.writerows(rows)
 
     def write_sqlitedb(self):
+        try:
+            from sqlite_utils import Database as SqliteDB
+        except ImportError:
+            self.logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
+            raise
+
         fieldnames = self.get_fieldnames()
         db_path = (self.output_path / "db.sqlite").resolve()
 
         if db_path.exists():
-            logging.warning(
+            self.logger.warning(
                 colored(
                     "Sqlite data base %s  exists; records will be appended.", "yellow"
                 ),
@@ -275,7 +275,7 @@ class DocdbToTabular:
             )
 
         db = SqliteDB(db_path)
-        logging.info(
+        self.logger.info(
             colored("Writing records to %s ...", "green"), db_path,
         )
         for tablename, rows in self.tables.items():
@@ -360,9 +360,16 @@ def main():
 
     log_level = logging.DEBUG if args.verbose else logging.INFO
     log_level = logging.CRITICAL if args.quiet else log_level
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger("script")
     logger.setLevel(log_level)  # format="%(message)s")
     logger.addHandler(logging.StreamHandler())
+
+    if args.output_type == "sqlite":
+        try:
+            from sqlite_utils import Database as SqliteDB
+        except ImportError:
+            logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
+            raise
 
     convertor = DocdbToTabular(**vars(args), logger=logger)
     convertor.convert()
