@@ -111,6 +111,15 @@
           "PARENT-US/PDOC/DOC/DATE": "date",
           "PARENT-US/PDOC/DOC/CTRY": "countryCode"
         }
+      },
+
+      "SDOBI/B600/B680US": {
+        "entity": "provisionalApp",
+        "fields": {
+          "DOC/DNUM": "docNumber",
+          "DOC/KIND": "kindCode",
+          "DOC/DATE": "date"
+        }
       }
     }
   }
