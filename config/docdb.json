@@ -93,15 +93,23 @@
       "SDOBI/B700/B745/B747/PARTY-US/NAM/SNM/STEXT": "examiner2Last",
       "SDOBI/B700/B745/B747/PARTY-US/NAM/FNM": "examiner2First",
 
-      "SDOBI/B600/B620/PARENT-US/PDOC/DOC/DNUM": "|relatedDocNum1",
+      "SDOBI/B600/B620": {
+        "entity": "dividedApp",
+        "fields": {
+          "PARENT-US/PDOC/DOC/DNUM": "docNumber",
+          "PARENT-US/PDOC/DOC/KIND": "kindCode",
+          "PARENT-US/PDOC/DOC/DATE": "date",
+          "PARENT-US/PDOC/DOC/CTRY": "countryCode"
+        }
+      },
 
       "SDOBI/B600/B630/B631": {
-        "entity": "relatedDoc",
+        "entity": "continuedApp",
         "fields": {
-          "PARENT-US/PDOC/DOC/DNUM": "relatedDocNum2",
-          "PARENT-US/PDOC/DOC/KIND": "relatedKindCode",
-          "PARENT-US/PDOC/DOC/DATE": "relatedDocDate",
-          "PARENT-US/PDOC/DOC/CTRY": "relatedCountry"
+          "PARENT-US/PDOC/DOC/DNUM": "docNumber",
+          "PARENT-US/PDOC/DOC/KIND": "kindCode",
+          "PARENT-US/PDOC/DOC/DATE": "date",
+          "PARENT-US/PDOC/DOC/CTRY": "countryCode"
         }
       }
     }
