@@ -1,2 +1,3 @@
 lxml
 termcolor
+sqlite_utils

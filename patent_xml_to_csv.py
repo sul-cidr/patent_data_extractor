@@ -256,6 +256,35 @@ class DocdbToTabular:
                 writer.writeheader()
                 writer.writerows(rows)
 
+    def write_sqlitedb(self):
+        try:
+            from sqlite_utils import Database as SqliteDB
+        except ImportError:
+            self.logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
+            raise
+
+        fieldnames = self.get_fieldnames()
+        db_path = (self.output_path / "db.sqlite").resolve()
+
+        if db_path.exists():
+            self.logger.warning(
+                colored(
+                    "Sqlite data base %s  exists; records will be appended.", "yellow"
+                ),
+                db_path,
+            )
+
+        db = SqliteDB(db_path)
+        self.logger.info(
+            colored("Writing records to %s ...", "green"), db_path,
+        )
+        for tablename, rows in self.tables.items():
+            params = {"column_order": fieldnames[tablename]}
+            if "id" in fieldnames[tablename]:
+                params["pk"] = "id"
+                params["not_null"] = {"id"}
+            db[tablename].insert_all(rows, **params)
+
 
 def main():
     """ Command-line entry-point. """
@@ -300,6 +329,12 @@ def main():
     )
 
     arg_parser.add_argument(
+        "--no-validate",
+        action="store_true",
+        help="skip validation of input XML (for speed)",
+    )
+
+    arg_parser.add_argument(
         "-o",
         "--output-path",
         action="store",
@@ -308,9 +343,11 @@ def main():
     )
 
     arg_parser.add_argument(
-        "--no-validate",
-        action="store_true",
-        help="skip validation of input XML (for speed)",
+        "--output-type",
+        choices=["csv", "sqlite"],
+        action="store",
+        default="csv",
+        help="output csv files (one per table, default) or a sqlite database",
     )
 
     arg_parser.add_argument(
@@ -323,13 +360,25 @@ def main():
 
     log_level = logging.DEBUG if args.verbose else logging.INFO
     log_level = logging.CRITICAL if args.quiet else log_level
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger("script")
     logger.setLevel(log_level)  # format="%(message)s")
     logger.addHandler(logging.StreamHandler())
 
+    if args.output_type == "sqlite":
+        try:
+            from sqlite_utils import Database as SqliteDB
+        except ImportError:
+            logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
+            raise
+
     convertor = DocdbToTabular(**vars(args), logger=logger)
     convertor.convert()
-    convertor.write_csv_files()
+
+    if args.output_type == "csv":
+        convertor.write_csv_files()
+
+    if args.output_type == "sqlite":
+        convertor.write_sqlitedb()
 
 
 if __name__ == "__main__":
