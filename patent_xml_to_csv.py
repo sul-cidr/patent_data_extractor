@@ -347,7 +347,7 @@ def main():
         choices=["csv", "sqlite"],
         action="store",
         default="csv",
-        help="path to folder in which to save output (will be created if necessary)",
+        help="output csv files (one per table, default) or a sqlite database",
     )
 
     arg_parser.add_argument(
