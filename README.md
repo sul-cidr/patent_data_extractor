@@ -2,7 +2,7 @@
 
 ## DOCUMENTATION
 
-* clone the repo, and run `pip install -r requirements.txt` to be sure needed packages are available (currently only `lxml` is required -- `termcolor` is optional).
+* clone the repo, and run `pip install -r requirements.txt` to be sure needed packages are available (currently only `lxml` is required -- `termcolor` is optional, and `sqlite-utils` is only required if you make use of the `--output-type sqlite` option).
 
 ```
 usage: patent_xml_to_csv.py [-h] [-v] [-q] -i XML_INPUT [-r] -c CONFIG -d
@@ -27,6 +27,10 @@ optional arguments:
   -o OUTPUT_PATH, --output-path OUTPUT_PATH
                         path to folder in which to save output (will be
                         created if necessary)
+  --output-type {csv,sqlite}
+                        output csv files (one per table, default) or a sqlite
+                        database
+  --continue-on-error   output errors on parsing failure but don't exit
   --no-validate         skip validation of input XML (for speed)
 ```
 
