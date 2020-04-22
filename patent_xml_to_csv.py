@@ -114,6 +114,29 @@ class DocdbToTabular:
             return self.get_text(elems[0])
         return None
 
+    def process_subpath(
+        self, tree, elems, config, parent_entity=None, parent_pk=None,
+    ):
+        """ Process a subtree of the xml as a new entity type, creating a new record in a new
+            output table/file.
+        """
+        entity = config["entity"]
+        for elem in elems:
+            record = {}
+
+            pk = self.get_pk(tree, config)
+            if pk:
+                record["id"] = pk
+            else:
+                record["id"] = f"{len(self.tables[entity])}"
+
+            if parent_pk:
+                record[f"{parent_entity}_id"] = parent_pk
+            for subpath, subconfig in config["fields"].items():
+                self.process_path(elem, subpath, subconfig, record, entity, pk)
+
+            self.tables[entity].append(record)
+
     def process_path(
         self, tree, path, config, record, parent_entity=None, parent_pk=None
     ):
@@ -151,23 +174,9 @@ class DocdbToTabular:
                 record[config] = self.get_text(elems[0])
             return
 
-        # config is not a simple fieldname to write to, so we've got an entity type
-        entity = config["entity"]
-        for elem in elems:
-            srecord = {}
-
-            pk = self.get_pk(tree, config)
-            if pk:
-                srecord["id"] = pk
-            else:
-                srecord["id"] = f"{len(self.tables[entity])}"
-
-            if parent_pk:
-                srecord[f"{parent_entity}_id"] = parent_pk
-            for subpath, subconfig in config["fields"].items():
-                self.process_path(elem, subpath, subconfig, srecord, entity, pk)
-
-            self.tables[entity].append(srecord)
+        if "entity" in config:
+            # config is an entity definition
+            self.process_subpath(tree, elems, config, parent_entity, parent_pk)
 
     def process_doc(self, doc):
 
