@@ -8,7 +8,14 @@ PATDOC:
     SDOCL/CL/CLM:
       entity: claim
       fields:
-        "*": "|claim_text"
+        # the asterisk specifies that all sub-elements of each PATDOC/SDOCL/CL/CLM
+        #  will be reduced to their text content, and the results of each such
+        #  reduction (for each PATDOC/SDOCL/CL/CLM element, should there be more
+        #  than one) will be concatenated together with the `joiner` string -- in
+        #  this case, a newline.
+        "*":
+          fieldname: claim_text
+          joiner: "\n"
 
     SDOBI/B100/B110/DNUM: doc_number
     SDOBI/B100/B130: kind_code
@@ -24,10 +31,14 @@ PATDOC:
     SDOBI/B200/B220/DATE: filing_date
     SDOBI/B100/B140/DATE: doc_date
     SDOBI/B500/B510/B511: IPC_primary
-    SDOBI/B500/B510/B512: "|IPC_secondary"
+    SDOBI/B500/B510/B512:
+      fieldname: IPC_secondary
+      joiner: "|"
 
     SDOBI/B500/B520/B521: USPC-primary
-    SDOBI/B500/B520/B522: "|USPC_secondary"
+    SDOBI/B500/B520/B522:
+      fieldname: USPC_secondary
+      joiner: "|"
     SDOBI/B500/B520/B522US: USPC_secondary
 
     SDOBI/B500/B510/B516: IPC_edition

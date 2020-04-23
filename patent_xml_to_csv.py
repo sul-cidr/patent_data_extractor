@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-""" docdb_to_csv.py """
+""" patent_xml_to_csv.py """
 
 import argparse
 import csv
@@ -9,6 +9,7 @@ import re
 from collections import defaultdict
 from io import BytesIO
 from pathlib import Path
+from pprint import pformat
 
 import yaml
 from lxml import etree
@@ -138,7 +139,7 @@ class DocdbToTabular:
             self.tables[entity].append(record)
 
     def process_path(
-        self, tree, path, config, record, parent_entity=None, parent_pk=None
+        self, tree, path, config, record, parent_entity=None, parent_pk=None,
     ):
 
         try:
@@ -148,19 +149,13 @@ class DocdbToTabular:
 
         if isinstance(config, str):
             if elems:
-
-                if config.startswith("|"):
-                    record[config[1:]] = "|".join(
-                        [self.get_text(elem) for elem in elems]
-                    )
-                    return
-
                 try:
                     assert len(elems) == 1
                 except AssertionError as exc:
                     exc.msg = (
                         f"Multiple elements found for {path}!"
-                        + "Should your config file include a |, or new entity definition?\n\n- "
+                        + "Should your config file include a joiner, or new entity definition?"
+                        + "\n\n- "
                         + "\n- ".join(self.get_text(el) for el in elems)
                     )
                     raise
@@ -170,13 +165,28 @@ class DocdbToTabular:
                     record[config.split(":")[0]] = config.split(":")[1]
                     return
 
-                # we've only on elem, and it's a simple mapping to a fieldname
+                # we've only one elem, and it's a simple mapping to a fieldname
                 record[config] = self.get_text(elems[0])
             return
 
+        if "fieldname" in config:
+            # config is extra configuration for a field on this table/file
+            if "joiner" in config:
+                record[config["fieldname"]] = config["joiner"].join(
+                    [self.get_text(elem) for elem in elems]
+                )
+                return
+
         if "entity" in config:
-            # config is an entity definition
+            # config is a new entity definition (i.e. a new record on a new table/file)
             self.process_subpath(tree, elems, config, parent_entity, parent_pk)
+            return
+
+        raise LookupError(
+            f'Invalid configuration for key "{parent_entity}":'
+            + "\n "
+            + "\n ".join(pformat(config).split("\n"))
+        )
 
     def process_doc(self, doc):
 
@@ -199,6 +209,10 @@ class DocdbToTabular:
                     )
                 try:
                     self.process_doc(doc)
+                except LookupError as exc:
+                    self.logger.warning(exc.args[0])
+                    if not self.continue_on_error:
+                        raise SystemExit()
                 except (AssertionError, etree.XMLSyntaxError) as exc:
                     self.logger.debug(doc)
                     p_id = re.search(
@@ -228,24 +242,33 @@ class DocdbToTabular:
                 if ":" in config:
                     _fieldnames.append(config.split(":")[0])
                     return
-                if config.startswith("|"):
-                    _fieldnames.append(config[1:])
-                    return
                 _fieldnames.append(config)
                 return
 
-            entity = config["entity"]
-            _fieldnames = []
-            if config.get("pk") or parent_entity:
-                _fieldnames.append("id")
-            if parent_entity:
-                _fieldnames.append(f"{parent_entity}_id")
-            for subconfig in config["fields"].values():
-                add_fieldnames(subconfig, _fieldnames, entity)
-            # different keys may be appending rows to the same table(s), so we're appending
-            #  to lists of fieldnames here.
-            fieldnames[entity] = list(
-                dict.fromkeys(fieldnames[entity] + _fieldnames).keys()
+            if "fieldname" in config:
+                _fieldnames.append(config["fieldname"])
+                return
+
+            if "entity" in config:
+                entity = config["entity"]
+                _fieldnames = []
+                if config.get("pk") or parent_entity:
+                    _fieldnames.append("id")
+                if parent_entity:
+                    _fieldnames.append(f"{parent_entity}_id")
+                for subconfig in config["fields"].values():
+                    add_fieldnames(subconfig, _fieldnames, entity)
+                # different keys may be appending rows to the same table(s), so we're appending
+                #  to lists of fieldnames here.
+                fieldnames[entity] = list(
+                    dict.fromkeys(fieldnames[entity] + _fieldnames).keys()
+                )
+                return
+
+            raise LookupError(
+                "Invalid configuration:"
+                + "\n "
+                + "\n ".join(pformat(config).split("\n"))
             )
 
         for config in self.config.values():
