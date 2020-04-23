@@ -160,22 +160,24 @@ class DocdbToTabular:
                     )
                     raise
 
-                # handle enum types
-                if ":" in config:
-                    record[config.split(":")[0]] = config.split(":")[1]
-                    return
-
                 # we've only one elem, and it's a simple mapping to a fieldname
                 record[config] = self.get_text(elems[0])
             return
 
         if "fieldname" in config:
-            # config is extra configuration for a field on this table/file
-            if "joiner" in config:
-                record[config["fieldname"]] = config["joiner"].join(
-                    [self.get_text(elem) for elem in elems]
-                )
-                return
+            if elems:
+                # config is extra configuration for a field on this table/file
+                if "joiner" in config:
+                    record[config["fieldname"]] = config["joiner"].join(
+                        [self.get_text(elem) for elem in elems]
+                    )
+                    return
+
+                if "enum_type" in config:
+                    record[config["fieldname"]] = config["enum_type"]
+                    return
+
+            return
 
         if "entity" in config:
             # config is a new entity definition (i.e. a new record on a new table/file)

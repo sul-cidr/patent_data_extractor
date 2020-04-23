@@ -69,15 +69,29 @@ PATDOC:
         PCIT/DOC/CTRY: country_code
         PCIT/PARTY-US/NAM/SNM/STEXT: name
         PCIT/DOC/DATE: date
-        CITED-BY-EXAMINER: cited_by:examiner
-        CITED-BY-OTHER: cited_by:other
+        # these fields specify `enum_type` -- this means the value provided (e.g.
+        #  "examiner") will be recorded in the specified field (i.e. "cited_by")
+        #  in the event that an element at the specified path (e.g.
+        #  PATDOC/SDOBI/B500/B560/B561/CITED-BY-EXAMINER) is found.  Note that if
+        #  multiple paths are found that reference the same fieldname, as here,
+        #  the value that comes last in order in the config file will prevail.
+        CITED-BY-EXAMINER:
+          fieldname: cited_by
+          enum_type: examiner
+        CITED-BY-OTHER:
+          fieldname: cited_by
+          enum_type: other
         PCIT/PNC: cited_in
 
     SDOBI/B500/B560/B562:
       entity: citation
       fields:
-        CITED-BY-EXAMINER: cited_by:examiner
-        CITED-BY-OTHER: cited_by:other
+        CITED-BY-EXAMINER:
+          fieldname: cited_by
+          enum_type: examiner
+        CITED-BY-OTHER:
+          fieldname: cited_by
+          enum_type: other
         NCIT/STEXT: cited_in_other
 
     SDOBI/B700/B745/B746/PARTY-US/NAM/SNM/STEXT: examiner1_last_name
