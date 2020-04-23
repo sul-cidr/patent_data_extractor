@@ -147,6 +147,11 @@ class DocdbToTabular:
         except AttributeError:
             elems = tree.findall("./" + path)
 
+        if "entity" in config:
+            # config is a new entity definition (i.e. a new record on a new table/file)
+            self.process_subpath(tree, elems, config, parent_entity, parent_pk)
+            return
+
         if isinstance(config, str):
             if elems:
                 try:
@@ -165,24 +170,18 @@ class DocdbToTabular:
             return
 
         if "fieldname" in config:
-            if elems:
-                # config is extra configuration for a field on this table/file
-                if "joiner" in config:
+            # config is extra configuration for a field on this table/file
+            if "joiner" in config:
+                if elems:
                     record[config["fieldname"]] = config["joiner"].join(
                         [self.get_text(elem) for elem in elems]
                     )
-                    return
+                return
 
-                if "enum_type" in config:
+            if "enum_type" in config:
+                if elems:
                     record[config["fieldname"]] = config["enum_type"]
-                    return
-
-            return
-
-        if "entity" in config:
-            # config is a new entity definition (i.e. a new record on a new table/file)
-            self.process_subpath(tree, elems, config, parent_entity, parent_pk)
-            return
+                return
 
         raise LookupError(
             f'Invalid configuration for key "{parent_entity}":'
