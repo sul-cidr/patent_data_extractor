@@ -1,4 +1,4 @@
-# Patent Data Extractor
+# USPTO Patent Data Extractor
 
 ## DOCUMENTATION
 
@@ -34,16 +34,16 @@ optional arguments:
   --no-validate         skip validation of input XML (for speed)
 ```
 
-* e.g. `python3 patent_xml_to_csv.py --xml-input ../SamplePatentFiles/pg030520.xml --config config/docdb.yaml --dtd-path ../dtds/grant_dtds --output ../output`
+* e.g. `python3 patent_xml_to_csv.py --xml-input ../SamplePatentFiles/pg030520.xml --config config/uspto-applications-0205.yaml --dtd-path ../dtds/grant_dtds --output ../output`
 
 
 
 ### CONFIG FILES
-see [config/docdb.yaml](config/docdb.yaml)
+see [config/uspto-applications-0205.yaml](config/uspto-applications-0205.yaml)
 
 ## TODO
 * (Option to?) write records to disk as they're parsed, so as to avoid keeping large amounts of data in memory
 	- Note that the 331mb sample file I've been working with results in a peak memory consumption (RSS) of about 140mb, that's all, so the speed advantage (admittedly as-yet unquantified) probably outweighs the likelihood of encountering memory shortages.
-* modularize the output code, leaving scope to output other kinds of files (SQL statements, pSQL scripts, sqlite DBs, HDF5 / arrow / other columnar formats, write directly to a DB server, etc.)
+* modularize the output code, leaving scope to output other kinds of files (SQL statements, pSQL scripts, ~~sqlite DBs~~, HDF5 / arrow / other columnar formats, write directly to a DB server, etc.)
 * probably lots more...
 
