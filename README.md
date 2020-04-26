@@ -41,6 +41,11 @@ optional arguments:
 ### CONFIG FILES
 see [config/uspto-applications-0205.yaml](config/uspto-applications-0205.yaml)
 
+
+### UTILITY SCRIPTS
+see [tools](tools/)
+
+
 ## TODO
 * (Option to?) write records to disk as they're parsed, so as to avoid keeping large amounts of data in memory
 	- Note that the 331mb sample file I've been working with results in a peak memory consumption (RSS) of about 140mb, that's all, so the speed advantage (admittedly as-yet unquantified) probably outweighs the likelihood of encountering memory shortages.
