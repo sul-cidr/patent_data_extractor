@@ -33,12 +33,12 @@ PATDOC:
     us-patent-grant/us-bibliographic-data-grant/publication-reference/document-id/date: doc_date
 
 
-    us-patent-grant/us-bibliographic-data-grant/classification-ipc/main-classification: IPC_primary
-    us-patent-grant/us-bibliographic-data-grant/classification-ipc/further-classification:
-      fieldname: IPC_secondary
-      joiner: "|"
-    us-patent-grant/us-bibliographic-data-grant/classification-ipc/edition: IPC_edition
-
+    us-patent-grant/us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/section: IPC_section
+    us-patent-grant/us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/class: IPC_class
+    us-patent-grant/us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/subclass: IPC_subclass
+    us-patent-grant/us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/main-group: IPC_main_group
+    us-patent-grant/us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/subgroup: IPC_subgroup
+    us-patent-grant/us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/ipc-version-indicator/date: IPC_edition
 
 
     us-patent-grant/us-bibliographic-data-grant/classification-national/country : USPC_country
