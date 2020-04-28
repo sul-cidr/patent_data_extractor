@@ -35,7 +35,7 @@ PATDOC:
       fieldname: IPC_secondary
       joiner: "|"
 
-    SDOBI/B500/B520/B521: USPC-primary
+    SDOBI/B500/B520/B521: USPC_primary
     SDOBI/B500/B520/B522:
       fieldname: USPC_secondary
       joiner: "|"
