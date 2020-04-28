@@ -16,9 +16,6 @@ PATDOC:
           fieldname: claim_text
           joiner: "\n"
 
-    us-patent-grant/claims/claim_text:
-      #Does this even actually exist?
-
     us-patent-grant/us-bibliographic-data-grant/invention-title: title
 
     us-patent-grant/us-bibliographic-data-grant/publication-reference/document-id/doc-number: doc_number
@@ -80,7 +77,7 @@ PATDOC:
         patcit/document-id/doc-number: doc_number
         patcit/document-id/kind: kind_code
         patcit/document-id/name: name
-        patcit/document-id/date: date 
+        patcit/document-id/date: date
         category: category #TODO
         classification-national/country: class_country
         classification-national/main-classification: class_main
