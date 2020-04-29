@@ -126,7 +126,7 @@ class PatentXmlToTabular:
             return self.get_text(elems[0])
         return None
 
-    def process_subpath(
+    def process_new_entity(
         self, tree, elems, config, parent_entity=None, parent_pk=None,
     ):
         """ Process a subtree of the xml as a new entity type, creating a new record in a new
@@ -158,11 +158,6 @@ class PatentXmlToTabular:
         except AttributeError:
             elems = tree.findall("./" + path)
 
-        if "entity" in config:
-            # config is a new entity definition (i.e. a new record on a new table/file)
-            self.process_subpath(tree, elems, config, parent_entity, parent_pk)
-            return
-
         if isinstance(config, str):
             if elems:
                 try:
@@ -178,6 +173,11 @@ class PatentXmlToTabular:
 
                 # we've only one elem, and it's a simple mapping to a fieldname
                 record[config] = self.get_text(elems[0])
+            return
+
+        if "entity" in config:
+            # config is a new entity definition (i.e. a new record on a new table/file)
+            self.process_new_entity(tree, elems, config, parent_entity, parent_pk)
             return
 
         if "fieldname" in config:
