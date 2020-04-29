@@ -120,7 +120,7 @@ class PatentXmlToTabular:
         ).strip()
 
     def get_pk(self, tree, config):
-        if config.get("pk", None):
+        if "pk" in config:
             elems = tree.findall("./" + config["pk"])
             assert len(elems) == 1
             return self.get_text(elems[0])
@@ -144,6 +144,8 @@ class PatentXmlToTabular:
 
             if parent_pk:
                 record[f"{parent_entity}_id"] = parent_pk
+            if "filename_field" in config:
+                record[config["filename_field"]] = self.current_filename
             for subpath, subconfig in config["fields"].items():
                 self.process_path(elem, subpath, subconfig, record, entity, pk)
 
@@ -213,6 +215,7 @@ class PatentXmlToTabular:
         for input_file in self.xml_files:
 
             self.logger.info(colored("Processing %s...", "green"), input_file.resolve())
+            self.current_filename = input_file.resolve().name
 
             for i, doc in enumerate(self.yield_xml_doc(input_file)):
                 if i % 100 == 0:
@@ -264,10 +267,12 @@ class PatentXmlToTabular:
             if "entity" in config:
                 entity = config["entity"]
                 _fieldnames = []
-                if config.get("pk") or parent_entity:
+                if "pk" in config or parent_entity:
                     _fieldnames.append("id")
                 if parent_entity:
                     _fieldnames.append(f"{parent_entity}_id")
+                if "filename_field" in config:
+                    _fieldnames.append(config["filename_field"])
                 for subconfig in config["fields"].values():
                     add_fieldnames(subconfig, _fieldnames, entity)
                 # different keys may be appending rows to the same table(s), so we're appending
