@@ -59,7 +59,7 @@ class DocdbToTabular:
         if self.xml_files.is_file():
             self.xml_files = [self.xml_files]
         elif self.xml_files.is_dir():
-            self.xml_files = self.xml_files.glob(f'{"**/" if recurse else ""}*.xml')
+            self.xml_files = self.xml_files.glob(f'{"**/" if recurse else ""}*.[xX][mM][lL]')
         else:
             self.logger.fatal("specified input is invalid")
             exit(1)
