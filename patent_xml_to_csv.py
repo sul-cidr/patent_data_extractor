@@ -35,6 +35,13 @@ def replace_missing_mathml_ents(doc):
     return doc
 
 
+def expand_paths(path_expr):
+    path = Path(path_expr).expanduser()
+    return Path(path.root).glob(
+        str(Path("").joinpath(*path.parts[1:] if path.is_absolute() else path.parts))
+    )
+
+
 class DTDResolver(etree.Resolver):
     def __init__(self, dtd_path):
         self.dtd_path = Path(dtd_path)
@@ -55,14 +62,18 @@ class PatentXmlToTabular:
 
         self.logger = logger
 
-        self.xml_files = Path(xml_input)
-        if self.xml_files.is_file():
-            self.xml_files = [self.xml_files]
-        elif self.xml_files.is_dir():
-            self.xml_files = self.xml_files.glob(f'{"**/" if recurse else ""}*.[xX][mM][lL]')
-        else:
-            self.logger.fatal("specified input is invalid")
-            exit(1)
+        self.xml_files = []
+        for input_path in xml_input:
+            for path in expand_paths(input_path):
+                if path.is_file():
+                    self.xml_files.append(path)
+                elif path.is_dir():
+                    self.xml_files.extend(
+                        path.glob(f'{"**/" if recurse else ""}*.[xX][mM][lL]')
+                    )
+                else:
+                    self.logger.fatal("specified input is invalid")
+                    exit(1)
 
         # do this now, because we don't want to process all that data and then find
         #  the output_path is invalid... :)
@@ -336,15 +347,18 @@ def main():
         "-i",
         "--xml-input",
         action="store",
+        nargs="+",
         required=True,
-        help='"XML" file or directory to parse recursively',
+        help="XML file or directory of XML files (*.{xml,XML}) to parse recursively"
+        " (multiple arguments can be passed)",
     )
 
     arg_parser.add_argument(
         "-r",
         "--recurse",
         action="store_true",
-        help='if supplied, the parser will search subdirectories for "XML" files to parse',
+        help="if supplied, the parser will search subdirectories for"
+        " XML files (*.{xml,XML}) to parse",
     )
 
     arg_parser.add_argument(
