@@ -48,7 +48,7 @@ class DTDResolver(etree.Resolver):
             )
 
 
-class DocdbToTabular:
+class PatentXmlToTabular:
     def __init__(
         self, xml_input, config, dtd_path, recurse, output_path, logger, **kwargs,
     ):
@@ -406,7 +406,7 @@ def main():
             logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
             raise
 
-    convertor = DocdbToTabular(**vars(args), logger=logger)
+    convertor = PatentXmlToTabular(**vars(args), logger=logger)
     convertor.convert()
 
     if args.output_type == "csv":
