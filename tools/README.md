@@ -28,6 +28,13 @@ Note: these latter two examples depend upon bash brace expansion -- multiple yea
 
 Output files that already exist will be skipped and not re-downloaded (so the script will only fetch needed files, but partial or failed downloads will need to be cleared manually).
 
+To extract all the archives to a single folder (e.g. `extracted/`), something like the following can be used:
+
+```
+for i in {2002..2008}/*.zip; do unzip -j "$i" "*.xml" "*.XML" -d extracted/; done;
+```
+
+Some of the archives contain SGML files in addition to the XML, so this command will extract only the files that match `*.xml` and `*.XML` (because of course there are both).
 
 
 ### Document Extraction
