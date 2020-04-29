@@ -395,7 +395,7 @@ def main():
 
     log_level = logging.DEBUG if args.verbose else logging.INFO
     log_level = logging.CRITICAL if args.quiet else log_level
-    logger = logging.getLogger("script")
+    logger = logging.getLogger(__name__)
     logger.setLevel(log_level)  # format="%(message)s")
     logger.addHandler(logging.StreamHandler())
 
