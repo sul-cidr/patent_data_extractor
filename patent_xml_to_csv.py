@@ -108,15 +108,17 @@ class PatentXmlToTabular:
         with open(filepath, "r") as _fh:
             for line in _fh:
                 if line.startswith("<?xml"):
-                    if xml_doc:
+                    if xml_doc and not xml_doc[1].startswith("<!DOCTYPE sequence-cwu"):
                         yield "".join(xml_doc)
                     xml_doc = []
                 xml_doc.append(line)
 
     @staticmethod
-    def get_text(elem):
+    def get_text(xpath_result):
+        if isinstance(xpath_result, str):
+            return re.sub(r"\s+", " ", xpath_result).strip()
         return re.sub(
-            r"\s+", " ", etree.tostring(elem, method="text", encoding="unicode")
+            r"\s+", " ", etree.tostring(xpath_result, method="text", encoding="unicode")
         ).strip()
 
     def get_pk(self, tree, config):
@@ -158,7 +160,7 @@ class PatentXmlToTabular:
         try:
             elems = [tree.getroot()]
         except AttributeError:
-            elems = tree.findall("./" + path)
+            elems = tree.xpath("./" + path)
 
         if isinstance(config, str):
             if elems:
@@ -188,6 +190,13 @@ class PatentXmlToTabular:
                 if elems:
                     record[config["fieldname"]] = config["joiner"].join(
                         [self.get_text(elem) for elem in elems]
+                    )
+                return
+
+            if "enum_map" in config:
+                if elems:
+                    record[config["fieldname"]] = config["enum_map"].get(
+                        self.get_text(elems[0])
                     )
                 return
 

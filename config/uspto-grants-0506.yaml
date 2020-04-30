@@ -1,0 +1,115 @@
+us-patent-grant:
+  entity: grant
+  pk: us-bibliographic-data-grant/application-reference/document-id/doc-number
+  filename_field: source_file
+  fields:
+    us-bibliographic-data-grant/number-of-claims: num_claims
+
+    claims/claim:
+      entity: claim
+      fields:
+        # the asterisk specifies that all sub-elements of each PATDOC/SDOCL/CL/CLM
+        #  will be reduced to their text content, and the results of each such
+        #  reduction (for each PATDOC/SDOCL/CL/CLM element, should there be more
+        #  than one) will be concatenated together with the `joiner` string -- in
+        #  this case, a newline.
+        "*":
+          fieldname: claim_text
+          joiner: "\n"
+
+    us-bibliographic-data-grant/invention-title: title
+
+    us-bibliographic-data-grant/publication-reference/document-id/doc-number: doc_number
+    us-bibliographic-data-grant/publication-reference/document-id/kind: kind_code
+    us-bibliographic-data-grant/publication-reference/document-id/country: country_code
+
+    us-bibliographic-data-grant/priority-claims/priority-claim:
+      entity: foreign_filing
+      fields:
+        doc-number: doc_number
+        country: country_code
+        date: date
+
+    us-bibliographic-data-grant/application-reference/document-id/date: filing_date
+    us-bibliographic-data-grant/publication-reference/document-id/date: doc_date
+
+
+    us-bibliographic-data-grant/classification-ipc/main-classification: IPC_primary
+    us-bibliographic-data-grant/classification-ipc/further-classification:
+      fieldname: IPC_secondary
+      joiner: "|"
+    us-bibliographic-data-grant/classification-ipc/edition: IPC_edition
+
+
+
+    us-bibliographic-data-grant/classification-national/country: USPC_country
+    us-bibliographic-data-grant/classification-national/edition: USPC_edition
+    us-bibliographic-data-grant/classification-national/main-classification: USPC_primary
+    us-bibliographic-data-grant/classification-national/further-classification:
+      fieldname: USPC_secondary
+      joiner: "|"
+
+
+    us-bibliographic-data-grant/parties/applicants/applicant/addressbook:
+      entity: applicant
+      fields:
+        last-name: last_name
+        first-name: given_name
+        orgname: org_name
+        address/city: res_city
+        address/country: res_country
+
+    us-bibliographic-data-grant/application-reference/document-id/doc-number: app_number
+    us-bibliographic-data-grant/us-application-series-code: series_code
+
+    us-bibliographic-data-grant/application-reference/@appl-type: filing_type
+
+    us-bibliographic-data-grant/assignees/assignee:
+      entity: assignee
+      fields:
+        addressbook/orgname: org_name
+        addressbook/role: role
+
+    us-bibliographic-data-grant/references-cited/citation:
+      entity: citation
+      fields:
+        patcit/document-id/country: country_code
+        patcit/document-id/doc-number: doc_number
+        patcit/document-id/kind: kind_code
+        patcit/document-id/name: name
+        patcit/document-id/date: date
+        category:
+          fieldname: cited_by
+          enum_map:
+            cited by examiner: examiner
+            cited by other: other
+        classification-national/country: class_country
+        classification-national/main-classification: class_main
+        nplcit/othercit: cited_in_other #I think this is the analogous field
+
+    us-bibliographic-data-grant/examiners/primary-examiner/last-name: examiner1_last_name
+    us-bibliographic-data-grant/examiners/primary-examiner/first-name: examiner1_given_name
+    us-bibliographic-data-grant/examiners/primary-examiner/department: examiner1_dep
+
+    us-bibliographic-data-grant/examiners/assistant-examiner/last-name: examiner2_last_name
+    us-bibliographic-data-grant/examiners/assistant-examiner/first-name: examiner2_first_name
+
+    us-related-documents/division:
+      entity: divided_application
+      fields:
+        relation/parent-doc/document-id/country: country_code
+        relation/parent-doc/document-id/doc-number: doc_number
+        relation/parent-doc/document-id/date: date
+
+    us-related-documents/continuation:
+      entity: continued_application
+      fields:
+        relation/parent-doc/document-id/country: country_code
+        relation/parent-doc/document-id/doc-number: doc_number
+        relation/parent-doc/document-id/date: date
+
+    us-related-documents/us-provisional-application:
+      entity: provisional_application
+      fields:
+        document-id/doc-number: doc_number
+        document-id/date: date
