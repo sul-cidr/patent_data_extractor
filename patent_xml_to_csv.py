@@ -193,6 +193,13 @@ class PatentXmlToTabular:
                     )
                 return
 
+            if "enum_map" in config:
+                if elems:
+                    record[config["fieldname"]] = config["enum_map"].get(
+                        self.get_text(elems[0])
+                    )
+                return
+
             if "enum_type" in config:
                 if elems:
                     record[config["fieldname"]] = config["enum_type"]
