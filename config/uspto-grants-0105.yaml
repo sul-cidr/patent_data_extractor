@@ -121,3 +121,7 @@ PATDOC:
       fields:
         DOC/DNUM: doc_number
         DOC/DATE: date
+
+    #Saves the name of the file where the patent was retreived
+    #Note this is not present in the XML; special handling by parser
+    filename_field: source_file
