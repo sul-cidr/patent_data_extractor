@@ -1,55 +1,55 @@
-PATDOC:
+us-patent-grant:
   entity: application
-  pk: us-patent-grant/us-bibliographic-data-grant/application-reference/document-id/doc-number
+  pk: us-bibliographic-data-grant/application-reference/document-id/doc-number
   fields:
-    us-patent-grant/us-bibliographic-data-grant/number-of-claims: num_claims
+    us-bibliographic-data-grant/number-of-claims: num_claims
 
-    us-patent-grant/claims/claim:
+    claims/claim:
       entity: claim
       fields:
-        # the asterisk specifies that all sub-elements of each PATDOC/SDOCL/CL/CLM
+        # the asterisk specifies that all sub-elements of each us-patent-grant/claims/claim
         #  will be reduced to their text content, and the results of each such
-        #  reduction (for each PATDOC/SDOCL/CL/CLM element, should there be more
+        #  reduction (for each us-patent-grant/claims/claim element, should there be more
         #  than one) will be concatenated together with the `joiner` string -- in
         #  this case, a newline.
         "*":
           fieldname: claim_text
           joiner: "\n"
 
-    us-patent-grant/us-bibliographic-data-grant/invention-title: title
+    us-bibliographic-data-grant/invention-title: title
 
-    us-patent-grant/us-bibliographic-data-grant/publication-reference/document-id/doc-number: doc_number
-    us-patent-grant/us-bibliographic-data-grant/publication-reference/document-id/kind: kind_code
-    us-patent-grant/us-bibliographic-data-grant/publication-reference/document-id/country: country_code
+    us-bibliographic-data-grant/publication-reference/document-id/doc-number: doc_number
+    us-bibliographic-data-grant/publication-reference/document-id/kind: kind_code
+    us-bibliographic-data-grant/publication-reference/document-id/country: country_code
 
-    us-patent-grant/us-bibliographic-data-grant/priority-claims/priority-claim:
+    us-bibliographic-data-grant/priority-claims/priority-claim:
       entity: foreign_filing
       fields:
         doc-number: doc_number
         country: country_code
         date: date
 
-    us-patent-grant/us-bibliographic-data-grant/application-reference/document-id/date: filing_date
-    us-patent-grant/us-bibliographic-data-grant/publication-reference/document-id/date: doc_date
+    us-bibliographic-data-grant/application-reference/document-id/date: filing_date
+    us-bibliographic-data-grant/publication-reference/document-id/date: doc_date
 
 
-    us-patent-grant/us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/section: IPC_section
-    us-patent-grant/us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/class: IPC_class
-    us-patent-grant/us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/subclass: IPC_subclass
-    us-patent-grant/us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/main-group: IPC_main_group
-    us-patent-grant/us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/subgroup: IPC_subgroup
-    us-patent-grant/us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/ipc-version-indicator/date: IPC_edition
+    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/section: IPC_section
+    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/class: IPC_class
+    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/subclass: IPC_subclass
+    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/main-group: IPC_main_group
+    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/subgroup: IPC_subgroup
+    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/ipc-version-indicator/date: IPC_edition
 
 
-    us-patent-grant/us-bibliographic-data-grant/classification-national/country : USPC_country
-    us-patent-grant/us-bibliographic-data-grant/classification-national/edition : USPC_edition
-    us-patent-grant/us-bibliographic-data-grant/classification-national/main-classification : USPC_primary
-    us-patent-grant/us-bibliographic-data-grant/classification-national/further-classification :
+    us-bibliographic-data-grant/classification-national/country : USPC_country
+    us-bibliographic-data-grant/classification-national/edition : USPC_edition
+    us-bibliographic-data-grant/classification-national/main-classification : USPC_primary
+    us-bibliographic-data-grant/classification-national/further-classification :
       fieldname: USPC_secondary
       joiner: "|"
 
 
-    us-patent-grant/us-bibliographic-data-grant/parties/applicants/applicant/addressbook:
+    us-bibliographic-data-grant/parties/applicants/applicant/addressbook:
       entity: applicant
       fields:
         last-name: last_name
@@ -58,19 +58,19 @@ PATDOC:
         address/city: res_city
         address/country: res_country
 
-    us-patent-grant/us-bibliographic-data-grant/application-reference/document-id/doc-number: app_number
-    us-patent-grant/us-bibliographic-data-grant/us-application-series-code: series_code
+    us-bibliographic-data-grant/application-reference/document-id/doc-number: app_number
+    us-bibliographic-data-grant/us-application-series-code: series_code
 
     #Note: this is pulling an attribute, and may not be the final syntax for that
-    us-patent-grant/us-bibliographic-data-grant/application-reference|appl-type: filing_type
+    us-bibliographic-data-grant/application-reference|appl-type: filing_type
 
-    us-patent-grant/us-bibliographic-data-grant/assignees/assignee:
+    us-bibliographic-data-grant/assignees/assignee:
       entity: assignee
       fields:
         addressbook/orgname: org_name
         addressbook/role: role
 
-    us-patent-grant/us-bibliographic-data-grant/references-cited/citation:
+    us-bibliographic-data-grant/references-cited/citation:
       entity: citation
       fields:
         patcit/document-id/country: country_code
@@ -83,28 +83,28 @@ PATDOC:
         classification-national/main-classification: class_main
         nplcit/othercit: cited_in_other #I think this is the analogous field
 
-    us-patent-grant/us-bibliographic-data-grant/examiners/primary-examiner/last-name: examiner1_last_name
-    us-patent-grant/us-bibliographic-data-grant/examiners/primary-examiner/first-name: examiner1_given_name
-    us-patent-grant/us-bibliographic-data-grant/examiners/primary-examiner/department: examiner1_dep
+    us-bibliographic-data-grant/examiners/primary-examiner/last-name: examiner1_last_name
+    us-bibliographic-data-grant/examiners/primary-examiner/first-name: examiner1_given_name
+    us-bibliographic-data-grant/examiners/primary-examiner/department: examiner1_dep
 
-    us-patent-grant/us-bibliographic-data-grant/examiners/assistant-examiner/last-name: examiner2_last_name
-    us-patent-grant/us-bibliographic-data-grant/examiners/assistant-examiner/first-name: examiner2_first_name
+    us-bibliographic-data-grant/examiners/assistant-examiner/last-name: examiner2_last_name
+    us-bibliographic-data-grant/examiners/assistant-examiner/first-name: examiner2_first_name
 
-    us-patent-grant/us-related-documents/division:
+    us-related-documents/division:
       entity: divided_application
       fields:
         relation/parent-doc/document-id/country: country_code
         relation/parent-doc/document-id/doc-number: doc_number
         relation/parent-doc/document-id/date: date
 
-    us-patent-grant/us-related-documents/continuation:
+    us-related-documents/continuation:
       entity: continued_application
       fields:
         relation/parent-doc/document-id/country: country_code
         relation/parent-doc/document-id/doc-number: doc_number
         relation/parent-doc/document-id/date: date
 
-    us-patent-grant/us-related-documents/us-provisional-application:
+    us-related-documents/us-provisional-application:
       entity: provisional_application
       fields:
         document-id/doc-number: doc_number
