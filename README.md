@@ -4,7 +4,7 @@
 
 ## DOCUMENTATION
 
-* clone the repo, and run `pip install -r requirements.txt` to be sure needed packages are available (currently only `lxml` is required -- `termcolor` is optional, and `sqlite-utils` is only required if you make use of the `--output-type sqlite` option).
+* clone the repo, and run `pip install -r requirements.txt` to be sure needed packages are available (`lxml` and `pyyaml` are required -- `termcolor` is optional, and `sqlite-utils` is only required if you make use of the `--output-type sqlite` option).
 
 ```
 usage: patent_xml_to_csv.py [-h] [-v] [-q] -i XML_INPUT [XML_INPUT ...] [-r]
@@ -45,11 +45,11 @@ optional arguments:
 
 
 ### CONFIG FILES
-see [config/uspto-applications-0205.yaml](config/uspto-applications-0205.yaml)
+See [config/](config/) for examples -- proper documentation (perhaps in the wiki for this repo?) is required.
 
 
 ### UTILITY SCRIPTS
-see [tools](tools/)
+See [tools](tools/).
 
 
 ## TODO
