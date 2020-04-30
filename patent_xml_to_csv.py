@@ -114,9 +114,11 @@ class PatentXmlToTabular:
                 xml_doc.append(line)
 
     @staticmethod
-    def get_text(elem):
+    def get_text(xpath_result):
+        if isinstance(xpath_result, str):
+            return re.sub(r"\s+", " ", xpath_result).strip()
         return re.sub(
-            r"\s+", " ", etree.tostring(elem, method="text", encoding="unicode")
+            r"\s+", " ", etree.tostring(xpath_result, method="text", encoding="unicode")
         ).strip()
 
     def get_pk(self, tree, config):
@@ -158,7 +160,7 @@ class PatentXmlToTabular:
         try:
             elems = [tree.getroot()]
         except AttributeError:
-            elems = tree.findall("./" + path)
+            elems = tree.xpath("./" + path)
 
         if isinstance(config, str):
             if elems:
