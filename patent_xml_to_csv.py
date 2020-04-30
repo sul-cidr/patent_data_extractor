@@ -108,7 +108,7 @@ class PatentXmlToTabular:
         with open(filepath, "r") as _fh:
             for line in _fh:
                 if line.startswith("<?xml"):
-                    if xml_doc:
+                    if xml_doc and not xml_doc[1].startswith("<!DOCTYPE sequence-cwu"):
                         yield "".join(xml_doc)
                     xml_doc = []
                 xml_doc.append(line)
