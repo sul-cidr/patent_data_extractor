@@ -1,5 +1,5 @@
 us-patent-grant:
-  entity: application
+  entity: patent
   pk: us-bibliographic-data-grant/application-reference/document-id/doc-number
   fields:
     us-bibliographic-data-grant/number-of-claims: num_claims
@@ -81,7 +81,7 @@ us-patent-grant:
         category:
           fieldname: cited_by
           enum_map:
-            cited by examiner: examiner 
+            cited by examiner: examiner
             cited by other: other
         classification-national/country: class_country
         classification-national/main-classification: class_main

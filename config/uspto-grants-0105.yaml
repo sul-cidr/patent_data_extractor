@@ -1,5 +1,5 @@
 PATDOC:
-  entity: application
+  entity: patent
   pk: SDOBI/B200/B210/DNUM
   fields:
     SDOBI/B500/B570/B577: num_claims
