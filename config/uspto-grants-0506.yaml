@@ -1,5 +1,5 @@
 us-patent-grant:
-  entity: patent 
+  entity: patent
   pk: us-bibliographic-data-grant/application-reference/document-id/doc-number
   filename_field: source_file
   fields:
