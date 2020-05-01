@@ -1,6 +1,8 @@
 us-patent-grant:
   entity: patent
   pk: us-bibliographic-data-grant/application-reference/document-id/doc-number
+  filename_field: source_file
+
   fields:
     us-bibliographic-data-grant/number-of-claims: num_claims
 
@@ -114,6 +116,3 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    #Saves the name of the file where the patent was retreived
-    #Note this is not present in the XML; special handling by parser
-    filename_field: source_file
