@@ -35,6 +35,13 @@ def replace_missing_mathml_ents(doc):
     return doc
 
 
+def expand_paths(path_expr):
+    path = Path(path_expr).expanduser()
+    return Path(path.root).glob(
+        str(Path("").joinpath(*path.parts[1:] if path.is_absolute() else path.parts))
+    )
+
+
 class DTDResolver(etree.Resolver):
     def __init__(self, dtd_path):
         self.dtd_path = Path(dtd_path)
@@ -48,21 +55,25 @@ class DTDResolver(etree.Resolver):
             )
 
 
-class DocdbToTabular:
+class PatentXmlToTabular:
     def __init__(
         self, xml_input, config, dtd_path, recurse, output_path, logger, **kwargs,
     ):
 
         self.logger = logger
 
-        self.xml_files = Path(xml_input)
-        if self.xml_files.is_file():
-            self.xml_files = [self.xml_files]
-        elif self.xml_files.is_dir():
-            self.xml_files = self.xml_files.glob(f'{"**/" if recurse else ""}*.xml')
-        else:
-            self.logger.fatal("specified input is invalid")
-            exit(1)
+        self.xml_files = []
+        for input_path in xml_input:
+            for path in expand_paths(input_path):
+                if path.is_file():
+                    self.xml_files.append(path)
+                elif path.is_dir():
+                    self.xml_files.extend(
+                        path.glob(f'{"**/" if recurse else ""}*.[xX][mM][lL]')
+                    )
+                else:
+                    self.logger.fatal("specified input is invalid")
+                    exit(1)
 
         # do this now, because we don't want to process all that data and then find
         #  the output_path is invalid... :)
@@ -97,25 +108,27 @@ class DocdbToTabular:
         with open(filepath, "r") as _fh:
             for line in _fh:
                 if line.startswith("<?xml"):
-                    if xml_doc:
+                    if xml_doc and not xml_doc[1].startswith("<!DOCTYPE sequence-cwu"):
                         yield "".join(xml_doc)
                     xml_doc = []
                 xml_doc.append(line)
 
     @staticmethod
-    def get_text(elem):
+    def get_text(xpath_result):
+        if isinstance(xpath_result, str):
+            return re.sub(r"\s+", " ", xpath_result).strip()
         return re.sub(
-            r"\s+", " ", etree.tostring(elem, method="text", encoding="unicode")
+            r"\s+", " ", etree.tostring(xpath_result, method="text", encoding="unicode")
         ).strip()
 
     def get_pk(self, tree, config):
-        if config.get("pk", None):
+        if "pk" in config:
             elems = tree.findall("./" + config["pk"])
             assert len(elems) == 1
             return self.get_text(elems[0])
         return None
 
-    def process_subpath(
+    def process_new_entity(
         self, tree, elems, config, parent_entity=None, parent_pk=None,
     ):
         """ Process a subtree of the xml as a new entity type, creating a new record in a new
@@ -133,6 +146,8 @@ class DocdbToTabular:
 
             if parent_pk:
                 record[f"{parent_entity}_id"] = parent_pk
+            if "filename_field" in config:
+                record[config["filename_field"]] = self.current_filename
             for subpath, subconfig in config["fields"].items():
                 self.process_path(elem, subpath, subconfig, record, entity, pk)
 
@@ -145,12 +160,7 @@ class DocdbToTabular:
         try:
             elems = [tree.getroot()]
         except AttributeError:
-            elems = tree.findall("./" + path)
-
-        if "entity" in config:
-            # config is a new entity definition (i.e. a new record on a new table/file)
-            self.process_subpath(tree, elems, config, parent_entity, parent_pk)
-            return
+            elems = tree.xpath("./" + path)
 
         if isinstance(config, str):
             if elems:
@@ -169,12 +179,24 @@ class DocdbToTabular:
                 record[config] = self.get_text(elems[0])
             return
 
+        if "entity" in config:
+            # config is a new entity definition (i.e. a new record on a new table/file)
+            self.process_new_entity(tree, elems, config, parent_entity, parent_pk)
+            return
+
         if "fieldname" in config:
             # config is extra configuration for a field on this table/file
             if "joiner" in config:
                 if elems:
                     record[config["fieldname"]] = config["joiner"].join(
                         [self.get_text(elem) for elem in elems]
+                    )
+                return
+
+            if "enum_map" in config:
+                if elems:
+                    record[config["fieldname"]] = config["enum_map"].get(
+                        self.get_text(elems[0])
                     )
                 return
 
@@ -202,6 +224,7 @@ class DocdbToTabular:
         for input_file in self.xml_files:
 
             self.logger.info(colored("Processing %s...", "green"), input_file.resolve())
+            self.current_filename = input_file.resolve().name
 
             for i, doc in enumerate(self.yield_xml_doc(input_file)):
                 if i % 100 == 0:
@@ -253,10 +276,12 @@ class DocdbToTabular:
             if "entity" in config:
                 entity = config["entity"]
                 _fieldnames = []
-                if config.get("pk") or parent_entity:
+                if "pk" in config or parent_entity:
                     _fieldnames.append("id")
                 if parent_entity:
                     _fieldnames.append(f"{parent_entity}_id")
+                if "filename_field" in config:
+                    _fieldnames.append(config["filename_field"])
                 for subconfig in config["fields"].values():
                     add_fieldnames(subconfig, _fieldnames, entity)
                 # different keys may be appending rows to the same table(s), so we're appending
@@ -336,15 +361,18 @@ def main():
         "-i",
         "--xml-input",
         action="store",
+        nargs="+",
         required=True,
-        help='"XML" file or directory to parse recursively',
+        help="XML file or directory of XML files (*.{xml,XML}) to parse recursively"
+        " (multiple arguments can be passed)",
     )
 
     arg_parser.add_argument(
         "-r",
         "--recurse",
         action="store_true",
-        help='if supplied, the parser will search subdirectories for "XML" files to parse',
+        help="if supplied, the parser will search subdirectories for"
+        " XML files (*.{xml,XML}) to parse",
     )
 
     arg_parser.add_argument(
@@ -395,7 +423,7 @@ def main():
 
     log_level = logging.DEBUG if args.verbose else logging.INFO
     log_level = logging.CRITICAL if args.quiet else log_level
-    logger = logging.getLogger("script")
+    logger = logging.getLogger(__name__)
     logger.setLevel(log_level)  # format="%(message)s")
     logger.addHandler(logging.StreamHandler())
 
@@ -406,7 +434,7 @@ def main():
             logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
             raise
 
-    convertor = DocdbToTabular(**vars(args), logger=logger)
+    convertor = PatentXmlToTabular(**vars(args), logger=logger)
     convertor.convert()
 
     if args.output_type == "csv":
