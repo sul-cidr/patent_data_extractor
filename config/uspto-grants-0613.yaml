@@ -78,7 +78,11 @@ us-patent-grant:
         patcit/document-id/kind: kind_code
         patcit/document-id/name: name
         patcit/document-id/date: date
-        category: category #TODO
+        category:
+          fieldname: cited_by
+          enum_map:
+            cited by examiner: examiner
+            cited by other: other
         classification-national/country: class_country
         classification-national/main-classification: class_main
         nplcit/othercit: cited_in_other #I think this is the analogous field
