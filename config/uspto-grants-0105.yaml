@@ -1,15 +1,18 @@
 PATDOC:
   # entity is used for the name of the table and for fieldnames for foreign key
   #  relations with related entities.
-  entity: application
+  entity: patent
+  
   # pk is optional -- if supplied, text extracted from the supplied path will be
   #  used for the primary ket of the table (so it must be unique!).  If this key
   #  is not supplied, an auto-incremented integer will be used for the pk.
   pk: SDOBI/B200/B210/DNUM
-  # filename_field is optiona; -- if supplied, the name of the file containing
+  
+  # filename_field is optional -- if supplied, the name of the file containing
   #  the XML parsed to make this record will be saved to a field named for the
   #  value supplied.
   filename_field: source_file
+
   fields:
     SDOBI/B500/B570/B577: num_claims
     SDOBI/B500/B540/STEXT: title
@@ -44,7 +47,7 @@ PATDOC:
       fieldname: IPC_secondary
       joiner: "|"
 
-    SDOBI/B500/B520/B521: USPC-primary
+    SDOBI/B500/B520/B521: USPC_primary
     SDOBI/B500/B520/B522:
       fieldname: USPC_secondary
       joiner: "|"
@@ -130,3 +133,7 @@ PATDOC:
       fields:
         DOC/DNUM: doc_number
         DOC/DATE: date
+
+    #Saves the name of the file where the patent was retreived
+    #Note this is not present in the XML; special handling by parser
+    filename_field: source_file

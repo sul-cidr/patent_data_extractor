@@ -41,6 +41,7 @@ us-patent-grant:
     us-bibliographic-data-grant/classification-ipc/edition: IPC_edition
 
 
+
     us-bibliographic-data-grant/classification-national/country : USPC_country
     us-bibliographic-data-grant/classification-national/edition : USPC_edition
     us-bibliographic-data-grant/classification-national/main-classification : USPC_primary
@@ -48,9 +49,25 @@ us-patent-grant:
       fieldname: USPC_secondary
       joiner: "|"
 
+    us-bibliographic-data-grant/classifications-cpc/main-cpc/classification-cpc/cpc-version-indicator/date: CPC_edition
+    us-bibliographic-data-grant/classifications-cpc/main-cpc/classification-cpc/section: CPC_section
+    us-bibliographic-data-grant/classifications-cpc/main-cpc/classification-cpc/class: CPC_class
+    us-bibliographic-data-grant/classifications-cpc/main-cpc/classification-cpc/subclass: CPC_subclass
+    us-bibliographic-data-grant/classifications-cpc/main-cpc/classification-cpc/main-group: CPC_main_group
+    us-bibliographic-data-grant/classifications-cpc/main-cpc/classification-cpc/subgroup: CPC_subgroup
 
-    us-bibliographic-data-grant/parties/applicants/applicant/addressbook:
+
+    us-bibliographic-data-grant/us-parties/us-applicants/us-applicant/addressbook:
       entity: applicant
+      fields:
+        last-name: last_name
+        first-name: given_name
+        orgname: org_name
+        address/city: res_city
+        address/country: res_country
+
+    us-bibliographic-data-grant/us-parties/inventors/inventor/addressbook:
+      entity: inventor
       fields:
         last-name: last_name
         first-name: given_name
@@ -61,6 +78,7 @@ us-patent-grant:
     us-bibliographic-data-grant/application-reference/document-id/doc-number: app_number
     us-bibliographic-data-grant/us-application-series-code: series_code
 
+    #Note: this is pulling an attribute, and may not be the final syntax for that
     us-bibliographic-data-grant/application-reference/@appl-type: filing_type
 
     us-bibliographic-data-grant/assignees/assignee:
@@ -69,7 +87,7 @@ us-patent-grant:
         addressbook/orgname: org_name
         addressbook/role: role
 
-    us-bibliographic-data-grant/references-cited/citation:
+    us-bibliographic-data-grant/us-references-cited/us-citation:
       entity: citation
       fields:
         patcit/document-id/country: country_code
@@ -113,6 +131,3 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    #Saves the name of the file where the patent was retreived
-    #Note this is not present in the XML; special handling by parser
-    filename_field: source_file
