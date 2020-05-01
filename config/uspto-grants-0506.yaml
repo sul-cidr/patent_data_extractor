@@ -62,7 +62,7 @@ us-patent-grant:
     us-bibliographic-data-grant/us-application-series-code: series_code
 
     #Note: this is pulling an attribute, and may not be the final syntax for that
-    us-bibliographic-data-grant/application-reference|appl-type: filing_type
+    us-bibliographic-data-grant/application-reference/@appl-type: filing_type
 
     us-bibliographic-data-grant/assignees/assignee:
       entity: assignee
