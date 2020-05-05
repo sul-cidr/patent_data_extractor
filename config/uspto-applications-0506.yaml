@@ -1,0 +1,445 @@
+us-patent-application:
+  entity: application
+  pk: us-bibliographic-data-application/publication-reference/document-id/doc-number
+  filename_field: source_file
+
+  fields:
+    us-bibliographic-data-application/publication-reference/document-id/doc-number: doc_number
+    us-bibliographic-data-application/publication-reference/document-id/kind: kind_code
+    us-bibliographic-data-application/publication-reference/document-id/country: country_code
+    us-bibliographic-data-application/publication-reference/document-id/date: doc_date
+
+    us-bibliographic-data-application/application-reference/@appl-type: filing_type
+    us-bibliographic-data-application/pct-or-regional-filing-data/document-id/doc-number: PCT_app_number
+    us-bibliographic-data-application/us-application-series-code: series_code
+
+    # Claims
+    claims/claim:
+      entity: claim
+      fields:
+        "*":
+          fieldname: claim_text
+          joiner: "\n"
+
+    # Correspondence Address
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/address/city: correspondence_city
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/address/state: correspondence_state
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/address/postcode: correspondence_postal
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/address/country: correspondence_country
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/address/address-1: correspondence_address_1
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/address/address-2: correspondence_address_2
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/name: correspondence_name
+
+    # Classification Information
+    us-bibliographic-data-application/classification-national/main-classification: USPC_class
+    us-bibliographic-data-application/classification-national/further-classification: USPC_subclass
+    us-bibliographic-data-application/classification-ipc/edition: IPC_edition
+    us-bibliographic-data-application/classification-ipc/main-classification: IPC_main
+    us-bibliographic-data-application/classification-ipc/further-classification:
+      fieldname: IPC_further
+      joiner: "|"
+
+
+
+    # Foreign filings
+    us-bibliographic-data-application/priority-claims/priority-claim:
+      entity: foreign_filing
+      fields:
+        doc-number: doc_number
+        date: date
+        country: country_code
+
+    # Applicants
+    us-bibliographic-data-application/parties/applicants/applicant:
+      entity: inventor
+      fields:
+        # Name information
+        addressbook/name/last-name: last_name
+        addressbook/name/first-name: given_name
+
+        # Residence information
+        addressbook/address/country: res_country
+        addressbook/address/state: res_state
+        addressbook/address/city: res_city
+
+    # Assignees
+    us-bibliographic-data-application/assignees/assignee:
+      entity: assignee
+      fields:
+        addressbook/orgname: org_name
+        addressbook/role: role
+        addressbook/first-name: given_name
+        addressbook/last-name: last_name
+
+        addressbook/address/address-1: address_1
+        addressbook/address/address-2: address_2
+        addressbook/address/city: res_city
+        addressbook/address/state: res_state
+        addressbook/address/country: res_country
+        addressbook/address/postcode: res_postal
+
+    # Related Documents
+
+    ## Parent Documents
+
+    ### Continuations
+
+    us-bibliographic-data-application/us-related-documents/continuation/relation/parent-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: continuation
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+        parent-status: status
+
+    us-bibliographic-data-application/us-related-documents/continuation-in-part/relation/parent-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: continuation_in_part
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+        parent-status: status
+
+    us-bibliographic-data-application/us-related-documents/continuing-reissue/relation/parent-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: continuing_reissue
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+        parent-status: status
+
+
+    ### Non-Continuations
+
+    us-bibliographic-data-application/us-related-documents/addition/relation/parent-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: addition
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+        parent-status: status
+
+    us-bibliographic-data-application/us-related-documents/division/relation/parent-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: division
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+        parent-status: status
+
+    us-bibliographic-data-application/us-related-documents/reissue/relation/parent-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: reissue
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+        parent-status: status
+
+    us-bibliographic-data-application/us-related-documents/reexamination/relation/parent-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: reexamination
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+        parent-status: status
+
+    us-bibliographic-data-application/us-related-documents/us-reexamination-reissue-merger/relation/parent-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: us_reexamination_reissue_merger
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+        parent-status: status
+
+    us-bibliographic-data-application/us-related-documents/substitution/relation/parent-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: substitution
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+        parent-status: status
+
+    us-bibliographic-data-application/us-related-documents/utility-model-basis/relation/parent-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: utility_model_basis
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+        parent-status: status
+
+    ## Child Documents
+
+    ### Continuations
+
+    us-bibliographic-data-application/us-related-documents/continuation/relation/child-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: continuation
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+
+    us-bibliographic-data-application/us-related-documents/continuation-in-part/relation/child-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: continuation_in_part
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+
+    us-bibliographic-data-application/us-related-documents/continuing-reissue/relation/child-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: continuing_reissue
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+
+
+    ### Non-Continuations
+
+    us-bibliographic-data-application/us-related-documents/addition/relation/child-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: addition
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+
+    us-bibliographic-data-application/us-related-documents/division/relation/child-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: division
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+
+    us-bibliographic-data-application/us-related-documents/reissue/relation/child-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: reissue
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+
+    us-bibliographic-data-application/us-related-documents/reexamination/relation/child-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: reexamination
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+
+    us-bibliographic-data-application/us-related-documents/us-reexamination-reissue-merger/relation/child-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: us_reexamination_reissue_merger
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+
+    us-bibliographic-data-application/us-related-documents/substitution/relation/child-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: substitution
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
+
+    us-bibliographic-data-application/us-related-documents/utility-model-basis/relation/child-doc:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: utility_model_basis
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from document to document
+        document-id/doc-number: doc_number
+        document-id/kind: kind_code
+        document-id/date: date
+        document-id/country: country_code
