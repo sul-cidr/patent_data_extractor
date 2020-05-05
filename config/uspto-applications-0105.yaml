@@ -95,6 +95,7 @@ patent-application-publication:
         parent-status: status
 
 
+
     subdoc-bibliographic-information/continuity-data/continuations/continuation-in-part-of/parent-child/parent:
       entity: related_document
       fields:
@@ -131,6 +132,8 @@ patent-application-publication:
         document-id/country-code: country_code
         parent-status: status
 
+
+    ### Non-Continuations
 
     ### Non-Continuations
 
