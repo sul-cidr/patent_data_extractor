@@ -58,49 +58,42 @@ patent-application-publication:
           fieldname: claim_text
           joiner: "\n"
 
-    # Continuations, Divisionals, and Provisionals
-    subdoc-bibliographic-information/continuity-data/continuations:
-      entity: continued_application
+
+    # Parent documents
+    subdoc-bibliographic-information/continuity-data/continuations/continuation-of/parent-child/parent:
+      entity: parent_continuation
       fields:
-        # Fetches type of continuation
-        continuation-of:
-          fieldname: type
-          enum_type: continuation
-        continuation-in-part-of:
-          fieldname: type
-          enum_type: continuation-in-part
-        continuing-reissue-of:
-          fieldname: type
-          enum_type: continuing-reissue
+        status: status
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
 
-        # Need to specify several paths since varying continuation types
-        # have varying paths
-        continuation-of/parent-child/parent/status: status
-        continuation-in-part-of/parent-child/parent/status: status
-        continuing-reissue-of/parent-child/parent/status: status
+    subdoc-bibliographic-information/continuity-data/continuations/continuation-in-part-of/parent-child/parent:
+      entity: parent_continuation_in_part
+      fields:
+        status: status
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
 
-        continuation-of/parent-child/parent/document-id/kind-code: kind_code
-        continuation-in-part-of/parent-child/parent/document-id/kind-code: kind_code
-        continuing-reissue-of/parent-child/parent/document-id/kind-code: kind_code
+    subdoc-bibliographic-information/continuity-data/continuations/continuing-reissue-of/parent-child/parent:
+      entity: parent_continuing_reissue
+      fields:
+        status: status
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
 
-        continuation-of/parent-child/parent/document-id/doc-number: doc_number
-        continuation-in-part-of/parent-child/parent/document-id/doc-number: doc_number
-        continuing-reissue-of/parent-child/parent/document-id/doc-number: doc_number
-
-        continuation-of/parent-child/parent/document-id/document-date: date
-        continuation-in-part-of/parent-child/parent/document-id/document-date: date
-        continuing-reissue-of/parent-child/parent/document-id/document-date: date
-
-        continuation-of/parent-child/parent/document-id/country-code: country_code
-        continuation-in-part-of/parent-child/parent/document-id/country-code: country_code
-        continuing-reissue-of/parent-child/parent/document-id/country-code: country_code
 
     subdoc-bibliographic-information/continuity-data/division-of:
       entity: divided_application
       fields:
         parent-child/parent-status: status
-        parent-child/parent/document-id/doc-number: doc_number
         parent-child/parent/document-id/kind-code: kind_code
+        parent-child/parent/document-id/doc-number: doc_number
         parent-child/parent/document-id/document-date: date
         parent-child/parent/document-id/country-code: country_code
 
@@ -109,6 +102,35 @@ patent-application-publication:
       fields:
         document-id/doc_number: doc_number
         document-id/date: date
+
+    #Child documents
+    subdoc-bibliographic-information/continuity-data/continuations/continuation-of/parent-child/child:
+      entity: child_continuation
+      fields:
+        status: status
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+
+    subdoc-bibliographic-information/continuity-data/continuations/continuation-in-part-of/parent-child/child:
+      entity: child_continuation_in_part
+      fields:
+        status: status
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+
+    subdoc-bibliographic-information/continuity-data/continuations/continuing-reissue-of/parent-child/child:
+      entity: child_continuing_reissue
+      fields:
+        status: status
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+
 
     # Inventors
     subdoc-bibliographic-information/inventors/first-named-inventor:
