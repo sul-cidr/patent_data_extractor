@@ -95,6 +95,7 @@ patent-application-publication:
         parent-status: status
 
 
+
     subdoc-bibliographic-information/continuity-data/continuations/continuation-in-part-of/parent-child/parent:
       entity: related_document
       fields:
@@ -134,6 +135,11 @@ patent-application-publication:
 
     ### Non-Continuations
 
+<<<<<<< HEAD
+=======
+    ### Non-Continuations
+
+>>>>>>> a61837b214510c2c937319f886efa132c1ef25e3
     subdoc-bibliographic-information/continuity-data/division-of/parent-child/parent:
       entity: related_document
       fields:
@@ -150,7 +156,10 @@ patent-application-publication:
         document-id/doc-number: doc_number
         document-id/document-date: date
         document-id/country-code: country_code
+<<<<<<< HEAD
         parent-status: status
+=======
+>>>>>>> a61837b214510c2c937319f886efa132c1ef25e3
 
 
     subdoc-bibliographic-information/continuity-data/a-371-of-international/parent-child/parent:
@@ -169,7 +178,10 @@ patent-application-publication:
         document-id/doc-number: doc_number
         document-id/document-date: date
         document-id/country-code: country_code
+<<<<<<< HEAD
         parent-status: status
+=======
+>>>>>>> a61837b214510c2c937319f886efa132c1ef25e3
 
 
     subdoc-bibliographic-information/continuity-data/substitution-for/parent-child/parent:
@@ -188,7 +200,10 @@ patent-application-publication:
         document-id/doc-number: doc_number
         document-id/document-date: date
         document-id/country-code: country_code
+<<<<<<< HEAD
         parent-status: status
+=======
+>>>>>>> a61837b214510c2c937319f886efa132c1ef25e3
 
 
     subdoc-bibliographic-information/continuity-data/reissue-of/parent-child/parent:
@@ -207,7 +222,10 @@ patent-application-publication:
         document-id/doc-number: doc_number
         document-id/document-date: date
         document-id/country-code: country_code
+<<<<<<< HEAD
         parent-status: status
+=======
+>>>>>>> a61837b214510c2c937319f886efa132c1ef25e3
 
 
     ## Child documents
