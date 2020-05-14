@@ -84,8 +84,6 @@ class PatentXmlToTabular:
 
         self.config = yaml.safe_load(open(config))
 
-        self.tables = defaultdict(list)
-
         if kwargs["no_validate"]:
             self.parser = etree.XMLParser(
                 load_dtd=True, resolve_entities=True, ns_clean=True
@@ -99,6 +97,7 @@ class PatentXmlToTabular:
         self.parser.resolvers.add(DTDResolver(dtd_path))
 
         self.fieldnames = self.get_fieldnames()
+        self.init_cache_vars()
 
     @staticmethod
     def get_all_xml_docs(filepath):
@@ -116,6 +115,10 @@ class PatentXmlToTabular:
                         yield "".join(xml_doc)
                     xml_doc = []
                 xml_doc.append(line)
+
+    def init_cache_vars(self):
+        self.tables = defaultdict(list)
+        self.table_pk_idx = defaultdict(lambda: defaultdict(int))
 
     @staticmethod
     def get_text(xpath_result):
@@ -146,7 +149,8 @@ class PatentXmlToTabular:
             if pk:
                 record["id"] = pk
             else:
-                record["id"] = f"{parent_pk}_{len(self.tables[entity])}"
+                record["id"] = f"{parent_pk}_{self.table_pk_idx[entity][parent_pk]}"
+                self.table_pk_idx[entity][parent_pk] += 1
 
             if parent_pk:
                 record[f"{parent_entity}_id"] = parent_pk
@@ -268,7 +272,7 @@ class PatentXmlToTabular:
         if self.output_type == "sqlite":
             self.write_sqlitedb()
 
-        self.tables = defaultdict(list)
+        self.init_cache_vars()
 
     def get_fieldnames(self):
         """ On python >=3.7, dictionaries maintain key order, so fields are guaranteed to be
@@ -329,10 +333,8 @@ class PatentXmlToTabular:
             output_file = self.output_path / f"{tablename}.csv"
 
             if output_file.exists():
-                self.logger.info(
-                    colored(
-                        "CSV file %s  exists; records will be appended.", "yellow",
-                    ),
+                self.logger.debug(
+                    colored("CSV file %s exists; records will be appended.", "yellow",),
                     output_file,
                 )
 
