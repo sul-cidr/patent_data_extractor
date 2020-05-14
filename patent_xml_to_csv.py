@@ -57,7 +57,7 @@ class DTDResolver(etree.Resolver):
 
 class PatentXmlToTabular:
     def __init__(
-        self, xml_input, config, dtd_path, output_path, logger, **kwargs,
+        self, xml_input, config, dtd_path, output_path, output_type, logger, **kwargs,
     ):
 
         self.logger = logger
@@ -80,6 +80,8 @@ class PatentXmlToTabular:
         self.output_path = Path(output_path)
         self.output_path.mkdir(parents=True, exist_ok=True)
 
+        self.output_type = output_type
+
         self.config = yaml.safe_load(open(config))
 
         self.tables = defaultdict(list)
@@ -95,6 +97,8 @@ class PatentXmlToTabular:
 
         self.continue_on_error = kwargs["continue_on_error"]
         self.parser.resolvers.add(DTDResolver(dtd_path))
+
+        self.fieldnames = self.get_fieldnames()
 
     @staticmethod
     def get_all_xml_docs(filepath):
@@ -142,7 +146,7 @@ class PatentXmlToTabular:
             if pk:
                 record["id"] = pk
             else:
-                record["id"] = f"{len(self.tables[entity])}"
+                record["id"] = f"{parent_pk}_{len(self.tables[entity])}"
 
             if parent_pk:
                 record[f"{parent_entity}_id"] = parent_pk
@@ -234,10 +238,12 @@ class PatentXmlToTabular:
                     )
                 try:
                     self.process_doc(doc)
+
                 except LookupError as exc:
                     self.logger.warning(exc.args[0])
                     if not self.continue_on_error:
                         raise SystemExit()
+
                 except (AssertionError, etree.XMLSyntaxError) as exc:
                     self.logger.debug(doc)
                     p_id = re.search(
@@ -252,6 +258,17 @@ class PatentXmlToTabular:
                         raise SystemExit()
 
             self.logger.info(colored("...%d records processed!", "green"), i + 1)
+
+            self.flush_to_disk()
+
+    def flush_to_disk(self):
+        if self.output_type == "csv":
+            self.write_csv_files()
+
+        if self.output_type == "sqlite":
+            self.write_sqlitedb()
+
+        self.tables = defaultdict(list)
 
     def get_fieldnames(self):
         """ On python >=3.7, dictionaries maintain key order, so fields are guaranteed to be
@@ -305,17 +322,29 @@ class PatentXmlToTabular:
 
     def write_csv_files(self):
 
-        fieldnames = self.get_fieldnames()
-
         self.logger.info(
             colored("Writing csv files to %s ...", "green"), self.output_path.resolve()
         )
         for tablename, rows in self.tables.items():
             output_file = self.output_path / f"{tablename}.csv"
-            with output_file.open("w") as _fh:
-                writer = csv.DictWriter(_fh, fieldnames=fieldnames[tablename])
-                writer.writeheader()
-                writer.writerows(rows)
+
+            if output_file.exists():
+                self.logger.info(
+                    colored(
+                        "CSV file %s  exists; records will be appended.", "yellow",
+                    ),
+                    output_file,
+                )
+
+                with output_file.open("a") as _fh:
+                    writer = csv.DictWriter(_fh, fieldnames=self.fieldnames[tablename])
+                    writer.writerows(rows)
+
+            else:
+                with output_file.open("w") as _fh:
+                    writer = csv.DictWriter(_fh, fieldnames=self.fieldnames[tablename])
+                    writer.writeheader()
+                    writer.writerows(rows)
 
     def write_sqlitedb(self):
         try:
@@ -324,13 +353,12 @@ class PatentXmlToTabular:
             self.logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
             raise
 
-        fieldnames = self.get_fieldnames()
         db_path = (self.output_path / "db.sqlite").resolve()
 
         if db_path.exists():
             self.logger.warning(
                 colored(
-                    "Sqlite data base %s  exists; records will be appended.", "yellow"
+                    "Sqlite database %s  exists; records will be appended.", "yellow"
                 ),
                 db_path,
             )
@@ -340,8 +368,8 @@ class PatentXmlToTabular:
             colored("Writing records to %s ...", "green"), db_path,
         )
         for tablename, rows in self.tables.items():
-            params = {"column_order": fieldnames[tablename]}
-            if "id" in fieldnames[tablename]:
+            params = {"column_order": self.fieldnames[tablename]}
+            if "id" in self.fieldnames[tablename]:
                 params["pk"] = "id"
                 params["not_null"] = {"id"}
             db[tablename].insert_all(rows, **params)
@@ -437,12 +465,6 @@ def main():
 
     convertor = PatentXmlToTabular(**vars(args), logger=logger)
     convertor.convert()
-
-    if args.output_type == "csv":
-        convertor.write_csv_files()
-
-    if args.output_type == "sqlite":
-        convertor.write_sqlitedb()
 
 
 if __name__ == "__main__":
