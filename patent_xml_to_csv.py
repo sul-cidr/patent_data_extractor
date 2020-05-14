@@ -57,7 +57,7 @@ class DTDResolver(etree.Resolver):
 
 class PatentXmlToTabular:
     def __init__(
-        self, xml_input, config, dtd_path, recurse, output_path, logger, **kwargs,
+        self, xml_input, config, dtd_path, output_path, logger, **kwargs,
     ):
 
         self.logger = logger
@@ -69,7 +69,7 @@ class PatentXmlToTabular:
                     self.xml_files.append(path)
                 elif path.is_dir():
                     self.xml_files.extend(
-                        path.glob(f'{"**/" if recurse else ""}*.[xX][mM][lL]')
+                        path.glob(f'{"**/" if kwargs["recurse"] else ""}*.[xX][mM][lL]')
                     )
                 else:
                     self.logger.fatal("specified input is invalid")
@@ -168,8 +168,9 @@ class PatentXmlToTabular:
                     assert len(elems) == 1
                 except AssertionError as exc:
                     exc.msg = (
-                        f"Multiple elements found for {path}!"
-                        + "Should your config file include a joiner, or new entity definition?"
+                        f"Multiple elements found for {path}! "
+                        + "Should your config file include a joiner, or new entity "
+                        + "definition?"
                         + "\n\n- "
                         + "\n- ".join(self.get_text(el) for el in elems)
                     )
@@ -254,9 +255,9 @@ class PatentXmlToTabular:
 
     def get_fieldnames(self):
         """ On python >=3.7, dictionaries maintain key order, so fields are guaranteed to be
-            returned in the order in which they appear in the config file.  To guarantee this
-            on versions of python <3.7 (insofar as it matters), collections.OrderedDict would
-            have to be used here.
+            returned in the order in which they appear in the config file.  To guarantee
+            this on versions of python <3.7 (insofar as it matters),
+            collections.OrderedDict would have to be used here.
         """
 
         fieldnames = defaultdict(list)
@@ -284,8 +285,8 @@ class PatentXmlToTabular:
                     _fieldnames.append(config["filename_field"])
                 for subconfig in config["fields"].values():
                     add_fieldnames(subconfig, _fieldnames, entity)
-                # different keys may be appending rows to the same table(s), so we're appending
-                #  to lists of fieldnames here.
+                # different keys may be appending rows to the same table(s), so we're
+                #  appending to lists of fieldnames here.
                 fieldnames[entity] = list(
                     dict.fromkeys(fieldnames[entity] + _fieldnames).keys()
                 )
@@ -380,7 +381,7 @@ def main():
         "--config",
         action="store",
         required=True,
-        help="config file (in JSON format) describing the fields to extract from the XML",
+        help="config file (in YAML format)",
     )
 
     arg_parser.add_argument(
@@ -429,7 +430,7 @@ def main():
 
     if args.output_type == "sqlite":
         try:
-            from sqlite_utils import Database as SqliteDB
+            from sqlite_utils import Database as SqliteDB  # noqa
         except ImportError:
             logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
             raise
