@@ -105,14 +105,23 @@ class PatentXmlToTabular:
             data = _fh.read()
         return re.split(r"\n(?=<\?xml)", data)
 
-    @staticmethod
-    def yield_xml_doc(filepath):
+    def yield_xml_doc(self, filepath):
         xml_doc = []
         with open(filepath, "r") as _fh:
-            for line in _fh:
-                if line.startswith("<?xml"):
-                    if xml_doc and not xml_doc[1].startswith("<!DOCTYPE sequence-cwu"):
-                        yield "".join(xml_doc)
+            for i, line in enumerate(_fh):
+                if line.startswith("<?xml "):
+                    try:
+                        if xml_doc and not xml_doc[1].startswith(
+                            "<!DOCTYPE sequence-cwu"
+                        ):
+                            yield "".join(xml_doc)
+                    except Exception as exc:
+                        self.logger.warning(exc.args[0])
+                        self.logger.debug(
+                            "Unexpected XML document at line %d:\n%s", i, xml_doc
+                        )
+                        if not self.continue_on_error:
+                            raise SystemExit()
                     xml_doc = []
                 xml_doc.append(line)
 
