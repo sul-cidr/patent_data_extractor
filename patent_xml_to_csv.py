@@ -114,7 +114,7 @@ class PatentXmlToTabular:
                         if xml_doc and not xml_doc[1].startswith(
                             "<!DOCTYPE sequence-cwu"
                         ):
-                            yield "".join(xml_doc)
+                            yield (i, "".join(xml_doc))
                     except Exception as exc:
                         self.logger.warning(exc.args[0])
                         self.logger.debug(
@@ -125,7 +125,7 @@ class PatentXmlToTabular:
                     xml_doc = []
                 xml_doc.append(line)
 
-            yield "".join(xml_doc)
+            yield (i, "".join(xml_doc))
 
     def init_cache_vars(self):
         self.tables = defaultdict(list)
@@ -231,12 +231,12 @@ class PatentXmlToTabular:
             + "\n ".join(pformat(config).split("\n"))
         )
 
-    def process_doc(self, doc):
-
+    def parse_tree(self, doc):
         doc = replace_missing_mathml_ents(doc)
+        return etree.parse(BytesIO(doc.encode("utf8")), self.parser)
 
-        tree = etree.parse(BytesIO(doc.encode("utf8")), self.parser)
-
+    def process_doc(self, doc):
+        tree = self.parse_tree(doc)
         for path, config in self.config.items():
             self.process_path(tree, path, config, {})
 
@@ -246,7 +246,7 @@ class PatentXmlToTabular:
             self.logger.info(colored("Processing %s...", "green"), input_file.resolve())
             self.current_filename = input_file.resolve().name
 
-            for i, doc in enumerate(self.yield_xml_doc(input_file)):
+            for i, (linenum, doc) in enumerate(self.yield_xml_doc(input_file)):
                 if i % 100 == 0:
                     self.logger.debug(
                         colored("Processing document %d...", "cyan"), i + 1
@@ -259,16 +259,29 @@ class PatentXmlToTabular:
                     if not self.continue_on_error:
                         raise SystemExit()
 
-                except (AssertionError, etree.XMLSyntaxError) as exc:
+                except etree.XMLSyntaxError as exc:
                     self.logger.debug(doc)
-                    p_id = re.search(
-                        r"<B210><DNUM><PDAT>(\d+)<\/PDAT><\/DNUM><\/B210>", doc
-                    ).group(1)
                     self.logger.warning(
-                        colored("ID %s: %s (record has not been parsed)", "red"),
-                        p_id,
+                        colored(
+                            "Unable to parse XML document ending at line %d "
+                            "(enable debugging -v to dump doc to console):\n\t%s",
+                            "red",
+                        ),
+                        linenum,
                         exc.msg,
                     )
+                    if not self.continue_on_error:
+                        raise SystemExit()
+
+                except AssertionError as exc:
+                    self.logger.debug(doc)
+                    pk = self.get_pk(
+                        self.parse_tree(doc), next(iter(self.config.values()))
+                    )
+                    self.logger.warning(
+                        colored("ID %s: (record has not been parsed)", "red"), pk
+                    )
+                    self.logger.warning(exc.msg)
                     if not self.continue_on_error:
                         raise SystemExit()
 
