@@ -1,0 +1,386 @@
+patent-application-publication:
+  entity: application
+  pk: subdoc-bibliographic-information/document-id/doc-number
+  filename_field: source_file
+  fields:
+    # Bibliographic info
+    subdoc-bibliographic-information/document-id/doc-number: doc_number
+    subdoc-bibliographic-information/document-id/kind_code: kind_code
+    subdoc-bibliographic-information/domestic-filing-data/filing-date: filing_date
+    subdoc-bibliographic-information/domestic-filing-data/application-number-series-code: series_code
+    subdoc-bibliographic-information/publication-filing-type: filing_type
+    subdoc-bibliographic-information/domestic-filing-data/application_number/doc-number: app_number
+    subdoc-bibliographic-information/document-id/document-date: doc_date
+    subdoc-bibliographic-information/document-id/country-code: country_code
+
+    # Assignee information
+    subdoc-bibliographic-information:
+      entity: assignee
+      fields:
+        organization-name: org_name
+        assignee-type: role
+        name/given-name: given_name
+        name/family-name: last_name
+
+        address/address-1: address_1
+        address/address-2: address_2
+        address/city: res_city
+        address/state: res_state
+        address/country/country-code: res_country
+        address/postalcode: res_postal
+
+
+    # Address info
+    subdoc-bibliographic-information/correspondence-address/address/city: correspondence_city
+    subdoc-bibliographic-information/correspondence-address/address/state: correspondence_state
+    subdoc-bibliographic-information/correspondence-address/address/postalcode: correspondence_postal
+    subdoc-bibliographic-information/correspondence-address/address/country/country-code: correspondence_country
+    subdoc-bibliographic-information/correspondence-address/address/address-1: correspondence_address_1
+    subdoc-bibliographic-information/correspondence-address/address/address-2: correspondence_address_2
+    subdoc-bibliographic-information/correspondence-address/name-1: correspondence_name_1
+    subdoc-bibliographic-information/correspondence-address/name-2: correspondence_name_2
+
+    # Crosswalk information
+    subdoc-bibliographic-information/technical-information/classification-us/classification-us-primary/uspc/class: USPC_class
+    subdoc-bibliographic-information/technical-information/classification-us/classification-us-primary/uspc/subclass: USPC_subclass
+
+    subdoc-bibliographic-information/technical-information/classification-ipc/classification-ipc-edition: IPC_edition
+    subdoc-bibliographic-information/technical-information/classification-ipc/classification-ipc-primary/ipc: IPC_main
+    subdoc-bibliographic-information/technical-information/classification-ipc/classification-ipc-secondary/ipc:
+      fieldname: IPC_further
+      joiner: "|"
+
+    subdoc-bibliographic-information/international-conventions/pct-application/document-id/doc-number: PCT_app_number
+
+    # Claims
+    subdoc-claims/claim:
+      entity: claim
+      fields:
+        "*":
+          fieldname: claim_text
+          joiner: "\n"
+
+
+    # Provisional applications techincally aren't "parents"
+    subdoc-bibliographic-information/continuity-data/non-provisional-of-provisional:
+      entity: provisional_application
+      fields:
+        document-id/doc_number: doc_number
+        document-id/date: date
+
+
+
+
+    # Related documents
+
+    ## Parent documents
+
+    ### Continuations
+    subdoc-bibliographic-information/continuity-data/continuations/continuation-of/parent-child/parent:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: continuation
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+        parent-status: status
+
+
+
+    subdoc-bibliographic-information/continuity-data/continuations/continuation-in-part-of/parent-child/parent:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: continuation_in_part
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+        parent-status: status
+
+    subdoc-bibliographic-information/continuity-data/continuations/continuing-reissue-of/parent-child/parent:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: continuing_reissue
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+        parent-status: status
+
+
+    ### Non-Continuations
+
+    subdoc-bibliographic-information/continuity-data/division-of/parent-child/parent:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: divisional
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+        parent-status: status
+
+
+    subdoc-bibliographic-information/continuity-data/a-371-of-international/parent-child/parent:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: a_371_of_international
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+        parent-status: status
+
+
+    subdoc-bibliographic-information/continuity-data/substitution-for/parent-child/parent:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: substitution
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+        parent-status: status
+
+
+    subdoc-bibliographic-information/continuity-data/reissue-of/parent-child/parent:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: reissue
+        document-id:
+          fieldname: relationship
+          enum_type: parent
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+        parent-status: status
+
+
+    ## Child documents
+    ### Continuations
+    subdoc-bibliographic-information/continuity-data/continuations/continuation-of/parent-child/child:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: continuation
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+
+
+    subdoc-bibliographic-information/continuity-data/continuations/continuation-in-part-of/parent-child/child:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: continuation_in_part
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+
+    subdoc-bibliographic-information/continuity-data/continuations/continuing-reissue-of/parent-child/child:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: continuing_reissue
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+
+
+    ### Non-Continuations
+
+    subdoc-bibliographic-information/continuity-data/division-of/parent-child/child:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: divisional
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+
+
+    subdoc-bibliographic-information/continuity-data/a-371-of-international/parent-child/child:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: a_371_of_international
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+
+
+    subdoc-bibliographic-information/continuity-data/substitution-for/parent-child/child:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: substitution
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+
+
+    subdoc-bibliographic-information/continuity-data/reissue-of/parent-child/child:
+      entity: related_document
+      fields:
+        # These values are fixed for all related documents found at this location
+        document-id:
+          fieldname: type
+          enum_type: reissue
+        document-id:
+          fieldname: relationship
+          enum_type: child
+
+        # These vary from record to record
+        document-id/kind-code: kind_code
+        document-id/doc-number: doc_number
+        document-id/document-date: date
+        document-id/country-code: country_code
+
+
+    # Inventors
+    subdoc-bibliographic-information/inventors/first-named-inventor:
+      entity: inventor
+      fields:
+
+        name/family-name: last_name
+        name/given-name: given_name
+
+        # Address if they are American
+        residence/residence-us/city: res_city
+        residence/residence-us/state: res_state
+        residence/residence-us/country_code: res_country
+
+        # Address if they are foreign
+        residence/residence-non-us/city: res_city
+        residence/residence-non-us/country_code: res_country
+
+        authority-applicant: authority_applicant
+
+    subdoc-bibliographic-information/inventors/inventor:
+      entity: inventor
+      fields:
+
+        name/family-name: last_name
+        name/given-name: given_name
+
+        # Address if they are American
+        residence/residence-us/city: res_city
+        residence/residence-us/state: res_state
+        residence/residence-us/country_code: res_country
+
+        # Address if they are foreign
+        residence/residence-non-us/city: res_city
+        residence/residence-non-us/country_code: res_country
+
+        authority-applicant: authority_applicant
+
+    # Foreign filings
+    subdoc-bibliographic-information/foreign-priority-data:
+      entity: foreign_filing
+      fields:
+        priority-application-number/doc-number: doc_number
+        filing-date: date
+        country-code: country_code
