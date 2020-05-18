@@ -125,6 +125,8 @@ class PatentXmlToTabular:
                     xml_doc = []
                 xml_doc.append(line)
 
+            yield "".join(xml_doc)
+
     def init_cache_vars(self):
         self.tables = defaultdict(list)
         self.table_pk_idx = defaultdict(lambda: defaultdict(int))
