@@ -241,6 +241,9 @@ class PatentXmlToTabular:
             self.process_path(tree, path, config, {})
 
     def convert(self):
+        if not self.xml_files:
+            self.logger.warning(colored("No input files to process!", "red",))
+
         for input_file in self.xml_files:
 
             self.logger.info(colored("Processing %s...", "green"), input_file.resolve())
