@@ -27,7 +27,7 @@ def main():
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
     for xml_doc in yield_xml_doc(sys.argv[1]):
-        if xml_doc["start"] < int(sys.argv[2]) < xml_doc["end"]:
+        if xml_doc["start"] <= int(sys.argv[2]) <= xml_doc["end"]:
             print(xml_doc["doc"])
             break
 
