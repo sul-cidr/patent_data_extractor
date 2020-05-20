@@ -114,7 +114,7 @@ class PatentXmlToTabular:
                         if xml_doc and not xml_doc[1].startswith(
                             "<!DOCTYPE sequence-cwu"
                         ):
-                            yield (i, "".join(xml_doc))
+                            yield (i - len(xml_doc), "".join(xml_doc))
                     except Exception as exc:
                         self.logger.warning(exc.args[0])
                         self.logger.debug(
@@ -125,7 +125,7 @@ class PatentXmlToTabular:
                     xml_doc = []
                 xml_doc.append(line)
 
-            yield (i, "".join(xml_doc))
+            yield (i - len(xml_doc), "".join(xml_doc))
 
     def init_cache_vars(self):
         self.tables = defaultdict(list)
@@ -282,7 +282,11 @@ class PatentXmlToTabular:
                         self.parse_tree(doc), next(iter(self.config.values()))
                     )
                     self.logger.warning(
-                        colored("ID %s: (record has not been parsed)", "red"), pk
+                        colored(
+                            "Record ID %s @%d: (record has not been parsed)", "red"
+                        ),
+                        pk,
+                        linenum,
                     )
                     self.logger.warning(exc.msg)
                     if not self.continue_on_error:
