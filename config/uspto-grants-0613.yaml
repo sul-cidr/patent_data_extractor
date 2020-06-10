@@ -34,12 +34,24 @@ us-patent-grant:
     us-bibliographic-data-grant/publication-reference/document-id/date: doc_date
 
 
-    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/section: IPC_section
-    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/class: IPC_class
-    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/subclass: IPC_subclass
-    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/main-group: IPC_main_group
-    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/subgroup: IPC_subgroup
-    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/ipc-version-indicator/date: IPC_edition
+    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/section: 
+        fieldname: IPC_section
+        joiner: "|"
+    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/class: 
+        fieldname: IPC_class
+        joiner: "|"
+    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/subclass: 
+        fieldname: IPC_subclass
+        joiner: "|"
+    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/main-group: 
+        fieldname: IPC_main_group
+        joiner: "|"
+    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/subgroup: 
+        fieldname: IPC_subgroup
+        joiner: "|"
+    us-bibliographic-data-grant/classifications-ipcr/classification-ipcr/ipc-version-indicator/date: 
+        fieldname: IPC_edition
+        joiner: "|"
 
 
     us-bibliographic-data-grant/classification-national/country : USPC_country

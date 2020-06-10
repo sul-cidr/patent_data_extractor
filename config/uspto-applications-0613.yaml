@@ -33,15 +33,29 @@ us-patent-application:
     # Classification Information
     # USPC
     us-bibliographic-data-application/classification-national/main-classification: USPC_class
-    us-bibliographic-data-application/classification-national/further-classification: USPC_subclass
+    us-bibliographic-data-application/classification-national/further-classification: 
+        fieldname: USPC_subclass
+        joiner: "|"
 
     ## IPC
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/ipc-version-indicator/date: IPC_edition
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/section: IPC_section
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/class: IPC_class
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/subclass: IPC_subclass
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/main-group: IPC_main_group
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/class: IPC_subgroup
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/ipc-version-indicator/date: 
+        fieldname: IPC_edition
+        joiner: "|"
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/section: 
+        fieldname: IPC_section
+        joiner: "|"
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/class: 
+        fieldname: IPC_class
+        joiner: "|"
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/subclass: 
+        fieldname: IPC_subclass
+        joiner: "|"
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/main-group: 
+        fieldname: IPC_main_group
+        joiner: "|"
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/class: 
+        fieldname: IPC_subgroup
+        joiner: "|"
 
 
     # Foreign filings
