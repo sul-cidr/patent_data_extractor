@@ -14,7 +14,7 @@ patent-application-publication:
     subdoc-bibliographic-information/document-id/country-code: country_code
 
     # Assignee information
-    subdoc-bibliographic-information:
+    subdoc-bibliographic-information/assignee:
       entity: assignee
       fields:
         organization-name: org_name
@@ -65,8 +65,8 @@ patent-application-publication:
     subdoc-bibliographic-information/continuity-data/non-provisional-of-provisional:
       entity: provisional_application
       fields:
-        document-id/doc_number: doc_number
-        document-id/date: date
+        document-id/doc-number: doc_number
+        document-id/document-date: date
 
 
 

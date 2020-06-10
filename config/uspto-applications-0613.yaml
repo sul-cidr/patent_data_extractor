@@ -57,8 +57,9 @@ us-patent-application:
       entity: inventor
       fields:
         # Name information
-        addressbook/name/last-name: last_name
-        addressbook/name/first-name: given_name
+        addressbook/last-name: last_name
+        addressbook/first-name: given_name
+        addressbook/middle-name: middle_name
 
         # Residence information
         addressbook/address/country: res_country
