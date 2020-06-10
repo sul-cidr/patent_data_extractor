@@ -57,7 +57,7 @@ class DTDResolver(etree.Resolver):
 
 class PatentXmlToTabular:
     def __init__(
-        self, xml_input, config, dtd_path, recurse, output_path, logger, **kwargs,
+        self, xml_input, config, dtd_path, output_path, output_type, logger, **kwargs,
     ):
 
         self.logger = logger
@@ -69,7 +69,7 @@ class PatentXmlToTabular:
                     self.xml_files.append(path)
                 elif path.is_dir():
                     self.xml_files.extend(
-                        path.glob(f'{"**/" if recurse else ""}*.[xX][mM][lL]')
+                        path.glob(f'{"**/" if kwargs["recurse"] else ""}*.[xX][mM][lL]')
                     )
                 else:
                     self.logger.fatal("specified input is invalid")
@@ -80,9 +80,9 @@ class PatentXmlToTabular:
         self.output_path = Path(output_path)
         self.output_path.mkdir(parents=True, exist_ok=True)
 
-        self.config = yaml.safe_load(open(config))
+        self.output_type = output_type
 
-        self.tables = defaultdict(list)
+        self.config = yaml.safe_load(open(config))
 
         if kwargs["no_validate"]:
             self.parser = etree.XMLParser(
@@ -96,22 +96,40 @@ class PatentXmlToTabular:
         self.continue_on_error = kwargs["continue_on_error"]
         self.parser.resolvers.add(DTDResolver(dtd_path))
 
+        self.fieldnames = self.get_fieldnames()
+        self.init_cache_vars()
+
     @staticmethod
     def get_all_xml_docs(filepath):
         with open(filepath, "r") as _fh:
             data = _fh.read()
         return re.split(r"\n(?=<\?xml)", data)
 
-    @staticmethod
-    def yield_xml_doc(filepath):
+    def yield_xml_doc(self, filepath):
         xml_doc = []
         with open(filepath, "r") as _fh:
-            for line in _fh:
-                if line.startswith("<?xml"):
-                    if xml_doc and not xml_doc[1].startswith("<!DOCTYPE sequence-cwu"):
-                        yield "".join(xml_doc)
+            for i, line in enumerate(_fh):
+                if line.startswith("<?xml "):
+                    try:
+                        if xml_doc and not xml_doc[1].startswith(
+                            "<!DOCTYPE sequence-cwu"
+                        ):
+                            yield (i - len(xml_doc), "".join(xml_doc))
+                    except Exception as exc:
+                        self.logger.warning(exc.args[0])
+                        self.logger.debug(
+                            "Unexpected XML document at line %d:\n%s", i, xml_doc
+                        )
+                        if not self.continue_on_error:
+                            raise SystemExit()
                     xml_doc = []
                 xml_doc.append(line)
+
+            yield (i - len(xml_doc), "".join(xml_doc))
+
+    def init_cache_vars(self):
+        self.tables = defaultdict(list)
+        self.table_pk_idx = defaultdict(lambda: defaultdict(int))
 
     @staticmethod
     def get_text(xpath_result):
@@ -142,7 +160,8 @@ class PatentXmlToTabular:
             if pk:
                 record["id"] = pk
             else:
-                record["id"] = f"{len(self.tables[entity])}"
+                record["id"] = f"{parent_pk}_{self.table_pk_idx[entity][parent_pk]}"
+                self.table_pk_idx[entity][parent_pk] += 1
 
             if parent_pk:
                 record[f"{parent_entity}_id"] = parent_pk
@@ -168,8 +187,9 @@ class PatentXmlToTabular:
                     assert len(elems) == 1
                 except AssertionError as exc:
                     exc.msg = (
-                        f"Multiple elements found for {path}!"
-                        + "Should your config file include a joiner, or new entity definition?"
+                        f"Multiple elements found for {path}! "
+                        + "Should your config file include a joiner, or new entity "
+                        + "definition?"
                         + "\n\n- "
                         + "\n- ".join(self.get_text(el) for el in elems)
                     )
@@ -211,52 +231,85 @@ class PatentXmlToTabular:
             + "\n ".join(pformat(config).split("\n"))
         )
 
-    def process_doc(self, doc):
-
+    def parse_tree(self, doc):
         doc = replace_missing_mathml_ents(doc)
+        return etree.parse(BytesIO(doc.encode("utf8")), self.parser)
 
-        tree = etree.parse(BytesIO(doc.encode("utf8")), self.parser)
-
+    def process_doc(self, doc):
+        tree = self.parse_tree(doc)
         for path, config in self.config.items():
             self.process_path(tree, path, config, {})
 
     def convert(self):
+        if not self.xml_files:
+            self.logger.warning(colored("No input files to process!", "red",))
+
         for input_file in self.xml_files:
 
             self.logger.info(colored("Processing %s...", "green"), input_file.resolve())
             self.current_filename = input_file.resolve().name
 
-            for i, doc in enumerate(self.yield_xml_doc(input_file)):
+            for i, (linenum, doc) in enumerate(self.yield_xml_doc(input_file)):
                 if i % 100 == 0:
                     self.logger.debug(
                         colored("Processing document %d...", "cyan"), i + 1
                     )
                 try:
                     self.process_doc(doc)
+
                 except LookupError as exc:
                     self.logger.warning(exc.args[0])
                     if not self.continue_on_error:
                         raise SystemExit()
-                except (AssertionError, etree.XMLSyntaxError) as exc:
+
+                except etree.XMLSyntaxError as exc:
                     self.logger.debug(doc)
-                    p_id = re.search(
-                        r"<B210><DNUM><PDAT>(\d+)<\/PDAT><\/DNUM><\/B210>", doc
-                    ).group(1)
                     self.logger.warning(
-                        colored("ID %s: %s (record has not been parsed)", "red"),
-                        p_id,
+                        colored(
+                            "Unable to parse XML document ending at line %d "
+                            "(enable debugging -v to dump doc to console):\n\t%s",
+                            "red",
+                        ),
+                        linenum,
                         exc.msg,
                     )
                     if not self.continue_on_error:
                         raise SystemExit()
 
+                except AssertionError as exc:
+                    self.logger.debug(doc)
+                    pk = self.get_pk(
+                        self.parse_tree(doc), next(iter(self.config.values()))
+                    )
+                    self.logger.warning(
+                        colored(
+                            "Record ID %s @%d: (record has not been parsed)", "red"
+                        ),
+                        pk,
+                        linenum,
+                    )
+                    self.logger.warning(exc.msg)
+                    if not self.continue_on_error:
+                        raise SystemExit()
+
             self.logger.info(colored("...%d records processed!", "green"), i + 1)
+
+            self.flush_to_disk()
+
+    def flush_to_disk(self):
+        if self.output_type == "csv":
+            self.write_csv_files()
+
+        if self.output_type == "sqlite":
+            self.write_sqlitedb()
+
+        self.init_cache_vars()
 
     def get_fieldnames(self):
         """ On python >=3.7, dictionaries maintain key order, so fields are guaranteed to be
-            returned in the order in which they appear in the config file.  To guarantee this
-            on versions of python <3.7 (insofar as it matters), collections.OrderedDict would
-            have to be used here.
+            returned in the order in which they appear in the config file.  To guarantee
+            this on versions of python <3.7 (insofar as it matters),
+            collections.OrderedDict would have to be used here.
         """
 
         fieldnames = defaultdict(list)
@@ -284,8 +337,8 @@ class PatentXmlToTabular:
                     _fieldnames.append(config["filename_field"])
                 for subconfig in config["fields"].values():
                     add_fieldnames(subconfig, _fieldnames, entity)
-                # different keys may be appending rows to the same table(s), so we're appending
-                #  to lists of fieldnames here.
+                # different keys may be appending rows to the same table(s), so we're
+                #  appending to lists of fieldnames here.
                 fieldnames[entity] = list(
                     dict.fromkeys(fieldnames[entity] + _fieldnames).keys()
                 )
@@ -304,17 +357,27 @@ class PatentXmlToTabular:
 
     def write_csv_files(self):
 
-        fieldnames = self.get_fieldnames()
-
         self.logger.info(
             colored("Writing csv files to %s ...", "green"), self.output_path.resolve()
         )
         for tablename, rows in self.tables.items():
             output_file = self.output_path / f"{tablename}.csv"
-            with output_file.open("w") as _fh:
-                writer = csv.DictWriter(_fh, fieldnames=fieldnames[tablename])
-                writer.writeheader()
-                writer.writerows(rows)
+
+            if output_file.exists():
+                self.logger.debug(
+                    colored("CSV file %s exists; records will be appended.", "yellow",),
+                    output_file,
+                )
+
+                with output_file.open("a") as _fh:
+                    writer = csv.DictWriter(_fh, fieldnames=self.fieldnames[tablename])
+                    writer.writerows(rows)
+
+            else:
+                with output_file.open("w") as _fh:
+                    writer = csv.DictWriter(_fh, fieldnames=self.fieldnames[tablename])
+                    writer.writeheader()
+                    writer.writerows(rows)
 
     def write_sqlitedb(self):
         try:
@@ -323,13 +386,12 @@ class PatentXmlToTabular:
             self.logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
             raise
 
-        fieldnames = self.get_fieldnames()
         db_path = (self.output_path / "db.sqlite").resolve()
 
         if db_path.exists():
             self.logger.warning(
                 colored(
-                    "Sqlite data base %s  exists; records will be appended.", "yellow"
+                    "Sqlite database %s  exists; records will be appended.", "yellow"
                 ),
                 db_path,
             )
@@ -339,8 +401,8 @@ class PatentXmlToTabular:
             colored("Writing records to %s ...", "green"), db_path,
         )
         for tablename, rows in self.tables.items():
-            params = {"column_order": fieldnames[tablename]}
-            if "id" in fieldnames[tablename]:
+            params = {"column_order": self.fieldnames[tablename]}
+            if "id" in self.fieldnames[tablename]:
                 params["pk"] = "id"
                 params["not_null"] = {"id"}
             db[tablename].insert_all(rows, **params)
@@ -380,7 +442,7 @@ def main():
         "--config",
         action="store",
         required=True,
-        help="config file (in JSON format) describing the fields to extract from the XML",
+        help="config file (in YAML format)",
     )
 
     arg_parser.add_argument(
@@ -429,19 +491,13 @@ def main():
 
     if args.output_type == "sqlite":
         try:
-            from sqlite_utils import Database as SqliteDB
+            from sqlite_utils import Database as SqliteDB  # noqa
         except ImportError:
             logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
             raise
 
     convertor = PatentXmlToTabular(**vars(args), logger=logger)
     convertor.convert()
-
-    if args.output_type == "csv":
-        convertor.write_csv_files()
-
-    if args.output_type == "sqlite":
-        convertor.write_sqlitedb()
 
 
 if __name__ == "__main__":

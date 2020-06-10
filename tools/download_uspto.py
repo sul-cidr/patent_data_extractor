@@ -35,12 +35,15 @@ def get_urls(record_type, year):
     response = requests.get(f"{URLBASE.format(record_type=record_type)}{year}")
     soup = BeautifulSoup(response.text, "html.parser")
     return [
-        f"{URLBASE.format(record_type=record_type)}{year}/{link['href']}"
+        (
+            f"{URLBASE.format(record_type=record_type)}{year}/{link['href']}",
+            int(link.parent.find_next_sibling("td").string, 10),
+        )
         for link in soup.select("a[href$=.zip]")
     ]
 
 
-def get_file(url, output_folder="."):
+def get_file(url, total_size, output_folder="."):
     """ Retrieve a file from a URL link and store to `output_folder`. """
 
     output_path = Path(output_folder)
@@ -49,34 +52,41 @@ def get_file(url, output_folder="."):
 
     filename = output_path / url.split("/")[-1]
 
-    if filename.exists():
+    if filename.exists() and filename.stat().st_size == total_size:
         logging.warning(
-            colored('Output file "%s" exists, not overwriting!', "yellow"), filename
+            colored('Complete output file "%s" exists, not overwriting!', "yellow"),
+            filename,
         )
         return
 
-    with filename.open("wb") as _fh:
-        logging.info("\nDownloading %s...", filename)
-        response = requests.get(url, allow_redirects=True, stream=True)
-        total_length = response.headers.get("content-length")
+    with filename.open("ab") as _fh:
+        headers = {}
+        pos = _fh.tell()
 
-        if total_length is None:
-            _fh.write(response.content)
+        if pos:
+            headers["Range"] = f"bytes={pos}-"
+            logging.info("\nResuming %s...", filename)
         else:
-            downloaded = 0
-            total_length = int(total_length)
-            for data in response.iter_content(
-                chunk_size=max(min(total_length // 100, 2 ** 20), 2 ** 12)
-            ):
-                downloaded += len(data)
-                _fh.write(data)
-                done = int(50 * downloaded / total_length)
-                print(
-                    f"\r[{'=' * done}{' ' * (50 - done)}] "
-                    f"({fmt_size(downloaded)} / {fmt_size(total_length)})",
-                    end=" " * 5,
-                )
-            print()
+            logging.info("\nDownloading %s...", filename)
+
+        response = requests.get(url, headers=headers, allow_redirects=True, stream=True)
+        content_length = response.headers.get("content-length")
+
+        content_length = int(content_length)
+        assert content_length == total_size - pos
+
+        for data in response.iter_content(
+            chunk_size=max(min(total_size // 100, 2 ** 20), 2 ** 12)
+        ):
+            pos += len(data)
+            _fh.write(data)
+            done = int(50 * pos / total_size)
+            print(
+                f"\r[{'=' * done}{' ' * (50 - done)}] "
+                f"({fmt_size(pos)} / {fmt_size(total_size)})",
+                end=" " * 5,
+            )
+        print()
 
 
 def main():
@@ -125,8 +135,8 @@ def main():
             colored("Writing files for %s to %s...", "blue"), year, output_path
         )
         urls = get_urls(args.record_type, year)
-        for url in urls:
-            get_file(url, output_folder=output_path)
+        for url, size in urls:
+            get_file(url, size, output_folder=output_path)
 
 
 if __name__ == "__main__":

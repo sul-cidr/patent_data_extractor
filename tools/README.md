@@ -1,6 +1,7 @@
 ## UTILITY SCRIPTS
 
 ### download_uspto.py
+Download application or grant files direct from the USPTO site.  Now includes the ability to resume broken downloads :)
 
 ```
 usage: download_uspto.py [-h] [-v] [-q] --years YEARS [YEARS ...]
