@@ -1,5 +1,5 @@
 us-patent-grant:
-  entity: patent 
+  entity: patent
   pk: us-bibliographic-data-grant/application-reference/document-id/doc-number
   filename_field: source_file
   fields:
@@ -41,10 +41,10 @@ us-patent-grant:
     us-bibliographic-data-grant/classification-ipc/edition: IPC_edition
 
 
-    us-bibliographic-data-grant/classification-national/country: USPC_country
-    us-bibliographic-data-grant/classification-national/edition: USPC_edition
-    us-bibliographic-data-grant/classification-national/main-classification: USPC_primary
-    us-bibliographic-data-grant/classification-national/further-classification:
+    us-bibliographic-data-grant/classification-national/country : USPC_country
+    us-bibliographic-data-grant/classification-national/edition : USPC_edition
+    us-bibliographic-data-grant/classification-national/main-classification : USPC_primary
+    us-bibliographic-data-grant/classification-national/further-classification :
       fieldname: USPC_secondary
       joiner: "|"
 
@@ -112,3 +112,7 @@ us-patent-grant:
       fields:
         document-id/doc-number: doc_number
         document-id/date: date
+
+    #Saves the name of the file where the patent was retreived
+    #Note this is not present in the XML; special handling by parser
+    filename_field: source_file
