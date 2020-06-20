@@ -29,7 +29,7 @@ optional arguments:
   -d DTD_PATH, --dtd-path DTD_PATH
                         path to folder where dtds and related documents can be
                         found
-  --no-validate         skip validation of input XML (for speed)
+  --validate            validate input XML (against supplied DTDs)
   -o OUTPUT_PATH, --output-path OUTPUT_PATH
                         path to folder in which to save output (will be
                         created if necessary)

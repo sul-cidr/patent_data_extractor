@@ -84,13 +84,13 @@ class PatentXmlToTabular:
 
         self.config = yaml.safe_load(open(config))
 
-        if kwargs["no_validate"]:
+        if kwargs["validate"]:
             self.parser = etree.XMLParser(
-                load_dtd=True, resolve_entities=True, ns_clean=True
+                load_dtd=True, resolve_entities=True, ns_clean=True, dtd_validation=True
             )
         else:
             self.parser = etree.XMLParser(
-                load_dtd=True, resolve_entities=True, ns_clean=True, dtd_validation=True
+                load_dtd=True, resolve_entities=True, ns_clean=True
             )
 
         self.continue_on_error = kwargs["continue_on_error"]
@@ -454,7 +454,7 @@ def main():
     )
 
     arg_parser.add_argument(
-        "--no-validate",
+        "--validate",
         action="store_true",
         help="skip validation of input XML (for speed)",
     )
