@@ -50,11 +50,3 @@ See [config/](config/) for examples -- proper documentation (perhaps in the wiki
 
 ### UTILITY SCRIPTS
 See [tools](tools/).
-
-
-## TODO
-* (Option to?) write records to disk as they're parsed, so as to avoid keeping large amounts of data in memory
-	- Note that the 331mb sample file I've been working with results in a peak memory consumption (RSS) of about 140mb, that's all, so the speed advantage (admittedly as-yet unquantified) probably outweighs the likelihood of encountering memory shortages.
-* modularize the output code, leaving scope to output other kinds of files (SQL statements, pSQL scripts, ~~sqlite DBs~~, HDF5 / arrow / other columnar formats, write directly to a DB server, etc.)
-* probably lots more...
-
