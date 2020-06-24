@@ -142,11 +142,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: continuation
-        document-id:
-          fieldname: relationship
-          enum_type: parent
+          - fieldname: type
+            enum_type: continuation
+          - fieldname: relationship
+            enum_type: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -160,11 +159,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: continuation_in_part
-        document-id:
-          fieldname: relationship
-          enum_type: parent
+          - fieldname: type
+            enum_type: continuation_in_part
+          - fieldname: relationship
+            enum_type: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -178,11 +176,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: continuing_reissue
-        document-id:
-          fieldname: relationship
-          enum_type: parent
+          - fieldname: type
+            enum_type: continuing_reissue
+          - fieldname: relationship
+            enum_type: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -199,11 +196,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: addition
-        document-id:
-          fieldname: relationship
-          enum_type: parent
+          - fieldname: type
+            enum_type: addition
+          - fieldname: relationship
+            enum_type: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -217,11 +213,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: division
-        document-id:
-          fieldname: relationship
-          enum_type: parent
+          - fieldname: type
+            enum_type: division
+          - fieldname: relationship
+            enum_type: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -235,11 +230,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: reissue
-        document-id:
-          fieldname: relationship
-          enum_type: parent
+          - fieldname: type
+            enum_type: reissue
+          - fieldname: relationship
+            enum_type: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -253,11 +247,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: reexamination
-        document-id:
-          fieldname: relationship
-          enum_type: parent
+          - fieldname: type
+            enum_type: reexamination
+          - fieldname: relationship
+            enum_type: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -271,11 +264,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: us_reexamination_reissue_merger
-        document-id:
-          fieldname: relationship
-          enum_type: parent
+          - fieldname: type
+            enum_type: us_reexamination_reissue_merger
+          - fieldname: relationship
+            enum_type: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -289,11 +281,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: substitution
-        document-id:
-          fieldname: relationship
-          enum_type: parent
+          - fieldname: type
+            enum_type: substitution
+          - fieldname: relationship
+            enum_type: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -307,11 +298,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: utility_model_basis
-        document-id:
-          fieldname: relationship
-          enum_type: parent
+          - fieldname: type
+            enum_type: utility_model_basis
+          - fieldname: relationship
+            enum_type: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -329,11 +319,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: continuation
-        document-id:
-          fieldname: relationship
-          enum_type: child
+          - fieldname: type
+            enum_type: continuation
+          - fieldname: relationship
+            enum_type: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -346,11 +335,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: continuation_in_part
-        document-id:
-          fieldname: relationship
-          enum_type: child
+          - fieldname: type
+            enum_type: continuation_in_part
+          - fieldname: relationship
+            enum_type: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -363,11 +351,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: continuing_reissue
-        document-id:
-          fieldname: relationship
-          enum_type: child
+          - fieldname: type
+            enum_type: continuing_reissue
+          - fieldname: relationship
+            enum_type: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -383,11 +370,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: addition
-        document-id:
-          fieldname: relationship
-          enum_type: child
+          - fieldname: type
+            enum_type: addition
+          - fieldname: relationship
+            enum_type: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -400,11 +386,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: division
-        document-id:
-          fieldname: relationship
-          enum_type: child
+          - fieldname: type
+            enum_type: division
+          - fieldname: relationship
+            enum_type: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -417,11 +402,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: reissue
-        document-id:
-          fieldname: relationship
-          enum_type: child
+          - fieldname: type
+            enum_type: reissue
+          - fieldname: relationship
+            enum_type: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -434,11 +418,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: reexamination
-        document-id:
-          fieldname: relationship
-          enum_type: child
+          - fieldname: type
+            enum_type: reexamination
+          - fieldname: relationship
+            enum_type: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -451,11 +434,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: us_reexamination_reissue_merger
-        document-id:
-          fieldname: relationship
-          enum_type: child
+          - fieldname: type
+            enum_type: us_reexamination_reissue_merger
+          - fieldname: relationship
+            enum_type: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -468,11 +450,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: substitution
-        document-id:
-          fieldname: relationship
-          enum_type: child
+          - fieldname: type
+            enum_type: substitution
+          - fieldname: relationship
+            enum_type: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -485,11 +466,10 @@ us-patent-application:
       fields:
         # These values are fixed for all related documents found at this location
         document-id:
-          fieldname: type
-          enum_type: utility_model_basis
-        document-id:
-          fieldname: relationship
-          enum_type: child
+          - fieldname: type
+            enum_type: utility_model_basis
+          - fieldname: relationship
+            enum_type: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
