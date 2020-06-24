@@ -172,14 +172,9 @@ class PatentXmlToTabular:
 
             self.tables[entity].append(record)
 
-    def process_path(
-        self, tree, path, config, record, parent_entity=None, parent_pk=None,
+    def process_field(
+        self, elems, tree, config, record, parent_entity=None, parent_pk=None
     ):
-
-        try:
-            elems = [tree.getroot()]
-        except AttributeError:
-            elems = tree.xpath("./" + path)
 
         if isinstance(config, str):
             if elems:
@@ -225,11 +220,28 @@ class PatentXmlToTabular:
                     record[config["fieldname"]] = config["enum_type"]
                 return
 
+        # We may have multiple configurations for this key (XPath expression)
+        if isinstance(config, list):
+            for subconfig in config:
+                self.process_field(elems, tree, subconfig, record, parent_entity)
+            return
+
         raise LookupError(
             f'Invalid configuration for key "{parent_entity}":'
             + "\n "
             + "\n ".join(pformat(config).split("\n"))
         )
+
+    def process_path(
+        self, tree, path, config, record, parent_entity=None, parent_pk=None,
+    ):
+
+        try:
+            elems = [tree.getroot()]
+        except AttributeError:
+            elems = tree.xpath("./" + path)
+
+        self.process_field(elems, tree, config, record, parent_entity, parent_pk)
 
     def parse_tree(self, doc):
         doc = replace_missing_mathml_ents(doc)
@@ -337,11 +349,17 @@ class PatentXmlToTabular:
                     _fieldnames.append(config["filename_field"])
                 for subconfig in config["fields"].values():
                     add_fieldnames(subconfig, _fieldnames, entity)
-                # different keys may be appending rows to the same table(s), so we're
-                #  appending to lists of fieldnames here.
+                # different keys (XPath expressions) may be appending rows to the same table(s),
+                #  so we're appending to lists of fieldnames here.
                 fieldnames[entity] = list(
                     dict.fromkeys(fieldnames[entity] + _fieldnames).keys()
                 )
+                return
+
+            # We may have multiple configurations for this key (XPath expression)
+            if isinstance(config, list):
+                for subconfig in config:
+                    add_fieldnames(subconfig, _fieldnames, parent_entity)
                 return
 
             raise LookupError(
