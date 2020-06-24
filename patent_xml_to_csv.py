@@ -172,26 +172,29 @@ class PatentXmlToTabular:
 
             self.tables[entity].append(record)
 
+    def add_string(self, path, elems, record, fieldname):
+        try:
+            assert len(elems) == 1
+        except AssertionError as exc:
+            exc.msg = (
+                f"Multiple elements found for {path}! "
+                + "Should your config file include a joiner, or new entity "
+                + "definition?"
+                + "\n\n- "
+                + "\n- ".join(self.get_text(el) for el in elems)
+            )
+            raise
+
+        # we've only one elem, and it's a simple mapping to a fieldname
+        record[fieldname] = self.get_text(elems[0])
+
     def process_field(
-        self, elems, tree, config, record, parent_entity=None, parent_pk=None
+        self, elems, tree, path, config, record, parent_entity=None, parent_pk=None
     ):
 
         if isinstance(config, str):
             if elems:
-                try:
-                    assert len(elems) == 1
-                except AssertionError as exc:
-                    exc.msg = (
-                        f"Multiple elements found for {path}! "
-                        + "Should your config file include a joiner, or new entity "
-                        + "definition?"
-                        + "\n\n- "
-                        + "\n- ".join(self.get_text(el) for el in elems)
-                    )
-                    raise
-
-                # we've only one elem, and it's a simple mapping to a fieldname
-                record[config] = self.get_text(elems[0])
+                self.add_string(path, elems, record, config)
             return
 
         if "entity" in config:
@@ -220,10 +223,15 @@ class PatentXmlToTabular:
                     record[config["fieldname"]] = config["enum_type"]
                 return
 
+            # just a mapping to a fieldname string
+            if len(config) == 1:
+                self.add_string(path, elems, record, config["fieldname"])
+                return
+
         # We may have multiple configurations for this key (XPath expression)
         if isinstance(config, list):
             for subconfig in config:
-                self.process_field(elems, tree, subconfig, record, parent_entity)
+                self.process_field(elems, tree, path, subconfig, record, parent_entity)
             return
 
         raise LookupError(
@@ -241,7 +249,7 @@ class PatentXmlToTabular:
         except AttributeError:
             elems = tree.xpath("./" + path)
 
-        self.process_field(elems, tree, config, record, parent_entity, parent_pk)
+        self.process_field(elems, tree, path, config, record, parent_entity, parent_pk)
 
     def parse_tree(self, doc):
         doc = replace_missing_mathml_ents(doc)
