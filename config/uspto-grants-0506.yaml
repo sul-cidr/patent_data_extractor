@@ -93,23 +93,343 @@ us-patent-grant:
     us-bibliographic-data-grant/examiners/assistant-examiner/last-name: examiner2_last_name
     us-bibliographic-data-grant/examiners/assistant-examiner/first-name: examiner2_first_name
 
-    us-related-documents/division:
-      entity: divided_application
+    # Related Documents
+    ## Parent Applications
+    us-related-documents/addition/relation/parent-doc:
+      entity: related_document
       fields:
-        relation/parent-doc/document-id/country: country_code
-        relation/parent-doc/document-id/doc-number: doc_number
-        relation/parent-doc/document-id/date: date
+        document-id:
+          - fieldname: type
+            enum_type: addition
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
 
-    us-related-documents/continuation:
-      entity: continued_application
+    us-related-documents/division/relation/parent-doc:
+      entity: related_document
       fields:
-        relation/parent-doc/document-id/country: country_code
-        relation/parent-doc/document-id/doc-number: doc_number
-        relation/parent-doc/document-id/date: date
+        document-id:
+          - fieldname: type
+            enum_type: divisional
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
 
-    us-related-documents/us-provisional-application:
-      entity: provisional_application
+    us-related-documents/continuation/relation/parent-doc:
+      entity: related_document
       fields:
+        document-id:
+          - fieldname: type
+            enum_type: continuation
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/continuation-in-part/relation/parent-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: continuation_in_part
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/continuing-reissue/relation/parent-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: continuing_reissue
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/reissue/relation/parent-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: reissue
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/us-divisional-reissue/relation/parent-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: divisional_reissue
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/reexamination/relation/parent-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: reexamination
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/reexamination-reissue-merger/relation/parent-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: reexamination_reissue_merger
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/substitution/relation/parent-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: substitution
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/us-provisional-application/relation/parent-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: us_provisional_application
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/utility-model-basis/relation/parent-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: utility_model_basis
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/correction/relation/parent-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: correction
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/related-publication/relation/parent-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: related_publication
+          - fieldname: relationship
+            enum_type: parent
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+
+    ##Child documents
+    us-related-documents/addition/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: addition
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/division/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: divisional
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/continuation/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: continuation
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/continuation-in-part/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: continuation_in_part
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/continuing-reissue/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: continuing_reissue
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/reissue/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: reissue
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/us-divisional-reissue/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: divisional_reissue
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/reexamination/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: reexamination
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/reexamination-reissue-merger/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: reexamination_reissue_merger
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/substitution/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: substitution
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/us-provisional-application/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: us_provisional_application
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/utility-model-basis/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: utility_model_basis
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/correction/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: correction
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
+        document-id/doc-number: doc_number
+        document-id/date: date
+
+    us-related-documents/related-publication/relation/child-doc:
+      entity: related_document
+      fields:
+        document-id:
+          - fieldname: type
+            enum_type: related_publication
+          - fieldname: relationship
+            enum_type: child
+        document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
