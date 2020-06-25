@@ -53,7 +53,7 @@ us-patent-application:
     us-bibliographic-data-application/classifications-ipcr/classification-ipcr/main-group: 
         fieldname: IPC_main_group
         joiner: "|"
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/class: 
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/subgroup:
         fieldname: IPC_subgroup
         joiner: "|"
 
