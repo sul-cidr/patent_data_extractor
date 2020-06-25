@@ -61,7 +61,7 @@ us-patent-application:
     us-bibliographic-data-application/classifications-ipcr/classification-ipcr/main-group:
         fieldname: IPC_main_group
         joiner: "|"
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/class:
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/subgroup:
         fieldname: IPC_subgroup
         joiner: "|"
 
@@ -75,16 +75,27 @@ us-patent-application:
 
     # Inventors
     us-bibliographic-data-application/parties/applicants/applicant:
-      entity: inventor
-      fields:
-        # Name information
-        addressbook/last-name: last_name
-        addressbook/first-name: given_name
+      - entity: inventor
+        fields:
+          # Name information
+          addressbook/last-name: last_name
+          addressbook/first-name: given_name
 
-        # Residence information
-        addressbook/address/country: res_country
-        addressbook/address/state: res_state
-        addressbook/address/city: res_city
+          # Residence information
+          addressbook/address/country: res_country
+          addressbook/address/state: res_state
+          addressbook/address/city: res_city
+
+      - entity: applicant
+        fields:
+          # Name information
+          addressbook/last-name: last_name
+          addressbook/first-name: given_name
+
+          # Residence information
+          addressbook/address/country: res_country
+          addressbook/address/state: res_state
+          addressbook/address/city: res_city
 
     # Applicants
     ## Domestic applicants
@@ -102,20 +113,6 @@ us-patent-application:
 
         #Status
         applicant-authority-category: authority_category
-
-    ## Foregin applicants
-    us-bibliographic-data-application/parties/applicants/applicant:
-      entity: applicant
-      fields:
-        # Name information
-        addressbook/last-name: last_name
-        addressbook/first-name: given_name
-
-        # Residence information
-        addressbook/address/country: res_country
-        addressbook/address/state: res_state
-        addressbook/address/city: res_city
-
 
     # Assignees
     us-bibliographic-data-application/assignees/assignee:
