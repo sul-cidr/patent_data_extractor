@@ -109,7 +109,7 @@ us-patent-grant:
 
     # Related Documents
     ## Parent Applications
-    us-related-documents/addition/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/addition/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -121,7 +121,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/division/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/division/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -133,7 +133,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/continuation/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/continuation/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -145,7 +145,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/continuation-in-part/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/continuation-in-part/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -157,7 +157,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/continuing-reissue/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/continuing-reissue/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -169,7 +169,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/reissue/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/reissue/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -181,7 +181,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/us-divisional-reissue/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/us-divisional-reissue/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -193,7 +193,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/reexamination/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/reexamination/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -205,7 +205,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/reexamination-reissue-merger/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/reexamination-reissue-merger/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -217,7 +217,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/substitution/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/substitution/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -229,7 +229,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/us-provisional-application/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/us-provisional-application/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -241,7 +241,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/utility-model-basis/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/utility-model-basis/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -253,7 +253,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/correction/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/correction/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -265,7 +265,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/related-publication/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/related-publication/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -279,7 +279,7 @@ us-patent-grant:
 
 
     ##Child documents
-    us-related-documents/addition/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/addition/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -291,7 +291,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/division/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/division/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -303,7 +303,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/continuation/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/continuation/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -315,7 +315,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/continuation-in-part/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/continuation-in-part/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -327,7 +327,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/continuing-reissue/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/continuing-reissue/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -339,7 +339,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/reissue/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/reissue/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -351,7 +351,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/us-divisional-reissue/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/us-divisional-reissue/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -363,7 +363,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/reexamination/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/reexamination/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -375,7 +375,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/reexamination-reissue-merger/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/reexamination-reissue-merger/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -387,7 +387,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/substitution/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/substitution/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -399,7 +399,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/us-provisional-application/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/us-provisional-application/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -411,7 +411,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/utility-model-basis/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/utility-model-basis/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -423,7 +423,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/correction/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/correction/relation/child-doc:
       entity: related_document
       fields:
         document-id:
@@ -435,7 +435,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-related-documents/related-publication/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/related-publication/relation/child-doc:
       entity: related_document
       fields:
         document-id:
