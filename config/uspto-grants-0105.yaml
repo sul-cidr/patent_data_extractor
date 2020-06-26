@@ -112,27 +112,283 @@ PATDOC:
     SDOBI/B700/B745/B747/PARTY-US/NAM/SNM/STEXT: examiner2_last_name
     SDOBI/B700/B745/B747/PARTY-US/NAM/FNM: examiner2_first_name
 
-    SDOBI/B600/B620:
-      entity: divided_application
-      fields:
-        PARENT-US/PDOC/DOC/DNUM: doc_number
-        PARENT-US/PDOC/DOC/DATE: date
-        PARENT-US/PDOC/DOC/KIND: kind_code
-        PARENT-US/PDOC/DOC/CTRY: country_code
+    # Related documents
 
-    SDOBI/B600/B630/B631:
-      entity: continued_application
+    ## Parent Documents
+    SDOBI/B600/B610/PARENT-US/PDOC:
+      entity: related_document
       fields:
-        PARENT-US/PDOC/DOC/DNUM: doc_number
-        PARENT-US/PDOC/DOC/DATE: date
-        PARENT-US/PDOC/DOC/KIND: kind_code
-        PARENT-US/PDOC/DOC/CTRY: country_code
-
-    SDOBI/B600/B680US:
-      entity: provisional_application
-      fields:
+        DOC:
+          - fieldname: type
+            enum_type: addition
+          - fieldname: relationship
+            enum_type: parent
         DOC/DNUM: doc_number
         DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B620/PARENT-US/PDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: division
+          - fieldname: relationship
+            enum_type: parent
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B630/B631/PARENT-US/PDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: continuation
+          - fieldname: relationship
+            enum_type: parent
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B630/B632/PARENT-US/PDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: continuation_in_part
+          - fieldname: relationship
+            enum_type: parent
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B630/B633/PARENT-US/PDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: continuing_reissue
+          - fieldname: relationship
+            enum_type: parent
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B640/PARENT-US/PDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: reissue
+          - fieldname: relationship
+            enum_type: parent
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B641US/PARENT-US/PDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: divisional_reissue
+          - fieldname: relationship
+            enum_type: parent
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B645/PARENT-US/PDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: reexamination
+          - fieldname: relationship
+            enum_type: parent
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    # TODO: This is wrong, but I literally can't find one in the data
+    # TODO: and this way we at least get to see them in the data
+    SDOBI/B600/B645US:
+      entity: related_document
+      fields:
+        PDAT:
+          - fieldname: type
+            enum_type: reexamination_reissue_merger
+          - fieldname: relationship
+            enum_type: parent
+          - "*":
+              fieldname: doc_number
+              joiner: "|#|"
+
+    SDOBI/B600/B650:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: related_publication
+          - fieldname: relationship
+            enum_type: parent
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B660/PARENT-US/PDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: subsitute
+          - fieldname: relationship
+            enum_type: parent
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B680US:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: provisional_application
+          - fieldname: relationship
+            enum_type: parent
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+
+
+
+    ## Child Documents
+    SDOBI/B600/B610/PARENT-US/CDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: addition
+          - fieldname: relationship
+            enum_type: child
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B620/PARENT-US/CDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: division
+          - fieldname: relationship
+            enum_type: child
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B630/B631/PARENT-US/CDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: continuation
+          - fieldname: relationship
+            enum_type: child
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B630/B632/PARENT-US/CDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: continuation_in_part
+          - fieldname: relationship
+            enum_type: child
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B630/B633/PARENT-US/CDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: continuing_reissue
+          - fieldname: relationship
+            enum_type: child
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B640/PARENT-US/CDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: reissue
+          - fieldname: relationship
+            enum_type: child
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B641US/PARENT-US/CDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: divisional_reissue
+          - fieldname: relationship
+            enum_type: child
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B645/PARENT-US/CDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: reexamination
+          - fieldname: relationship
+            enum_type: child
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
+
+    SDOBI/B600/B660/PARENT-US/CDOC:
+      entity: related_document
+      fields:
+        DOC:
+          - fieldname: type
+            enum_type: subsitute
+          - fieldname: relationship
+            enum_type: child
+        DOC/DNUM: doc_number
+        DOC/DATE: date
+        DOC/KIND: kind_code
+        DOC/CTRY: country_code
 
     #Saves the name of the file where the patent was retreived
     #Note this is not present in the XML; special handling by parser
