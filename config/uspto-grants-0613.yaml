@@ -229,7 +229,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-bibliographic-data-grant/us-related-documents/us-provisional-application/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/us-provisional-application:
       entity: related_document
       fields:
         document-id:
@@ -240,6 +240,7 @@ us-patent-grant:
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
+        us-provisional-application-status: status
 
     us-bibliographic-data-grant/us-related-documents/utility-model-basis/relation/parent-doc:
       entity: related_document
@@ -393,18 +394,6 @@ us-patent-grant:
         document-id:
           - fieldname: type
             enum_type: substitution
-          - fieldname: relationship
-            enum_type: child
-        document-id/country: country_code
-        document-id/doc-number: doc_number
-        document-id/date: date
-
-    us-bibliographic-data-grant/us-related-documents/us-provisional-application/relation/child-doc:
-      entity: related_document
-      fields:
-        document-id:
-          - fieldname: type
-            enum_type: us_provisional_application
           - fieldname: relationship
             enum_type: child
         document-id/country: country_code
