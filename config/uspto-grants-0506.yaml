@@ -191,7 +191,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-bibliographic-data-grant/us-related-documents/reexamination-reissue-merger/relation/parent-doc:
+    us-bibliographic-data-grant/us-related-documents/us-reexamination-reissue-merger/relation/parent-doc:
       entity: related_document
       fields:
         document-id:
@@ -362,7 +362,7 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-bibliographic-data-grant/us-related-documents/reexamination-reissue-merger/relation/child-doc:
+    us-bibliographic-data-grant/us-related-documents/us-reexamination-reissue-merger/relation/child-doc:
       entity: related_document
       fields:
         document-id:
