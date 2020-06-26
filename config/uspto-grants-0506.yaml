@@ -240,18 +240,6 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-bibliographic-data-grant/us-related-documents/correction/relation/parent-doc:
-      entity: related_document
-      fields:
-        document-id:
-          - fieldname: type
-            enum_type: correction
-          - fieldname: relationship
-            enum_type: parent
-        document-id/country: country_code
-        document-id/doc-number: doc_number
-        document-id/date: date
-
     us-bibliographic-data-grant/us-related-documents/related-publication/relation/parent-doc:
       entity: related_document
       fields:
@@ -398,18 +386,6 @@ us-patent-grant:
         document-id/doc-number: doc_number
         document-id/date: date
 
-    us-bibliographic-data-grant/us-related-documents/correction/relation/child-doc:
-      entity: related_document
-      fields:
-        document-id:
-          - fieldname: type
-            enum_type: correction
-          - fieldname: relationship
-            enum_type: child
-        document-id/country: country_code
-        document-id/doc-number: doc_number
-        document-id/date: date
-
     us-bibliographic-data-grant/us-related-documents/related-publication/relation/child-doc:
       entity: related_document
       fields:
@@ -421,6 +397,15 @@ us-patent-grant:
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
+
+
+  us-bibliographic-data-grant/us-related-documents/correction:
+    entity: correction
+    fields:
+      document-corrected/document-id/doc-number: corrected_doc
+      type-of-correction: correction_type
+      gazette-reference: gazette_reference
+      text: correction_text
 
     #Saves the name of the file where the patent was retreived
     #Note this is not present in the XML; special handling by parser
