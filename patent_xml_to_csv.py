@@ -111,6 +111,7 @@ class PatentXmlToTabular:
             for i, line in enumerate(_fh):
                 if line.startswith("<?xml "):
                     try:
+                        # this should ideally be factored out of here (but where?)
                         if xml_doc and not xml_doc[1].startswith(
                             "<!DOCTYPE sequence-cwu"
                         ):
