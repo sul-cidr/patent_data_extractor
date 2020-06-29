@@ -1,8 +1,8 @@
 patent-application-publication:
-  entity: application
-  pk: subdoc-bibliographic-information/document-id/doc-number
-  filename_field: source_file
-  fields:
+  <entity>: application
+  <primary_key>: subdoc-bibliographic-information/document-id/doc-number
+  <filename_field>: source_file
+  <fields>:
     # Bibliographic info
     subdoc-bibliographic-information/document-id/doc-number: doc_number
     subdoc-bibliographic-information/document-id/kind_code: kind_code
@@ -15,8 +15,8 @@ patent-application-publication:
 
     # Assignee information
     subdoc-bibliographic-information/assignee:
-      entity: assignee
-      fields:
+      <entity>: assignee
+      <fields>:
         organization-name: org_name
         assignee-type: role
         name/given-name: given_name
@@ -47,24 +47,24 @@ patent-application-publication:
     subdoc-bibliographic-information/technical-information/classification-ipc/classification-ipc-edition: IPC_edition
     subdoc-bibliographic-information/technical-information/classification-ipc/classification-ipc-primary/ipc: IPC_main
     subdoc-bibliographic-information/technical-information/classification-ipc/classification-ipc-secondary/ipc:
-      fieldname: IPC_further
-      joiner: "|"
+      <fieldname>: IPC_further
+      <joiner>: "|"
 
     subdoc-bibliographic-information/international-conventions/pct-application/document-id/doc-number: PCT_app_number
 
     # Claims
     subdoc-claims/claim:
-      entity: claim
-      fields:
+      <entity>: claim
+      <fields>:
         "*":
-          fieldname: claim_text
-          joiner: "\n"
+          <fieldname>: claim_text
+          <joiner>: "\n"
 
 
     # Provisional applications techincally aren't "parents"
     subdoc-bibliographic-information/continuity-data/non-provisional-of-provisional:
-      entity: provisional_application
-      fields:
+      <entity>: provisional_application
+      <fields>:
         document-id/doc-number: doc_number
         document-id/document-date: date
 
@@ -75,14 +75,14 @@ patent-application-publication:
 
     ### Continuations
     subdoc-bibliographic-information/continuity-data/continuations/continuation-of/parent-child/parent:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: continuation
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: continuation
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -94,14 +94,14 @@ patent-application-publication:
 
 
     subdoc-bibliographic-information/continuity-data/continuations/continuation-in-part-of/parent-child/parent:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: continuation_in_part
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: continuation_in_part
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -111,14 +111,14 @@ patent-application-publication:
         parent-status: status
 
     subdoc-bibliographic-information/continuity-data/continuations/continuing-reissue-of/parent-child/parent:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: continuing_reissue
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: continuing_reissue
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -131,14 +131,14 @@ patent-application-publication:
     ### Non-Continuations
 
     subdoc-bibliographic-information/continuity-data/division-of/parent-child/parent:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: divisional
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: divisional
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -149,14 +149,14 @@ patent-application-publication:
 
 
     subdoc-bibliographic-information/continuity-data/a-371-of-international/parent-child/parent:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: a_371_of_international
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: a_371_of_international
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -167,14 +167,14 @@ patent-application-publication:
 
 
     subdoc-bibliographic-information/continuity-data/substitution-for/parent-child/parent:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: substitution
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: substitution
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -185,14 +185,14 @@ patent-application-publication:
 
 
     subdoc-bibliographic-information/continuity-data/reissue-of/parent-child/parent:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: reissue
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: reissue
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -205,14 +205,14 @@ patent-application-publication:
     ## Child documents
     ### Continuations
     subdoc-bibliographic-information/continuity-data/continuations/continuation-of/parent-child/child:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: continuation
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: continuation
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -222,14 +222,14 @@ patent-application-publication:
 
 
     subdoc-bibliographic-information/continuity-data/continuations/continuation-in-part-of/parent-child/child:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: continuation_in_part
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: continuation_in_part
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -238,14 +238,14 @@ patent-application-publication:
         document-id/country-code: country_code
 
     subdoc-bibliographic-information/continuity-data/continuations/continuing-reissue-of/parent-child/child:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: continuing_reissue
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: continuing_reissue
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -257,14 +257,14 @@ patent-application-publication:
     ### Non-Continuations
 
     subdoc-bibliographic-information/continuity-data/division-of/parent-child/child:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: divisional
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: divisional
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -274,14 +274,14 @@ patent-application-publication:
 
 
     subdoc-bibliographic-information/continuity-data/a-371-of-international/parent-child/child:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: a_371_of_international
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: a_371_of_international
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -291,14 +291,14 @@ patent-application-publication:
 
 
     subdoc-bibliographic-information/continuity-data/substitution-for/parent-child/child:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: substitution
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: substitution
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -308,14 +308,14 @@ patent-application-publication:
 
 
     subdoc-bibliographic-information/continuity-data/reissue-of/parent-child/child:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: reissue
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: reissue
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from record to record
         document-id/kind-code: kind_code
@@ -326,8 +326,8 @@ patent-application-publication:
 
     # Inventors
     subdoc-bibliographic-information/inventors/first-named-inventor:
-      entity: inventor
-      fields:
+      <entity>: inventor
+      <fields>:
 
         name/family-name: last_name
         name/given-name: given_name
@@ -344,8 +344,8 @@ patent-application-publication:
         authority-applicant: authority_applicant
 
     subdoc-bibliographic-information/inventors/inventor:
-      entity: inventor
-      fields:
+      <entity>: inventor
+      <fields>:
 
         name/family-name: last_name
         name/given-name: given_name
@@ -363,8 +363,8 @@ patent-application-publication:
 
     # Foreign filings
     subdoc-bibliographic-information/foreign-priority-data:
-      entity: foreign_filing
-      fields:
+      <entity>: foreign_filing
+      <fields>:
         priority-application-number/doc-number: doc_number
         filing-date: date
         country-code: country_code

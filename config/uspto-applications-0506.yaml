@@ -1,9 +1,9 @@
 us-patent-application:
-  entity: application
-  pk: us-bibliographic-data-application/publication-reference/document-id/doc-number
-  filename_field: source_file
+  <entity>: application
+  <primary_key>: us-bibliographic-data-application/publication-reference/document-id/doc-number
+  <filename_field>: source_file
 
-  fields:
+  <fields>:
     us-bibliographic-data-application/publication-reference/document-id/doc-number: doc_number
     us-bibliographic-data-application/publication-reference/document-id/kind: kind_code
     us-bibliographic-data-application/publication-reference/document-id/country: country_code
@@ -15,11 +15,11 @@ us-patent-application:
 
     # Claims
     claims/claim:
-      entity: claim
-      fields:
+      <entity>: claim
+      <fields>:
         "*":
-          fieldname: claim_text
-          joiner: "\n"
+          <fieldname>: claim_text
+          <joiner>: "\n"
 
     # Correspondence Address
     us-bibliographic-data-application/parties/correspondence-address/addressbook/address/city: correspondence_city
@@ -36,23 +36,23 @@ us-patent-application:
     us-bibliographic-data-application/classification-ipc/edition: IPC_edition
     us-bibliographic-data-application/classification-ipc/main-classification: IPC_main
     us-bibliographic-data-application/classification-ipc/further-classification:
-      fieldname: IPC_further
-      joiner: "|"
+      <fieldname>: IPC_further
+      <joiner>: "|"
 
 
 
     # Foreign filings
     us-bibliographic-data-application/priority-claims/priority-claim:
-      entity: foreign_filing
-      fields:
+      <entity>: foreign_filing
+      <fields>:
         doc-number: doc_number
         date: date
         country: country_code
 
     # Applicants
     us-bibliographic-data-application/parties/applicants/applicant:
-      entity: inventor
-      fields:
+      <entity>: inventor
+      <fields>:
         # Name information
         addressbook/name/last-name: last_name
         addressbook/name/first-name: given_name
@@ -64,8 +64,8 @@ us-patent-application:
 
     # Assignees
     us-bibliographic-data-application/assignees/assignee:
-      entity: assignee
-      fields:
+      <entity>: assignee
+      <fields>:
         addressbook/orgname: org_name
         addressbook/role: role
         addressbook/first-name: given_name
@@ -85,14 +85,14 @@ us-patent-application:
     ### Continuations
 
     us-bibliographic-data-application/us-related-documents/continuation/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: continuation
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: continuation
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -102,14 +102,14 @@ us-patent-application:
         parent-status: status
 
     us-bibliographic-data-application/us-related-documents/continuation-in-part/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: continuation_in_part
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: continuation_in_part
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -119,14 +119,14 @@ us-patent-application:
         parent-status: status
 
     us-bibliographic-data-application/us-related-documents/continuing-reissue/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: continuing_reissue
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: continuing_reissue
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -139,14 +139,14 @@ us-patent-application:
     ### Non-Continuations
 
     us-bibliographic-data-application/us-related-documents/addition/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: addition
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: addition
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -156,14 +156,14 @@ us-patent-application:
         parent-status: status
 
     us-bibliographic-data-application/us-related-documents/division/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: division
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: division
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -173,14 +173,14 @@ us-patent-application:
         parent-status: status
 
     us-bibliographic-data-application/us-related-documents/reissue/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: reissue
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: reissue
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -190,14 +190,14 @@ us-patent-application:
         parent-status: status
 
     us-bibliographic-data-application/us-related-documents/reexamination/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: reexamination
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: reexamination
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -207,14 +207,14 @@ us-patent-application:
         parent-status: status
 
     us-bibliographic-data-application/us-related-documents/us-reexamination-reissue-merger/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: us_reexamination_reissue_merger
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: us_reexamination_reissue_merger
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -224,14 +224,14 @@ us-patent-application:
         parent-status: status
 
     us-bibliographic-data-application/us-related-documents/substitution/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: substitution
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: substitution
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -241,14 +241,14 @@ us-patent-application:
         parent-status: status
 
     us-bibliographic-data-application/us-related-documents/utility-model-basis/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: utility_model_basis
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: utility_model_basis
+          - <fieldname>: relationship
+            <enum_type>: parent
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -262,14 +262,14 @@ us-patent-application:
     ### Continuations
 
     us-bibliographic-data-application/us-related-documents/continuation/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: continuation
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: continuation
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -278,14 +278,14 @@ us-patent-application:
         document-id/country: country_code
 
     us-bibliographic-data-application/us-related-documents/continuation-in-part/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: continuation_in_part
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: continuation_in_part
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -294,14 +294,14 @@ us-patent-application:
         document-id/country: country_code
 
     us-bibliographic-data-application/us-related-documents/continuing-reissue/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: continuing_reissue
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: continuing_reissue
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -313,14 +313,14 @@ us-patent-application:
     ### Non-Continuations
 
     us-bibliographic-data-application/us-related-documents/addition/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: addition
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: addition
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -329,14 +329,14 @@ us-patent-application:
         document-id/country: country_code
 
     us-bibliographic-data-application/us-related-documents/division/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: division
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: division
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -345,14 +345,14 @@ us-patent-application:
         document-id/country: country_code
 
     us-bibliographic-data-application/us-related-documents/reissue/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: reissue
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: reissue
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -361,14 +361,14 @@ us-patent-application:
         document-id/country: country_code
 
     us-bibliographic-data-application/us-related-documents/reexamination/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: reexamination
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: reexamination
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -377,14 +377,14 @@ us-patent-application:
         document-id/country: country_code
 
     us-bibliographic-data-application/us-related-documents/us-reexamination-reissue-merger/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: us_reexamination_reissue_merger
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: us_reexamination_reissue_merger
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -393,14 +393,14 @@ us-patent-application:
         document-id/country: country_code
 
     us-bibliographic-data-application/us-related-documents/substitution/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: substitution
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: substitution
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
@@ -409,14 +409,14 @@ us-patent-application:
         document-id/country: country_code
 
     us-bibliographic-data-application/us-related-documents/utility-model-basis/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         # These values are fixed for all related documents found at this location
         document-id:
-          - fieldname: type
-            enum_type: utility_model_basis
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: utility_model_basis
+          - <fieldname>: relationship
+            <enum_type>: child
 
         # These vary from document to document
         document-id/doc-number: doc_number
