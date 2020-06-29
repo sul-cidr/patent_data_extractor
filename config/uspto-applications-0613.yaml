@@ -13,11 +13,6 @@ us-patent-application:
     us-bibliographic-data-application/pct-or-regional-filing-data/document-id/doc-number: PCT_app_number
     us-bibliographic-data-application/us-application-series-code: series_code
 
-    us-bibliographic-data-application/invention-title: title
-    description/p:
-      fieldname: fullDes
-      joiner: "\n"
-
     # Claims
     claims/claim:
       entity: claim
@@ -27,43 +22,41 @@ us-patent-application:
           joiner: "\n"
 
     # Correspondence Address
-    us-bibliographic-data-application/us-parties/agents/agent/addressbook/address/city: correspondence_city
-    us-bibliographic-data-application/us-parties/agents/agent/addressbook/address/state: correspondence_state
-    us-bibliographic-data-application/us-parties/agents/agent/addressbook/address/postcode: correspondence_postal
-    us-bibliographic-data-application/us-parties/agents/agent/addressbook/address/country: correspondence_country
-    us-bibliographic-data-application/us-parties/agents/agent/addressbook/address/address-1: correspondence_address_1
-    us-bibliographic-data-application/us-parties/agents/agent/addressbook/address/address-2: correspondence_address_2
-    us-bibliographic-data-application/us-parties/agents/agent/addressbook/address/address-3: correspondence_address_3
-    us-bibliographic-data-application/us-parties/agents/agent/addressbook/address/street: correspondence_address_street
-    us-bibliographic-data-application/us-parties/agents/agent/addressbook/address/text: correspondence_address_text
-    us-bibliographic-data-application/us-parties/agents/agent/addressbook/name: correspondence_name
-    us-bibliographic-data-application/us-parties/agents/agent/addressbook/first-name: correspondence_given_name
-    us-bibliographic-data-application/us-parties/agents/agent/addressbook/last-name: correspondence_last_name
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/address/city: correspondence_city
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/address/state: correspondence_state
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/address/postcode: correspondence_postal
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/address/country: correspondence_country
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/address/address-1: correspondence_address_1
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/address/address-2: correspondence_address_2
+    us-bibliographic-data-application/parties/correspondence-address/addressbook/name: correspondence_name
 
     # Classification Information
     # USPC
     us-bibliographic-data-application/classification-national/main-classification: USPC_class
-    us-bibliographic-data-application/classification-national/further-classification: USPC_subclass
+    us-bibliographic-data-application/classification-national/further-classification: 
+        fieldname: USPC_subclass
+        joiner: "|"
 
     ## IPC
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/ipc-version-indicator/date:
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/ipc-version-indicator/date: 
         fieldname: IPC_edition
         joiner: "|"
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/section:
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/section: 
         fieldname: IPC_section
         joiner: "|"
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/class:
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/class: 
         fieldname: IPC_class
         joiner: "|"
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/subclass:
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/subclass: 
         fieldname: IPC_subclass
         joiner: "|"
-    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/main-group:
+    us-bibliographic-data-application/classifications-ipcr/classification-ipcr/main-group: 
         fieldname: IPC_main_group
         joiner: "|"
     us-bibliographic-data-application/classifications-ipcr/classification-ipcr/subgroup:
         fieldname: IPC_subgroup
         joiner: "|"
+
 
     # Foreign filings
     us-bibliographic-data-application/priority-claims/priority-claim:
@@ -73,67 +66,31 @@ us-patent-application:
         date: date
         country: country_code
 
-    # Inventors
-    us-bibliographic-data-application/parties/applicants/applicant:
-      - entity: inventor
-        fields:
-          # Name information
-          addressbook/last-name: last_name
-          addressbook/first-name: given_name
-
-          # Residence information
-          addressbook/address/country: res_country
-          addressbook/address/state: res_state
-          addressbook/address/city: res_city
-
-      - entity: applicant
-        fields:
-          # Name information
-          addressbook/last-name: last_name
-          addressbook/first-name: given_name
-
-          # Residence information
-          addressbook/address/country: res_country
-          addressbook/address/state: res_state
-          addressbook/address/city: res_city
-
     # Applicants
-    ## Domestic applicants
-    us-bibliographic-data-application/us-parties/us-applicants/us-applicant:
-      entity: applicant
+    us-bibliographic-data-application/parties/applicants/applicant:
+      entity: inventor
       fields:
         # Name information
         addressbook/last-name: last_name
         addressbook/first-name: given_name
+        addressbook/middle-name: middle_name
 
         # Residence information
         addressbook/address/country: res_country
         addressbook/address/state: res_state
         addressbook/address/city: res_city
 
-        #Status
-        applicant-authority-category: authority_category
-
     # Assignees
     us-bibliographic-data-application/assignees/assignee:
       entity: assignee
       fields:
-        orgname: org_name
         addressbook/orgname: org_name
-
-        role: role
         addressbook/role: role
-
-        first-name: given_name
         addressbook/first-name: given_name
-
-        last-name: last_name
         addressbook/last-name: last_name
 
         addressbook/address/address-1: address_1
         addressbook/address/address-2: address_2
-        addressbook/address/address-3: address_3
-        addressbook/address/street: res_street
         addressbook/address/city: res_city
         addressbook/address/state: res_state
         addressbook/address/country: res_country
