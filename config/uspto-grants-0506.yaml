@@ -1,21 +1,21 @@
 us-patent-grant:
-  entity: patent
-  pk: us-bibliographic-data-grant/application-reference/document-id/doc-number
-  filename_field: source_file
-  fields:
+  <entity>: patent
+  <primary_key>: us-bibliographic-data-grant/application-reference/document-id/doc-number
+  <filename_field>: source_file
+  <fields>:
     us-bibliographic-data-grant/number-of-claims: num_claims
 
     claims/claim:
-      entity: claim
-      fields:
+      <entity>: claim
+      <fields>:
         # the asterisk specifies that all sub-elements of each us-patent-grant/claims/claim
         #  will be reduced to their text content, and the results of each such
         #  reduction (for each us-patent-grant/claims/claim element, should there be more
         #  than one) will be concatenated together with the `joiner` string -- in
         #  this case, a newline.
         "*":
-          fieldname: claim_text
-          joiner: "\n"
+          <fieldname>: claim_text
+          <joiner>: "\n"
 
     us-bibliographic-data-grant/invention-title: title
 
@@ -24,8 +24,8 @@ us-patent-grant:
     us-bibliographic-data-grant/publication-reference/document-id/country: country_code
 
     us-bibliographic-data-grant/priority-claims/priority-claim:
-      entity: foreign_filing
-      fields:
+      <entity>: foreign_filing
+      <fields>:
         doc-number: doc_number
         country: country_code
         date: date
@@ -36,8 +36,8 @@ us-patent-grant:
 
     us-bibliographic-data-grant/classification-ipc/main-classification: IPC_primary
     us-bibliographic-data-grant/classification-ipc/further-classification:
-      fieldname: IPC_secondary
-      joiner: "|"
+      <fieldname>: IPC_secondary
+      <joiner>: "|"
     us-bibliographic-data-grant/classification-ipc/edition: IPC_edition
 
 
@@ -45,13 +45,13 @@ us-patent-grant:
     us-bibliographic-data-grant/classification-national/edition : USPC_edition
     us-bibliographic-data-grant/classification-national/main-classification : USPC_primary
     us-bibliographic-data-grant/classification-national/further-classification :
-      fieldname: USPC_secondary
-      joiner: "|"
+      <fieldname>: USPC_secondary
+      <joiner>: "|"
 
 
     us-bibliographic-data-grant/parties/applicants/applicant/addressbook:
-      entity: applicant
-      fields:
+      <entity>: applicant
+      <fields>:
         last-name: last_name
         first-name: given_name
         orgname: org_name
@@ -64,22 +64,22 @@ us-patent-grant:
     us-bibliographic-data-grant/application-reference/@appl-type: filing_type
 
     us-bibliographic-data-grant/assignees/assignee:
-      entity: assignee
-      fields:
+      <entity>: assignee
+      <fields>:
         addressbook/orgname: org_name
         addressbook/role: role
 
     us-bibliographic-data-grant/references-cited/citation:
-      entity: citation
-      fields:
+      <entity>: citation
+      <fields>:
         patcit/document-id/country: country_code
         patcit/document-id/doc-number: doc_number
         patcit/document-id/kind: kind_code
         patcit/document-id/name: name
         patcit/document-id/date: date
         category:
-          fieldname: cited_by
-          enum_map:
+          <fieldname>: cited_by
+          <enum_map>:
             cited by examiner: examiner
             cited by other: other
         classification-national/country: class_country
@@ -96,158 +96,158 @@ us-patent-grant:
     # Related Documents
     ## Parent Applications
     us-bibliographic-data-grant/us-related-documents/addition/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: addition
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: addition
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/division/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: divisional
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: divisional
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/continuation/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: continuation
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: continuation
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/continuation-in-part/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: continuation_in_part
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: continuation_in_part
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/continuing-reissue/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: continuing_reissue
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: continuing_reissue
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/reissue/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: reissue
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: reissue
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/us-divisional-reissue/us-relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: divisional_reissue
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: divisional_reissue
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/reexamination/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: reexamination
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: reexamination
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/us-reexamination-reissue-merger/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: reexamination_reissue_merger
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: reexamination_reissue_merger
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/substitution/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: substitution
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: substitution
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/us-provisional-application:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: us_provisional_application
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: us_provisional_application
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
         us-provisional-application-status: status
 
     us-bibliographic-data-grant/us-related-documents/utility-model-basis/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: utility_model_basis
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: utility_model_basis
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/related-publication/relation/parent-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: related_publication
-          - fieldname: relationship
-            enum_type: parent
+          - <fieldname>: type
+            <enum_type>: related_publication
+          - <fieldname>: relationship
+            <enum_type>: parent
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
@@ -255,153 +255,153 @@ us-patent-grant:
 
     ##Child documents
     us-bibliographic-data-grant/us-related-documents/addition/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: addition
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: addition
+          - <fieldname>: relationship
+            <enum_type>: child
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/division/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: divisional
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: divisional
+          - <fieldname>: relationship
+            <enum_type>: child
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/continuation/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: continuation
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: continuation
+          - <fieldname>: relationship
+            <enum_type>: child
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/continuation-in-part/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: continuation_in_part
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: continuation_in_part
+          - <fieldname>: relationship
+            <enum_type>: child
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/continuing-reissue/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: continuing_reissue
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: continuing_reissue
+          - <fieldname>: relationship
+            <enum_type>: child
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/reissue/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: reissue
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: reissue
+          - <fieldname>: relationship
+            <enum_type>: child
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/us-divisional-reissue/us-relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: divisional_reissue
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: divisional_reissue
+          - <fieldname>: relationship
+            <enum_type>: child
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/reexamination/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: reexamination
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: reexamination
+          - <fieldname>: relationship
+            <enum_type>: child
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/us-reexamination-reissue-merger/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: reexamination_reissue_merger
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: reexamination_reissue_merger
+          - <fieldname>: relationship
+            <enum_type>: child
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/substitution/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: substitution
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: substitution
+          - <fieldname>: relationship
+            <enum_type>: child
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/utility-model-basis/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: utility_model_basis
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: utility_model_basis
+          - <fieldname>: relationship
+            <enum_type>: child
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
     us-bibliographic-data-grant/us-related-documents/related-publication/relation/child-doc:
-      entity: related_document
-      fields:
+      <entity>: related_document
+      <fields>:
         document-id:
-          - fieldname: type
-            enum_type: related_publication
-          - fieldname: relationship
-            enum_type: child
+          - <fieldname>: type
+            <enum_type>: related_publication
+          - <fieldname>: relationship
+            <enum_type>: child
         document-id/country: country_code
         document-id/doc-number: doc_number
         document-id/date: date
 
 
   us-bibliographic-data-grant/us-related-documents/correction:
-    entity: correction
-    fields:
+    <entity>: correction
+    <fields>:
       document-corrected/document-id/doc-number: corrected_doc
       type-of-correction: correction_type
       gazette-reference: gazette_reference
@@ -409,4 +409,4 @@ us-patent-grant:
 
     #Saves the name of the file where the patent was retreived
     #Note this is not present in the XML; special handling by parser
-    filename_field: source_file
+    <filename_field>: source_file

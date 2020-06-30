@@ -141,8 +141,8 @@ class PatentXmlToTabular:
         ).strip()
 
     def get_pk(self, tree, config):
-        if "pk" in config:
-            elems = tree.findall("./" + config["pk"])
+        if "<primary_key>" in config:
+            elems = tree.findall("./" + config["<primary_key>"])
             assert len(elems) == 1
             return self.get_text(elems[0])
         return None
@@ -153,7 +153,7 @@ class PatentXmlToTabular:
         """ Process a subtree of the xml as a new entity type, creating a new record in a new
             output table/file.
         """
-        entity = config["entity"]
+        entity = config["<entity>"]
         for elem in elems:
             record = {}
 
@@ -166,9 +166,9 @@ class PatentXmlToTabular:
 
             if parent_pk:
                 record[f"{parent_entity}_id"] = parent_pk
-            if "filename_field" in config:
-                record[config["filename_field"]] = self.current_filename
-            for subpath, subconfig in config["fields"].items():
+            if "<filename_field>" in config:
+                record[config["<filename_field>"]] = self.current_filename
+            for subpath, subconfig in config["<fields>"].items():
                 self.process_path(elem, subpath, subconfig, record, entity, pk)
 
             self.tables[entity].append(record)
@@ -198,35 +198,35 @@ class PatentXmlToTabular:
                 self.add_string(path, elems, record, config)
             return
 
-        if "entity" in config:
+        if "<entity>" in config:
             # config is a new entity definition (i.e. a new record on a new table/file)
             self.process_new_entity(tree, elems, config, parent_entity, parent_pk)
             return
 
-        if "fieldname" in config:
+        if "<fieldname>" in config:
             # config is extra configuration for a field on this table/file
-            if "joiner" in config:
+            if "<joiner>" in config:
                 if elems:
-                    record[config["fieldname"]] = config["joiner"].join(
+                    record[config["<fieldname>"]] = config["<joiner>"].join(
                         [self.get_text(elem) for elem in elems]
                     )
                 return
 
-            if "enum_map" in config:
+            if "<enum_map>" in config:
                 if elems:
-                    record[config["fieldname"]] = config["enum_map"].get(
+                    record[config["<fieldname>"]] = config["<enum_map>"].get(
                         self.get_text(elems[0])
                     )
                 return
 
-            if "enum_type" in config:
+            if "<enum_type>" in config:
                 if elems:
-                    record[config["fieldname"]] = config["enum_type"]
+                    record[config["<fieldname>"]] = config["<enum_type>"]
                 return
 
             # just a mapping to a fieldname string
             if len(config) == 1:
-                self.add_string(path, elems, record, config["fieldname"])
+                self.add_string(path, elems, record, config["<fieldname>"])
                 return
 
         # We may have multiple configurations for this key (XPath expression)
@@ -343,23 +343,23 @@ class PatentXmlToTabular:
                 _fieldnames.append(config)
                 return
 
-            if "fieldname" in config:
-                _fieldnames.append(config["fieldname"])
+            if "<fieldname>" in config:
+                _fieldnames.append(config["<fieldname>"])
                 return
 
-            if "entity" in config:
-                entity = config["entity"]
+            if "<entity>" in config:
+                entity = config["<entity>"]
                 _fieldnames = []
-                if "pk" in config or parent_entity:
+                if "<primary_key>" in config or parent_entity:
                     _fieldnames.append("id")
                 if parent_entity:
                     _fieldnames.append(f"{parent_entity}_id")
-                if "filename_field" in config:
-                    _fieldnames.append(config["filename_field"])
-                for subconfig in config["fields"].values():
+                if "<filename_field>" in config:
+                    _fieldnames.append(config["<filename_field>"])
+                for subconfig in config["<fields>"].values():
                     add_fieldnames(subconfig, _fieldnames, entity)
-                # different keys (XPath expressions) may be appending rows to the same table(s),
-                #  so we're appending to lists of fieldnames here.
+                # different keys (XPath expressions) may be appending rows to the same
+                #  table(s), so we're appending to lists of fieldnames here.
                 fieldnames[entity] = list(
                     dict.fromkeys(fieldnames[entity] + _fieldnames).keys()
                 )
