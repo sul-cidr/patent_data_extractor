@@ -25,8 +25,29 @@ except ImportError:
 
 
 def replace_missing_mathml_ents(doc):
-    """ Substitute out some undefined entities that appear in the XML -- see notes
-        for further details. """
+    """
+    Substitute out some undefined entities that appear in the XML
+
+    * IndentingNewLine
+    * LeftBracketingBar
+    * LeftDoubleBracketingBar
+    * RightBracketingBar
+
+      These seem to be MathML symbols, but the mappings that I've used (deriving from
+        https://reference.wolfram.com/language/ref/character/LeftBracketingBar.html and
+        http://www.mathmlcentral.com/characters/glyphs/LeftBracketingBar.html) point to
+        code points in the PUA of the Unicode BMP -- i.e., they're only going to work
+        with specific fonts.
+      It seems like they should be part of mmlextra
+        (see https://www.w3.org/TR/REC-MathML/chap6/byalpha.html), but they're not in
+        any of the versions (plural!) of this file that I have available, or can find
+        documented online (see, e.g., https://www.w3.org/TR/MathML2/mmlextra.html,
+        https://www.w3.org/2003/entities/mathmldoc/mmlextra.html etc.)
+
+      The version of mmlextra.ent from here:
+        https://github.com/martinklepsch/patalyze/blob/master/resources/parsedir/mmlextra.ent
+        seems to have what's required?
+    """
     doc = doc.replace("&IndentingNewLine;", "&#xF3A3;")
     doc = doc.replace("&LeftBracketingBar;", "&#xF603;")
     doc = doc.replace("&RightBracketingBar;", "&#xF604;")
