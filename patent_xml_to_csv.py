@@ -33,20 +33,36 @@ def replace_missing_ents(doc):
     * LeftDoubleBracketingBar
     * RightBracketingBar
 
-      These seem to be MathML symbols, but the mappings that I've used (deriving from
-        https://reference.wolfram.com/language/ref/character/LeftBracketingBar.html and
-        http://www.mathmlcentral.com/characters/glyphs/LeftBracketingBar.html) point to
-        code points in the PUA of the Unicode BMP -- i.e., they're only going to work
-        with specific fonts.
-      It seems like they should be part of mmlextra
-        (see https://www.w3.org/TR/REC-MathML/chap6/byalpha.html), but they're not in
-        any of the versions (plural!) of this file that I have available, or can find
-        documented online (see, e.g., https://www.w3.org/TR/MathML2/mmlextra.html,
-        https://www.w3.org/2003/entities/mathmldoc/mmlextra.html etc.)
+      These seem to be MathML symbols, but the mappings that I've used (deriving from,
+      e.g., https://reference.wolfram.com/language/ref/character/LeftBracketingBar.html
+      and http://www.mathmlcentral.com/characters/glyphs/LeftBracketingBar.html) point to
+      code points in the PUA of the Unicode BMP -- i.e., they're only going to work with
+      specific fonts.
+
+      It seems like they should be part of mmlextra (see
+      https://www.w3.org/TR/REC-MathML/chap6/byalpha.html), but they're not in any of the
+      versions (plural!) of this file that I have available, or can find documented
+      online (see, e.g., https://www.w3.org/TR/MathML2/mmlextra.html,
+      https://www.w3.org/2003/entities/mathmldoc/mmlextra.html etc.)
+
+      Alternative renderings are included in mmlalias.ent -- unclear where these come
+      from.
 
       The version of mmlextra.ent from here:
-        https://github.com/martinklepsch/patalyze/blob/master/resources/parsedir/mmlextra.ent
-        seems to have what's required?
+      https://github.com/martinklepsch/patalyze/blob/master/resources/parsedir/mmlextra.ent
+      seems to have what's required, and uses the PUA renderings in line with
+      mathmlcentral.com and reference.wolfram.com
+
+    ----
+
+    * RightSkeleton
+
+      Another MathML symbol, but there is a discrepancy here in that
+      https://reference.wolfram.com/language/ref/character/RightSkeleton.html and
+      https://www.mathmlcentral.com/characters/glyphs/RightSkeleton.html use U+F762 and
+      my copy of mmlextra.ent uses U+E851.
+
+      Curiously (?), I have yet to encounter &LeftSkeleton; ...
 
     ----
 
@@ -83,6 +99,8 @@ def replace_missing_ents(doc):
     doc = doc.replace("&RightBracketingBar;", "&#xF604;")
     doc = doc.replace("&LeftDoubleBracketingBar;", "&#xF605;")
     doc = doc.replace("&RightDoubleBracketingBar;", "&#xF606;")
+
+    doc = doc.replace("&RightSkeleton;", "&#xF762;")
 
     doc = doc.replace("&hearts;", "&#x2665;")
     return doc
