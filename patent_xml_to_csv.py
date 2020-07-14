@@ -162,10 +162,15 @@ class PatentXmlToTabular:
                 ns_clean=True,
                 huge_tree=True,
                 dtd_validation=True,
+                collect_ids=False,
             )
         else:
             self.parser = etree.XMLParser(
-                load_dtd=True, resolve_entities=True, ns_clean=True, huge_tree=True
+                load_dtd=True,
+                resolve_entities=True,
+                ns_clean=True,
+                huge_tree=True,
+                collect_ids=False,
             )
 
         self.continue_on_error = kwargs["continue_on_error"]
