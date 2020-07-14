@@ -160,7 +160,7 @@ class PatentXmlToTabular:
 
     def yield_xml_doc(self, filepath):
         xml_doc = []
-        with open(filepath, "r") as _fh:
+        with open(filepath, "r", errors="replace") as _fh:
             for i, line in enumerate(_fh):
                 if line.startswith("<?xml "):
                     try:
