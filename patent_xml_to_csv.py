@@ -24,14 +24,85 @@ except ImportError:
         return text
 
 
-def replace_missing_mathml_ents(doc):
-    """ Substitute out some undefined entities that appear in the XML -- see notes
-        for further details. """
+def replace_missing_ents(doc):
+    """
+    Substitute out some undefined entities that appear in the XML
+
+    * IndentingNewLine
+    * LeftBracketingBar
+    * LeftDoubleBracketingBar
+    * RightBracketingBar
+
+      These seem to be MathML symbols, but the mappings that I've used (deriving from,
+      e.g., https://reference.wolfram.com/language/ref/character/LeftBracketingBar.html
+      and http://www.mathmlcentral.com/characters/glyphs/LeftBracketingBar.html) point to
+      code points in the PUA of the Unicode BMP -- i.e., they're only going to work with
+      specific fonts.
+
+      It seems like they should be part of mmlextra (see
+      https://www.w3.org/TR/REC-MathML/chap6/byalpha.html), but they're not in any of the
+      versions (plural!) of this file that I have available, or can find documented
+      online (see, e.g., https://www.w3.org/TR/MathML2/mmlextra.html,
+      https://www.w3.org/2003/entities/mathmldoc/mmlextra.html etc.)
+
+      Alternative renderings are included in mmlalias.ent -- unclear where these come
+      from.
+
+      The version of mmlextra.ent from here:
+      https://github.com/martinklepsch/patalyze/blob/master/resources/parsedir/mmlextra.ent
+      seems to have what's required, and uses the PUA renderings in line with
+      mathmlcentral.com and reference.wolfram.com
+
+    ----
+
+    * RightSkeleton
+
+      Another MathML symbol, but there is a discrepancy here in that
+      https://reference.wolfram.com/language/ref/character/RightSkeleton.html and
+      https://www.mathmlcentral.com/characters/glyphs/RightSkeleton.html use U+F762 and
+      my copy of mmlextra.ent uses U+E851.
+
+      Curiously (?), I have yet to encounter &LeftSkeleton; ...
+
+    ----
+
+    * hearts
+
+      This entity appears in the detailed description for, e.g., 09489911 (note that this
+      description is not extracted by the parser according to the current version of the
+      config file at config/uspto-grants-0105.yaml).
+
+      In the same context the suit "diamonds" is represented by &diams;, and clubs and
+      hearts are presented by <CUSTOM-CHARACTER> elements which reference external TIFF
+      files... (sigh).  This is despite the face that the appropriate XML entities
+      (&hearts;, &diams;, &clubs;, and &spades;) are all defined in the DTDs and .ent
+      files available, but for some reason &hearts; (and &hearts; alone) is missing from
+      isopub.ent, which is the file actually invoked by the DTD specified in the XML
+      (double sigh).
+
+      In some of the DTD files the symbols specified for the suits are the white glpyhs
+      (i.e. &#x2661, &#x2662, &#x2664, and &#x2667 for hearts, diamonds, spades and clubs
+      respectively), and in others they are the black glyphs (i.e. &#x2665, &#x2666,
+      &#x2660, and &#x2663) -- see, e.g.
+      https://en.wikipedia.org/wiki/List_of_Unicode_characters#Miscellaneous_Symbols.
+
+      I've chose the black variant here, as the black variants are used in isopub.ent
+      -- but note that Google Patents has used the black variants for diamonds
+      (presumably from isopub.ent), the white variant for hearts (coopted from another
+      DTD?), and has dropped the <CUSTOM-CHARACTER> elements for spades and clubs (see
+      https://patents.google.com/patent/US6612926).
+
+    """
+
     doc = doc.replace("&IndentingNewLine;", "&#xF3A3;")
     doc = doc.replace("&LeftBracketingBar;", "&#xF603;")
     doc = doc.replace("&RightBracketingBar;", "&#xF604;")
     doc = doc.replace("&LeftDoubleBracketingBar;", "&#xF605;")
     doc = doc.replace("&RightDoubleBracketingBar;", "&#xF606;")
+
+    doc = doc.replace("&RightSkeleton;", "&#xF762;")
+
+    doc = doc.replace("&hearts;", "&#x2665;")
     return doc
 
 
@@ -86,11 +157,20 @@ class PatentXmlToTabular:
 
         if kwargs["validate"]:
             self.parser = etree.XMLParser(
-                load_dtd=True, resolve_entities=True, ns_clean=True, dtd_validation=True
+                load_dtd=True,
+                resolve_entities=True,
+                ns_clean=True,
+                huge_tree=True,
+                dtd_validation=True,
+                collect_ids=False,
             )
         else:
             self.parser = etree.XMLParser(
-                load_dtd=True, resolve_entities=True, ns_clean=True
+                load_dtd=True,
+                resolve_entities=True,
+                ns_clean=True,
+                huge_tree=True,
+                collect_ids=False,
             )
 
         self.continue_on_error = kwargs["continue_on_error"]
@@ -107,7 +187,7 @@ class PatentXmlToTabular:
 
     def yield_xml_doc(self, filepath):
         xml_doc = []
-        with open(filepath, "r") as _fh:
+        with open(filepath, "r", errors="replace") as _fh:
             for i, line in enumerate(_fh):
                 if line.startswith("<?xml "):
                     try:
@@ -253,7 +333,7 @@ class PatentXmlToTabular:
         self.process_field(elems, tree, path, config, record, parent_entity, parent_pk)
 
     def parse_tree(self, doc):
-        doc = replace_missing_mathml_ents(doc)
+        doc = replace_missing_ents(doc)
         return etree.parse(BytesIO(doc.encode("utf8")), self.parser)
 
     def process_doc(self, doc):
