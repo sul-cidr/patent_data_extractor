@@ -100,6 +100,7 @@ def replace_missing_ents(doc):
     doc = doc.replace("&LeftDoubleBracketingBar;", "&#xF605;")
     doc = doc.replace("&RightDoubleBracketingBar;", "&#xF606;")
 
+    doc = doc.replace("&LeftSkeleton;", "&#xF761;")
     doc = doc.replace("&RightSkeleton;", "&#xF762;")
 
     doc = doc.replace("&hearts;", "&#x2665;")
