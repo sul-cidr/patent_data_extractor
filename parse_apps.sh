@@ -26,13 +26,13 @@ mkdir $TEMP
 mkdir $OUTPUT
 
 # 2001-2005
-for i in $ZIP_DIR/ipa0[1-4]*.zip; do unzip "$i" -d $TEMP & done
+for i in $ZIP_DIR/pa0[1-4]*.zip; do unzip "$i" -d $TEMP & done
 wait
 
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config uspto-applications-0105.yaml \
+        --config config/uspto-applications-0105.yaml \
         --output-path $OUTPUT \
         --output-type csv \
         --dtd-path $DTDS \
@@ -48,7 +48,7 @@ wait
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config uspto-applications-0506.yaml \
+        --config config/uspto-applications-0506.yaml \
         --output-path $OUTPUT \
         --output-type csv \
         --dtd-path $DTDS \
@@ -65,7 +65,7 @@ wait
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config uspto-applications-0613.yaml \
+        --config config/uspto-applications-0613.yaml \
         --output-path $OUTPUT \
         --output-type csv \
         --dtd-path $DTDS \
@@ -82,7 +82,7 @@ wait
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config "uspto-applications-13+.yaml" \
+        --config "config/uspto-applications-13+.yaml" \
         --output-path $OUTPUT \
         --output-type csv \
         --dtd-path $DTDS \

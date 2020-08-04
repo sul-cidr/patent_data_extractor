@@ -32,7 +32,7 @@ wait
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config uspto-grants-0105.yaml \
+        --config config/uspto-grants-0105.yaml \
         --output-path $OUTPUT \
         --output-type csv \
         --dtd-path $DTDS \
@@ -48,7 +48,7 @@ wait
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config uspto-grants-0506.yaml \
+        --config config/uspto-grants-0506.yaml \
         --output-path $OUTPUT \
         --output-type csv \
         --dtd-path $DTDS \
@@ -65,7 +65,7 @@ wait
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config uspto-grants-0613.yaml \
+        --config config/uspto-grants-0613.yaml \
         --output-path $OUTPUT \
         --output-type csv \
         --dtd-path $DTDS \
@@ -82,7 +82,7 @@ wait
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config "uspto-grants-13+.yaml" \
+        --config "config/uspto-grants-13+.yaml" \
         --output-path $OUTPUT \
         --output-type csv \
         --dtd-path $DTDS \
