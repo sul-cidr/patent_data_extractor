@@ -76,7 +76,7 @@ mkdir $TEMP
 
 #2013-present
 for i in $ZIP_DIR/ipa1[3-9]*.zip; do unzip "$i" -d $TEMP & done
-for i in $ZIP_DIR/ipa2*.zip; do unzip "$i" -d TEMP & done
+for i in $ZIP_DIR/ipa2*.zip; do unzip "$i" -d $TEMP & done
 wait
 
 python3 patent_xml_to_csv.py \
