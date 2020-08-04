@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-#SBATCH --job-name=xml_prs
-#SBATCH --output=run_parser.out
+#SBATCH --job-name=grnt_prs
+#SBATCH --output=parse_grants.out
 #
 #SBATCH --partition=hlwill
 #SBATCH --time=7-00:00:00
@@ -17,12 +17,13 @@ OAK="/oak/stanford/groups/hlwill"
 TEMP="$SCRATCH/sponsorships_temp"
 ZIP_DIR="$OAK/raw/USPTO_grants/data"
 DTDS="$OAK/raw/USPTO_grants/python/patent_processor/config/grants/DTDs"
+OUTPUT="output/grants"
 
 rm -r $TEMP
-rm -r output/grants
+rm -r $OUTPUT
 
 mkdir $TEMP
-mkdir output/grants
+mkdir $OUTPUT
 
 # 2001-2005
 for i in $ZIP_DIR/pg*.zip; do unzip "$i" -x *.sgm -d $TEMP & done
@@ -32,9 +33,9 @@ python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
         --config uspto-grants-0105.yaml \
-        --output-path output/grants \
+        --output-path $OUTPUT \
         --output-type csv \
-        --dtd-path /oak/stanford/groups/hlwill/raw/USPTO_grants/python/patent_processor/config/grants/DTDs \
+        --dtd-path $DTDS \
         --continue-on-error
 
 rm -r $TEMP
@@ -48,9 +49,9 @@ python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
         --config uspto-grants-0506.yaml \
-        --output-path output/grants \
+        --output-path $OUTPUT \
         --output-type csv \
-        --dtd-path /oak/stanford/groups/hlwill/raw/USPTO_grants/python/patent_processor/config/grants/DTDs \
+        --dtd-path $DTDS \
         --continue-on-error
 
 rm -r $TEMP
@@ -65,9 +66,9 @@ python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
         --config uspto-grants-0613.yaml \
-        --output-path output/grants \
+        --output-path $OUTPUT \
         --output-type csv \
-        --dtd-path /oak/stanford/groups/hlwill/raw/USPTO_grants/python/patent_processor/config/grants/DTDs \
+        --dtd-path $DTDS \
         --continue-on-error
 
 rm -r $TEMP
@@ -82,9 +83,9 @@ python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
         --config "uspto-grants-13+.yaml" \
-        --output-path output/grants \
+        --output-path $OUTPUT \
         --output-type csv \
-        --dtd-path /oak/stanford/groups/hlwill/raw/USPTO_grants/python/patent_processor/config/grants/DTDs \
+        --dtd-path $DTDS \
         --continue-on-error
 
 rm -r $TEMP
