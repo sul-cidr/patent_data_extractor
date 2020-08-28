@@ -525,7 +525,7 @@ class PatentXmlToTabular:
             colored("Writing records to %s ...", "green"), db_path,
         )
         for tablename, rows in self.tables.items():
-            params = {"column_order": self.fieldnames[tablename]}
+            params = {"column_order": self.fieldnames[tablename], "alter": True}
             if "id" in self.fieldnames[tablename]:
                 params["pk"] = "id"
                 params["not_null"] = {"id"}
