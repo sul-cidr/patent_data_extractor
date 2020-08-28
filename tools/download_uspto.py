@@ -40,6 +40,7 @@ def get_urls(record_type, year):
             int(link.parent.find_next_sibling("td").string, 10),
         )
         for link in soup.select("a[href$=.zip]")
+        if not link["href"].startswith("pftaps")  # exlude old style versions for 2001
     ]
 
 
