@@ -229,9 +229,9 @@ PATDOC:
             <enum_type>: reexamination_reissue_merger
           - <fieldname>: relationship
             <enum_type>: parent
-          - "*":
-              <fieldname>: doc_number
-              <joiner>: "|#|"
+          # - "*":
+          #     <fieldname>: doc_number
+          #     <joiner>: "|#|"
 
     SDOBI/B600/B650:
       <entity>: related_document
@@ -389,7 +389,3 @@ PATDOC:
         DOC/DATE: date
         DOC/KIND: kind_code
         DOC/CTRY: country_code
-
-    #Saves the name of the file where the patent was retreived
-    #Note this is not present in the XML; special handling by parser
-    <filename_field>: source_file
