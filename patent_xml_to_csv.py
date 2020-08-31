@@ -178,6 +178,7 @@ class PatentXmlToTabular:
         self.parser.resolvers.add(DTDResolver(dtd_path))
 
         self.fieldnames = self.get_fieldnames()
+        self.get_root_config()
         self.init_cache_vars()
 
     @staticmethod
@@ -192,9 +193,8 @@ class PatentXmlToTabular:
             for i, line in enumerate(_fh):
                 if line.startswith("<?xml "):
                     try:
-                        # this should ideally be factored out of here (but where?)
-                        if xml_doc and not xml_doc[1].startswith(
-                            "<!DOCTYPE sequence-cwu"
+                        if xml_doc and xml_doc[1].startswith(
+                            f"<!DOCTYPE {self.xml_root}"
                         ):
                             yield (i - len(xml_doc), "".join(xml_doc))
                     except Exception as exc:
@@ -207,11 +207,24 @@ class PatentXmlToTabular:
                     xml_doc = []
                 xml_doc.append(line)
 
-            yield (i - len(xml_doc), "".join(xml_doc))
+            if xml_doc and xml_doc[1].startswith(f"<!DOCTYPE {self.xml_root}"):
+                yield (i - len(xml_doc), "".join(xml_doc))
 
     def init_cache_vars(self):
         self.tables = defaultdict(list)
         self.table_pk_idx = defaultdict(lambda: defaultdict(int))
+
+    def get_root_config(self):
+        self.xml_root = self.config.get("xml_root", None)
+        if self.xml_root is None:
+            self.xml_root = next(iter(self.config.keys()))
+            self.logger.warning(
+                colored(
+                    "<xml_root> not explicitly set in config -- assuming <%s/>",
+                    "yellow",
+                )
+                % self.xml_root
+            )
 
     @staticmethod
     def get_text(xpath_result):
@@ -458,7 +471,10 @@ class PatentXmlToTabular:
                 + "\n ".join(pformat(config).split("\n"))
             )
 
-        for config in self.config.values():
+        for key, config in self.config.items():
+            if key.startswith("<"):
+                # skip keyword instructions
+                continue
             add_fieldnames(config, [])
 
         return fieldnames
@@ -509,7 +525,7 @@ class PatentXmlToTabular:
             colored("Writing records to %s ...", "green"), db_path,
         )
         for tablename, rows in self.tables.items():
-            params = {"column_order": self.fieldnames[tablename]}
+            params = {"column_order": self.fieldnames[tablename], "alter": True}
             if "id" in self.fieldnames[tablename]:
                 params["pk"] = "id"
                 params["not_null"] = {"id"}
