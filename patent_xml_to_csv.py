@@ -532,6 +532,11 @@ class PatentXmlToTabular:
             if "id" in self.fieldnames[tablename]:
                 params["pk"] = "id"
                 params["not_null"] = {"id"}
+            self.logger.debug(
+                colored("Writing %d records to `%s`...", "magenta"),
+                len(rows),
+                tablename,
+            )
             db[tablename].insert_all(rows, **params)
 
 
