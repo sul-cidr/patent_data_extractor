@@ -516,7 +516,7 @@ class PatentXmlToTabular:
         if db_path.exists():
             self.logger.warning(
                 colored(
-                    "Sqlite database %s  exists; records will be appended.", "yellow"
+                    "Sqlite database %s exists; records will be appended.", "yellow"
                 ),
                 db_path,
             )
