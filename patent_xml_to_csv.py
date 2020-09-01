@@ -407,9 +407,8 @@ class PatentXmlToTabular:
                     if not self.continue_on_error:
                         raise SystemExit()
 
-                self.logger.info(colored("...%d records processed!", "green"), i + 1)
-
             if self.tables:
+                self.logger.info(colored("...%d records processed!", "green"), i + 1)
                 self.flush_to_disk()
             else:
                 self.logger.warning(
