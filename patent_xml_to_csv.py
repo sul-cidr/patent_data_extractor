@@ -407,9 +407,14 @@ class PatentXmlToTabular:
                     if not self.continue_on_error:
                         raise SystemExit()
 
-            self.logger.info(colored("...%d records processed!", "green"), i + 1)
+                self.logger.info(colored("...%d records processed!", "green"), i + 1)
 
-            self.flush_to_disk()
+            if self.tables:
+                self.flush_to_disk()
+            else:
+                self.logger.warning(
+                    colored("No records found! (config file error?)", "red")
+                )
 
     def flush_to_disk(self):
         if self.output_type == "csv":
