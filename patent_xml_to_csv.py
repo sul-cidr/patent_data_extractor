@@ -123,13 +123,13 @@ class DTDResolver(etree.Resolver):
             return self.resolve_filename(system_url, context)
         else:
             return self.resolve_filename(
-                str((self.dtd_path / system_url).resolve()), context,
+                str((self.dtd_path / system_url).resolve()), context
             )
 
 
 class PatentXmlToTabular:
     def __init__(
-        self, xml_input, config, dtd_path, output_path, output_type, logger, **kwargs,
+        self, xml_input, config, dtd_path, output_path, output_type, logger, **kwargs
     ):
 
         self.logger = logger
@@ -242,10 +242,10 @@ class PatentXmlToTabular:
         return None
 
     def process_new_entity(
-        self, tree, elems, config, parent_entity=None, parent_pk=None,
+        self, tree, elems, config, parent_entity=None, parent_pk=None
     ):
-        """ Process a subtree of the xml as a new entity type, creating a new record in a new
-            output table/file.
+        """Process a subtree of the xml as a new entity type, creating a new record in a
+        new output table/file.
         """
         entity = config["<entity>"]
         for elem in elems:
@@ -336,7 +336,7 @@ class PatentXmlToTabular:
         )
 
     def process_path(
-        self, tree, path, config, record, parent_entity=None, parent_pk=None,
+        self, tree, path, config, record, parent_entity=None, parent_pk=None
     ):
 
         try:
@@ -357,7 +357,7 @@ class PatentXmlToTabular:
 
     def convert(self):
         if not self.xml_files:
-            self.logger.warning(colored("No input files to process!", "red",))
+            self.logger.warning(colored("No input files to process!", "red"))
 
         for input_file in self.xml_files:
 
@@ -421,10 +421,11 @@ class PatentXmlToTabular:
         self.init_cache_vars()
 
     def get_fieldnames(self):
-        """ On python >=3.7, dictionaries maintain key order, so fields are guaranteed to be
-            returned in the order in which they appear in the config file.  To guarantee
-            this on versions of python <3.7 (insofar as it matters),
-            collections.OrderedDict would have to be used here.
+        """
+        On python >=3.7, dictionaries maintain key order, so fields are guaranteed to
+        be returned in the order in which they appear in the config file.  To guarantee
+        this on versions of python <3.7 (insofar as it matters), collections.OrderedDict
+        would have to be used here.
         """
 
         fieldnames = defaultdict(list)
@@ -489,7 +490,7 @@ class PatentXmlToTabular:
 
             if output_file.exists():
                 self.logger.debug(
-                    colored("CSV file %s exists; records will be appended.", "yellow",),
+                    colored("CSV file %s exists; records will be appended.", "yellow"),
                     output_file,
                 )
 
@@ -521,9 +522,7 @@ class PatentXmlToTabular:
             )
 
         db = SqliteDB(db_path)
-        self.logger.info(
-            colored("Writing records to %s ...", "green"), db_path,
-        )
+        self.logger.info(colored("Writing records to %s ...", "green"), db_path)
         for tablename, rows in self.tables.items():
             params = {"column_order": self.fieldnames[tablename], "alter": True}
             if "id" in self.fieldnames[tablename]:
