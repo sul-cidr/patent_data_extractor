@@ -534,6 +534,7 @@ class PatentXmlToTabular:
 
     def write_sqlitedb(self):
         self.logger.info(colored("Writing records to %s ...", "green"), self.db_path)
+        self.db.conn.execute("begin exclusive;")
         for tablename, rows in self.tables.items():
             params = {"column_order": self.fieldnames[tablename], "alter": True}
             if "id" in self.fieldnames[tablename]:
