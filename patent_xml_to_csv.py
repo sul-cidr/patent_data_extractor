@@ -169,7 +169,9 @@ class PatentXmlToTabular:
                         self.db_path,
                     )
 
-                db_conn = sqlite3.connect(str(self.db_path))
+                db_conn = sqlite3.connect(str(self.db_path), isolation_level=None)
+                db_conn.execute("pragma synchronous=off;")
+                db_conn.execute("pragma journal_mode=memory;")
                 self.db = SqliteDB(db_conn)
 
             except ImportError:
