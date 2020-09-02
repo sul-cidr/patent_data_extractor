@@ -157,6 +157,20 @@ class PatentXmlToTabular:
         if self.output_type == "sqlite":
             try:
                 from sqlite_utils import Database as SqliteDB  # noqa
+
+                self.db_path = (self.output_path / "db.sqlite").resolve()
+
+                if self.db_path.exists():
+                    self.logger.warning(
+                        colored(
+                            "Sqlite database %s exists; records will be appended.",
+                            "yellow",
+                        ),
+                        self.db_path,
+                    )
+
+                self.db = SqliteDB(self.db_path)
+
             except ImportError:
                 logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
                 raise
@@ -516,18 +530,7 @@ class PatentXmlToTabular:
                     writer.writerows(rows)
 
     def write_sqlitedb(self):
-        db_path = (self.output_path / "db.sqlite").resolve()
-
-        if db_path.exists():
-            self.logger.warning(
-                colored(
-                    "Sqlite database %s exists; records will be appended.", "yellow"
-                ),
-                db_path,
-            )
-
-        db = SqliteDB(db_path)
-        self.logger.info(colored("Writing records to %s ...", "green"), db_path)
+        self.logger.info(colored("Writing records to %s ...", "green"), self.db_path)
         for tablename, rows in self.tables.items():
             params = {"column_order": self.fieldnames[tablename], "alter": True}
             if "id" in self.fieldnames[tablename]:
@@ -538,7 +541,7 @@ class PatentXmlToTabular:
                 len(rows),
                 tablename,
             )
-            db[tablename].insert_all(rows, **params)
+            self.db[tablename].insert_all(rows, **params)
 
 
 def main():
