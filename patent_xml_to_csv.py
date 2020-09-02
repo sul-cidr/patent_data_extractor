@@ -6,6 +6,7 @@ import argparse
 import csv
 import logging
 import re
+import sqlite3
 from collections import defaultdict
 from io import BytesIO
 from pathlib import Path
@@ -159,7 +160,6 @@ class PatentXmlToTabular:
                 from sqlite_utils import Database as SqliteDB  # noqa
 
                 self.db_path = (self.output_path / "db.sqlite").resolve()
-
                 if self.db_path.exists():
                     self.logger.warning(
                         colored(
@@ -169,7 +169,8 @@ class PatentXmlToTabular:
                         self.db_path,
                     )
 
-                self.db = SqliteDB(self.db_path)
+                db_conn = sqlite3.connect(str(self.db_path))
+                self.db = SqliteDB(db_conn)
 
             except ImportError:
                 logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
