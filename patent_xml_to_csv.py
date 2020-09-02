@@ -154,6 +154,13 @@ class PatentXmlToTabular:
 
         self.output_type = output_type
 
+        if self.output_type == "sqlite":
+            try:
+                from sqlite_utils import Database as SqliteDB  # noqa
+            except ImportError:
+                logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
+                raise
+
         self.config = yaml.safe_load(open(config))
 
         if kwargs["validate"]:
@@ -509,12 +516,6 @@ class PatentXmlToTabular:
                     writer.writerows(rows)
 
     def write_sqlitedb(self):
-        try:
-            from sqlite_utils import Database as SqliteDB
-        except ImportError:
-            self.logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
-            raise
-
         db_path = (self.output_path / "db.sqlite").resolve()
 
         if db_path.exists():
@@ -618,15 +619,8 @@ def main():
     log_level = logging.DEBUG if args.verbose else logging.INFO
     log_level = logging.CRITICAL if args.quiet else log_level
     logger = logging.getLogger(__name__)
-    logger.setLevel(log_level)  # format="%(message)s")
+    logger.setLevel(log_level)
     logger.addHandler(logging.StreamHandler())
-
-    if args.output_type == "sqlite":
-        try:
-            from sqlite_utils import Database as SqliteDB  # noqa
-        except ImportError:
-            logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
-            raise
 
     convertor = PatentXmlToTabular(**vars(args), logger=logger)
     convertor.convert()
