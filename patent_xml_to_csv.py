@@ -6,6 +6,7 @@ import argparse
 import csv
 import logging
 import re
+import sqlite3
 from collections import defaultdict
 from io import BytesIO
 from pathlib import Path
@@ -153,6 +154,29 @@ class PatentXmlToTabular:
         self.output_path.mkdir(parents=True, exist_ok=True)
 
         self.output_type = output_type
+
+        if self.output_type == "sqlite":
+            try:
+                from sqlite_utils import Database as SqliteDB  # noqa
+
+                self.db_path = (self.output_path / "db.sqlite").resolve()
+                if self.db_path.exists():
+                    self.logger.warning(
+                        colored(
+                            "Sqlite database %s exists; records will be appended.",
+                            "yellow",
+                        ),
+                        self.db_path,
+                    )
+
+                db_conn = sqlite3.connect(str(self.db_path), isolation_level=None)
+                db_conn.execute("pragma synchronous=off;")
+                db_conn.execute("pragma journal_mode=memory;")
+                self.db = SqliteDB(db_conn)
+
+            except ImportError:
+                logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
+                raise
 
         self.config = yaml.safe_load(open(config))
 
@@ -509,24 +533,8 @@ class PatentXmlToTabular:
                     writer.writerows(rows)
 
     def write_sqlitedb(self):
-        try:
-            from sqlite_utils import Database as SqliteDB
-        except ImportError:
-            self.logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
-            raise
-
-        db_path = (self.output_path / "db.sqlite").resolve()
-
-        if db_path.exists():
-            self.logger.warning(
-                colored(
-                    "Sqlite database %s exists; records will be appended.", "yellow"
-                ),
-                db_path,
-            )
-
-        db = SqliteDB(db_path)
-        self.logger.info(colored("Writing records to %s ...", "green"), db_path)
+        self.logger.info(colored("Writing records to %s ...", "green"), self.db_path)
+        self.db.conn.execute("begin exclusive;")
         for tablename, rows in self.tables.items():
             params = {"column_order": self.fieldnames[tablename], "alter": True}
             if "id" in self.fieldnames[tablename]:
@@ -537,7 +545,7 @@ class PatentXmlToTabular:
                 len(rows),
                 tablename,
             )
-            db[tablename].insert_all(rows, **params)
+            self.db[tablename].insert_all(rows, **params)
 
 
 def main():
@@ -618,15 +626,8 @@ def main():
     log_level = logging.DEBUG if args.verbose else logging.INFO
     log_level = logging.CRITICAL if args.quiet else log_level
     logger = logging.getLogger(__name__)
-    logger.setLevel(log_level)  # format="%(message)s")
+    logger.setLevel(log_level)
     logger.addHandler(logging.StreamHandler())
-
-    if args.output_type == "sqlite":
-        try:
-            from sqlite_utils import Database as SqliteDB  # noqa
-        except ImportError:
-            logger.debug("sqlite_utils (pip3 install sqlite-utils) not available")
-            raise
 
     convertor = PatentXmlToTabular(**vars(args), logger=logger)
     convertor.convert()
