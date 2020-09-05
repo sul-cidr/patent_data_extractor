@@ -6,7 +6,7 @@ PATDOC:
   # pk is optional -- if supplied, text extracted from the supplied path will be
   #  used for the primary ket of the table (so it must be unique!).  If this key
   #  is not supplied, an auto-incremented integer will be used for the pk.
-  <primary_key>: SDOBI/B200/B210/DNUM
+  <primary_key>: SDOBI/B100/B110/DNUM
 
   # filename_field is optional -- if supplied, the name of the file containing
   #  the XML parsed to make this record will be saved to a field named for the
