@@ -128,6 +128,154 @@ class DTDResolver(etree.Resolver):
             )
 
 
+class XmlDocToTabular:
+    def __init__(self, logger, config, parser, continue_on_error, filename):
+        self.logger = logger
+        self.config = config
+        self.parser = parser
+        self.continue_on_error = continue_on_error
+        self.filename = filename
+        self.tables = defaultdict(list)
+        self.table_pk_idx = defaultdict(lambda: defaultdict(int))
+
+    @staticmethod
+    def get_text(xpath_result):
+        if isinstance(xpath_result, str):
+            return re.sub(r"\s+", " ", xpath_result).strip()
+        return re.sub(
+            r"\s+", " ", etree.tostring(xpath_result, method="text", encoding="unicode")
+        ).strip()
+
+    def get_pk(self, tree, config):
+        if "<primary_key>" in config:
+            elems = tree.findall("./" + config["<primary_key>"])
+            assert len(elems) == 1
+            return self.get_text(elems[0])
+        return None
+
+    def add_string(self, path, elems, record, fieldname):
+        try:
+            assert len(elems) == 1
+        except AssertionError as exc:
+            exc.msg = (
+                f"Multiple elements found for {path}! "
+                + "Should your config file include a joiner, or new entity "
+                + "definition?"
+                + "\n\n- "
+                + "\n- ".join(self.get_text(el) for el in elems)
+            )
+            raise
+
+        # we've only one elem, and it's a simple mapping to a fieldname
+        record[fieldname] = self.get_text(elems[0])
+
+    def process_doc(self, doc):
+        tree = self.parse_tree(doc)
+        for path, config in self.config.items():
+            self.process_path(tree, path, config, {})
+
+        return self.tables
+
+    def parse_tree(self, doc):
+        doc = replace_missing_ents(doc)
+        return etree.parse(BytesIO(doc.encode("utf8")), self.parser)
+
+    def process_path(
+        self, tree, path, config, record, parent_entity=None, parent_pk=None
+    ):
+        try:
+            elems = [tree.getroot()]
+        except AttributeError:
+            elems = tree.xpath("./" + path)
+
+        self.process_field(elems, tree, path, config, record, parent_entity, parent_pk)
+
+    def process_field(
+        self,
+        elems,
+        tree,
+        path,
+        config,
+        record,
+        parent_entity=None,
+        parent_pk=None,
+    ):
+
+        if isinstance(config, str):
+            if elems:
+                self.add_string(path, elems, record, config)
+            return
+
+        if "<entity>" in config:
+            # config is a new entity definition (i.e. a new record on a new table/file)
+            self.process_new_entity(tree, elems, config, parent_entity, parent_pk)
+            return
+
+        if "<fieldname>" in config:
+            # config is extra configuration for a field on this table/file
+            if "<joiner>" in config:
+                if elems:
+                    record[config["<fieldname>"]] = config["<joiner>"].join(
+                        [self.get_text(elem) for elem in elems]
+                    )
+                return
+
+            if "<enum_map>" in config:
+                if elems:
+                    record[config["<fieldname>"]] = config["<enum_map>"].get(
+                        self.get_text(elems[0])
+                    )
+                return
+
+            if "<enum_type>" in config:
+                if elems:
+                    record[config["<fieldname>"]] = config["<enum_type>"]
+                return
+
+            # just a mapping to a fieldname string
+            if len(config) == 1:
+                self.add_string(path, elems, record, config["<fieldname>"])
+                return
+
+        # We may have multiple configurations for this key (XPath expression)
+        if isinstance(config, list):
+            for subconfig in config:
+                self.process_field(elems, tree, path, subconfig, record, parent_entity)
+            return
+
+        raise LookupError(
+            f'Invalid configuration for key "{parent_entity}":'
+            + "\n "
+            + "\n ".join(pformat(config).split("\n"))
+        )
+
+    def process_new_entity(
+        self, tree, elems, config, parent_entity=None, parent_pk=None
+    ):
+        """Process a subtree of the xml as a new entity type, creating a new record in a
+        new output table/file.
+        """
+        entity = config["<entity>"]
+        for elem in elems:
+            record = {}
+
+            pk = self.get_pk(tree, config)
+            if pk:
+                record["id"] = pk
+            else:
+                record["id"] = f"{parent_pk}_{self.table_pk_idx[entity][parent_pk]}"
+                self.table_pk_idx[entity][parent_pk] += 1
+
+            if parent_pk:
+                record[f"{parent_entity}_id"] = parent_pk
+            if "<filename_field>" in config:
+                record[config["<filename_field>"]] = self.filename
+            for subpath, subconfig in config["<fields>"].items():
+                self.process_path(elem, subpath, subconfig, record, entity, pk)
+
+            self.tables[entity].append(record)
+
+
 class XmlCollectionToTabular:
     def __init__(
         self, xml_input, config, dtd_path, output_path, output_type, logger, **kwargs
@@ -244,135 +392,6 @@ class XmlCollectionToTabular:
                 % self.xml_root
             )
 
-    @staticmethod
-    def get_text(xpath_result):
-        if isinstance(xpath_result, str):
-            return re.sub(r"\s+", " ", xpath_result).strip()
-        return re.sub(
-            r"\s+", " ", etree.tostring(xpath_result, method="text", encoding="unicode")
-        ).strip()
-
-    def get_pk(self, tree, config):
-        if "<primary_key>" in config:
-            elems = tree.findall("./" + config["<primary_key>"])
-            assert len(elems) == 1
-            return self.get_text(elems[0])
-        return None
-
-    def process_new_entity(
-        self, tree, elems, config, parent_entity=None, parent_pk=None
-    ):
-        """Process a subtree of the xml as a new entity type, creating a new record in a
-        new output table/file.
-        """
-        entity = config["<entity>"]
-        for elem in elems:
-            record = {}
-
-            pk = self.get_pk(tree, config)
-            if pk:
-                record["id"] = pk
-            else:
-                record["id"] = f"{parent_pk}_{self.table_pk_idx[entity][parent_pk]}"
-                self.table_pk_idx[entity][parent_pk] += 1
-
-            if parent_pk:
-                record[f"{parent_entity}_id"] = parent_pk
-            if "<filename_field>" in config:
-                record[config["<filename_field>"]] = self.current_filename
-            for subpath, subconfig in config["<fields>"].items():
-                self.process_path(elem, subpath, subconfig, record, entity, pk)
-
-            self.tables[entity].append(record)
-
-    def add_string(self, path, elems, record, fieldname):
-        try:
-            assert len(elems) == 1
-        except AssertionError as exc:
-            exc.msg = (
-                f"Multiple elements found for {path}! "
-                + "Should your config file include a joiner, or new entity "
-                + "definition?"
-                + "\n\n- "
-                + "\n- ".join(self.get_text(el) for el in elems)
-            )
-            raise
-
-        # we've only one elem, and it's a simple mapping to a fieldname
-        record[fieldname] = self.get_text(elems[0])
-
-    def process_field(
-        self, elems, tree, path, config, record, parent_entity=None, parent_pk=None
-    ):
-
-        if isinstance(config, str):
-            if elems:
-                self.add_string(path, elems, record, config)
-            return
-
-        if "<entity>" in config:
-            # config is a new entity definition (i.e. a new record on a new table/file)
-            self.process_new_entity(tree, elems, config, parent_entity, parent_pk)
-            return
-
-        if "<fieldname>" in config:
-            # config is extra configuration for a field on this table/file
-            if "<joiner>" in config:
-                if elems:
-                    record[config["<fieldname>"]] = config["<joiner>"].join(
-                        [self.get_text(elem) for elem in elems]
-                    )
-                return
-
-            if "<enum_map>" in config:
-                if elems:
-                    record[config["<fieldname>"]] = config["<enum_map>"].get(
-                        self.get_text(elems[0])
-                    )
-                return
-
-            if "<enum_type>" in config:
-                if elems:
-                    record[config["<fieldname>"]] = config["<enum_type>"]
-                return
-
-            # just a mapping to a fieldname string
-            if len(config) == 1:
-                self.add_string(path, elems, record, config["<fieldname>"])
-                return
-
-        # We may have multiple configurations for this key (XPath expression)
-        if isinstance(config, list):
-            for subconfig in config:
-                self.process_field(elems, tree, path, subconfig, record, parent_entity)
-            return
-
-        raise LookupError(
-            f'Invalid configuration for key "{parent_entity}":'
-            + "\n "
-            + "\n ".join(pformat(config).split("\n"))
-        )
-
-    def process_path(
-        self, tree, path, config, record, parent_entity=None, parent_pk=None
-    ):
-
-        try:
-            elems = [tree.getroot()]
-        except AttributeError:
-            elems = tree.xpath("./" + path)
-
-        self.process_field(elems, tree, path, config, record, parent_entity, parent_pk)
-
-    def parse_tree(self, doc):
-        doc = replace_missing_ents(doc)
-        return etree.parse(BytesIO(doc.encode("utf8")), self.parser)
-
-    def process_doc(self, doc):
-        tree = self.parse_tree(doc)
-        for path, config in self.config.items():
-            self.process_path(tree, path, config, {})
-
     def convert(self):
         if not self.xml_files:
             self.logger.warning(colored("No input files to process!", "red"))
@@ -388,7 +407,18 @@ class XmlCollectionToTabular:
                         colored("Processing document %d...", "cyan"), i + 1
                     )
                 try:
-                    self.process_doc(doc)
+
+                    docParser = XmlDocToTabular(
+                        self.logger,
+                        self.config,
+                        self.parser,
+                        self.continue_on_error,
+                        self.current_filename,
+                    )
+                    tables = docParser.process_doc(doc)
+
+                    for key, value in tables.items():
+                        self.tables[key].extend(value)
 
                 except LookupError as exc:
                     self.logger.warning(exc.args[0])
