@@ -205,12 +205,6 @@ class XmlCollectionToTabular:
         self.get_root_config()
         self.init_cache_vars()
 
-    @staticmethod
-    def get_all_xml_docs(filepath):
-        with open(filepath, "r") as _fh:
-            data = _fh.read()
-        return re.split(r"\n(?=<\?xml)", data)
-
     def yield_xml_doc(self, filepath):
         xml_doc = []
         with open(filepath, "r", errors="replace") as _fh:
