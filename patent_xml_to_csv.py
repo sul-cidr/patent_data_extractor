@@ -351,7 +351,6 @@ class XmlCollectionToTabular:
 
         self.fieldnames = self.get_fieldnames()
         self.get_root_config()
-        self.init_cache_vars()
 
     def yield_xml_doc(self, filepath):
         xml_doc = []
@@ -376,10 +375,6 @@ class XmlCollectionToTabular:
             if xml_doc and xml_doc[1].startswith(f"<!DOCTYPE {self.xml_root}"):
                 yield (i - len(xml_doc), "".join(xml_doc))
 
-    def init_cache_vars(self):
-        self.tables = defaultdict(list)
-        self.table_pk_idx = defaultdict(lambda: defaultdict(int))
-
     def get_root_config(self):
         self.xml_root = self.config.get("xml_root", None)
         if self.xml_root is None:
@@ -401,6 +396,8 @@ class XmlCollectionToTabular:
             self.logger.info(colored("Processing %s...", "green"), input_file.resolve())
             self.current_filename = input_file.resolve().name
 
+            all_tables = defaultdict(list)
+
             for i, (linenum, doc) in enumerate(self.yield_xml_doc(input_file)):
                 if i % 100 == 0:
                     self.logger.debug(
@@ -418,7 +415,7 @@ class XmlCollectionToTabular:
                     tables = docParser.process_doc(doc)
 
                     for key, value in tables.items():
-                        self.tables[key].extend(value)
+                        all_tables[key].extend(value)
 
                 except LookupError as exc:
                     self.logger.warning(exc.args[0])
@@ -455,22 +452,20 @@ class XmlCollectionToTabular:
                     if not self.continue_on_error:
                         raise SystemExit()
 
-            if self.tables:
+            if all_tables:
                 self.logger.info(colored("...%d records processed!", "green"), i + 1)
-                self.flush_to_disk()
+                self.flush_to_disk(all_tables)
             else:
                 self.logger.warning(
                     colored("No records found! (config file error?)", "red")
                 )
 
-    def flush_to_disk(self):
+    def flush_to_disk(self, tables):
         if self.output_type == "csv":
-            self.write_csv_files()
+            self.write_csv_files(tables)
 
         if self.output_type == "sqlite":
-            self.write_sqlitedb()
-
-        self.init_cache_vars()
+            self.write_sqlitedb(tables)
 
     def get_fieldnames(self):
         """
@@ -532,12 +527,12 @@ class XmlCollectionToTabular:
 
         return fieldnames
 
-    def write_csv_files(self):
+    def write_csv_files(self, tables):
 
         self.logger.info(
             colored("Writing csv files to %s ...", "green"), self.output_path.resolve()
         )
-        for tablename, rows in self.tables.items():
+        for tablename, rows in tables.items():
             output_file = self.output_path / f"{tablename}.csv"
 
             if output_file.exists():
@@ -556,10 +551,10 @@ class XmlCollectionToTabular:
                     writer.writeheader()
                     writer.writerows(rows)
 
-    def write_sqlitedb(self):
+    def write_sqlitedb(self, tables):
         self.logger.info(colored("Writing records to %s ...", "green"), self.db_path)
         self.db.conn.execute("begin exclusive;")
-        for tablename, rows in self.tables.items():
+        for tablename, rows in tables.items():
             params = {"column_order": self.fieldnames[tablename], "alter": True}
             if "id" in self.fieldnames[tablename]:
                 params["pk"] = "id"
