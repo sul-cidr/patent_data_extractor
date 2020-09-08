@@ -128,7 +128,7 @@ class DTDResolver(etree.Resolver):
             )
 
 
-class PatentXmlToTabular:
+class XmlCollectionToTabular:
     def __init__(
         self, xml_input, config, dtd_path, output_path, output_type, logger, **kwargs
     ):
@@ -629,7 +629,7 @@ def main():
     logger.setLevel(log_level)
     logger.addHandler(logging.StreamHandler())
 
-    convertor = PatentXmlToTabular(**vars(args), logger=logger)
+    convertor = XmlCollectionToTabular(**vars(args), logger=logger)
     convertor.convert()
 
 
