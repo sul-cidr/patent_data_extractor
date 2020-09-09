@@ -129,12 +129,11 @@ class DTDResolver(etree.Resolver):
 
 
 class XmlDocToTabular:
-    def __init__(self, logger, config, parser, continue_on_error, filename):
+    def __init__(self, logger, config, parser, continue_on_error):
         self.logger = logger
         self.config = config
         self.parser = parser
         self.continue_on_error = continue_on_error
-        self.filename = filename
         self.tables = defaultdict(list)
         self.table_pk_idx = defaultdict(lambda: defaultdict(int))
 
@@ -169,10 +168,10 @@ class XmlDocToTabular:
         # we've only one elem, and it's a simple mapping to a fieldname
         record[fieldname] = self.get_text(elems[0])
 
-    def process_doc(self, doc):
+    def process_doc(self, doc, filename):
         tree = self.parse_tree(doc)
         for path, config in self.config.items():
-            self.process_path(tree, path, config, {})
+            self.process_path(tree, path, config, filename, {})
 
         return self.tables
 
@@ -181,14 +180,16 @@ class XmlDocToTabular:
         return etree.parse(BytesIO(doc.encode("utf8")), self.parser)
 
     def process_path(
-        self, tree, path, config, record, parent_entity=None, parent_pk=None
+        self, tree, path, config, filename, record, parent_entity=None, parent_pk=None
     ):
         try:
             elems = [tree.getroot()]
         except AttributeError:
             elems = tree.xpath("./" + path)
 
-        self.process_field(elems, tree, path, config, record, parent_entity, parent_pk)
+        self.process_field(
+            elems, tree, path, config, filename, record, parent_entity, parent_pk
+        )
 
     def process_field(
         self,
@@ -196,6 +197,7 @@ class XmlDocToTabular:
         tree,
         path,
         config,
+        filename,
         record,
         parent_entity=None,
         parent_pk=None,
@@ -208,7 +210,9 @@ class XmlDocToTabular:
 
         if "<entity>" in config:
             # config is a new entity definition (i.e. a new record on a new table/file)
-            self.process_new_entity(tree, elems, config, parent_entity, parent_pk)
+            self.process_new_entity(
+                tree, elems, config, filename, parent_entity, parent_pk
+            )
             return
 
         if "<fieldname>" in config:
@@ -240,7 +244,9 @@ class XmlDocToTabular:
         # We may have multiple configurations for this key (XPath expression)
         if isinstance(config, list):
             for subconfig in config:
-                self.process_field(elems, tree, path, subconfig, record, parent_entity)
+                self.process_field(
+                    elems, tree, path, subconfig, filename, record, parent_entity
+                )
             return
 
         raise LookupError(
@@ -250,7 +256,7 @@ class XmlDocToTabular:
         )
 
     def process_new_entity(
-        self, tree, elems, config, parent_entity=None, parent_pk=None
+        self, tree, elems, config, filename, parent_entity=None, parent_pk=None
     ):
         """Process a subtree of the xml as a new entity type, creating a new record in a
         new output table/file.
@@ -269,9 +275,11 @@ class XmlDocToTabular:
             if parent_pk:
                 record[f"{parent_entity}_id"] = parent_pk
             if "<filename_field>" in config:
-                record[config["<filename_field>"]] = self.filename
+                record[config["<filename_field>"]] = filename
             for subpath, subconfig in config["<fields>"].items():
-                self.process_path(elem, subpath, subconfig, record, entity, pk)
+                self.process_path(
+                    elem, subpath, subconfig, filename, record, entity, pk
+                )
 
             self.tables[entity].append(record)
 
@@ -353,6 +361,7 @@ class XmlCollectionToTabular:
         self.get_root_config()
 
     def yield_xml_doc(self, filepath):
+        filename = filepath.resolve().name
         xml_doc = []
         with open(filepath, "r", errors="replace") as _fh:
             for i, line in enumerate(_fh):
@@ -361,7 +370,7 @@ class XmlCollectionToTabular:
                         if xml_doc and xml_doc[1].startswith(
                             f"<!DOCTYPE {self.xml_root}"
                         ):
-                            yield (i - len(xml_doc), "".join(xml_doc))
+                            yield (filename, i - len(xml_doc), "".join(xml_doc))
                     except Exception as exc:
                         self.logger.warning(exc.args[0])
                         self.logger.debug(
@@ -373,7 +382,7 @@ class XmlCollectionToTabular:
                 xml_doc.append(line)
 
             if xml_doc and xml_doc[1].startswith(f"<!DOCTYPE {self.xml_root}"):
-                yield (i - len(xml_doc), "".join(xml_doc))
+                yield (filename, i - len(xml_doc), "".join(xml_doc))
 
     def get_root_config(self):
         self.xml_root = self.config.get("xml_root", None)
@@ -394,28 +403,23 @@ class XmlCollectionToTabular:
         for input_file in self.xml_files:
 
             self.logger.info(colored("Processing %s...", "green"), input_file.resolve())
-            self.current_filename = input_file.resolve().name
 
-            all_tables = defaultdict(list)
+            docParser = XmlDocToTabular(
+                self.logger,
+                self.config,
+                self.parser,
+                self.continue_on_error,
+            )
 
-            for i, (linenum, doc) in enumerate(self.yield_xml_doc(input_file)):
+            for i, (filename, linenum, doc) in enumerate(
+                self.yield_xml_doc(input_file)
+            ):
                 if i % 100 == 0:
                     self.logger.debug(
                         colored("Processing document %d...", "cyan"), i + 1
                     )
                 try:
-
-                    docParser = XmlDocToTabular(
-                        self.logger,
-                        self.config,
-                        self.parser,
-                        self.continue_on_error,
-                        self.current_filename,
-                    )
-                    tables = docParser.process_doc(doc)
-
-                    for key, value in tables.items():
-                        all_tables[key].extend(value)
+                    docParser.process_doc(doc, filename)
 
                 except LookupError as exc:
                     self.logger.warning(exc.args[0])
@@ -452,9 +456,9 @@ class XmlCollectionToTabular:
                     if not self.continue_on_error:
                         raise SystemExit()
 
-            if all_tables:
+            if docParser.tables:
                 self.logger.info(colored("...%d records processed!", "green"), i + 1)
-                self.flush_to_disk(all_tables)
+                self.flush_to_disk(docParser.tables)
             else:
                 self.logger.warning(
                     colored("No records found! (config file error?)", "red")
