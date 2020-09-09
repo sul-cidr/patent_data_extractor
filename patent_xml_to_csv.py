@@ -168,10 +168,43 @@ class XmlDocToTabular:
         # we've only one elem, and it's a simple mapping to a fieldname
         record[fieldname] = self.get_text(elems[0])
 
-    def process_doc(self, doc, filename):
-        tree = self.parse_tree(doc)
-        for path, config in self.config.items():
-            self.process_path(tree, path, config, filename, {})
+    def process_doc(self, filename, linenum, doc):
+
+        try:
+            tree = self.parse_tree(doc)
+            for path, config in self.config.items():
+                self.process_path(tree, path, config, filename, {})
+
+        except LookupError as exc:
+            self.logger.warning(exc.args[0])
+            if not self.continue_on_error:
+                raise SystemExit()
+
+        except etree.XMLSyntaxError as exc:
+            self.logger.debug(doc)
+            self.logger.warning(
+                colored(
+                    "Unable to parse XML document ending at line %d "
+                    "(enable debugging -v to dump doc to console):\n\t%s",
+                    "red",
+                ),
+                linenum,
+                exc.msg,
+            )
+            if not self.continue_on_error:
+                raise SystemExit()
+
+        except AssertionError as exc:
+            self.logger.debug(doc)
+            pk = self.get_pk(self.parse_tree(doc), next(iter(self.config.values())))
+            self.logger.warning(
+                colored("Record ID %s @%d: (record has not been parsed)", "red"),
+                pk,
+                linenum,
+            )
+            self.logger.warning(exc.msg)
+            if not self.continue_on_error:
+                raise SystemExit()
 
         return self.tables
 
@@ -418,43 +451,7 @@ class XmlCollectionToTabular:
                     self.logger.debug(
                         colored("Processing document %d...", "cyan"), i + 1
                     )
-                try:
-                    docParser.process_doc(doc, filename)
-
-                except LookupError as exc:
-                    self.logger.warning(exc.args[0])
-                    if not self.continue_on_error:
-                        raise SystemExit()
-
-                except etree.XMLSyntaxError as exc:
-                    self.logger.debug(doc)
-                    self.logger.warning(
-                        colored(
-                            "Unable to parse XML document ending at line %d "
-                            "(enable debugging -v to dump doc to console):\n\t%s",
-                            "red",
-                        ),
-                        linenum,
-                        exc.msg,
-                    )
-                    if not self.continue_on_error:
-                        raise SystemExit()
-
-                except AssertionError as exc:
-                    self.logger.debug(doc)
-                    pk = self.get_pk(
-                        self.parse_tree(doc), next(iter(self.config.values()))
-                    )
-                    self.logger.warning(
-                        colored(
-                            "Record ID %s @%d: (record has not been parsed)", "red"
-                        ),
-                        pk,
-                        linenum,
-                    )
-                    self.logger.warning(exc.msg)
-                    if not self.continue_on_error:
-                        raise SystemExit()
+                docParser.process_doc(filename, linenum, doc)
 
             if docParser.tables:
                 self.logger.info(colored("...%d records processed!", "green"), i + 1)
