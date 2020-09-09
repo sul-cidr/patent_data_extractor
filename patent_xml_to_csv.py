@@ -400,16 +400,16 @@ class XmlCollectionToTabular:
         if not self.xml_files:
             self.logger.warning(colored("No input files to process!", "red"))
 
+        docParser = XmlDocToTabular(
+            self.logger,
+            self.config,
+            self.parser,
+            self.continue_on_error,
+        )
+
         for input_file in self.xml_files:
 
             self.logger.info(colored("Processing %s...", "green"), input_file.resolve())
-
-            docParser = XmlDocToTabular(
-                self.logger,
-                self.config,
-                self.parser,
-                self.continue_on_error,
-            )
 
             for i, (filename, linenum, doc) in enumerate(
                 self.yield_xml_doc(input_file)
