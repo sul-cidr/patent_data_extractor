@@ -1,6 +1,6 @@
 us-patent-grant:
   <entity>: patent
-  <primary_key>: us-bibliographic-data-grant/application-reference/document-id/doc-number
+  <primary_key>: us-bibliographic-data-grant/publication-reference/document-id/doc-number
   <filename_field>: source_file
   <fields>:
     us-bibliographic-data-grant/number-of-claims: num_claims
