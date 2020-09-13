@@ -8,6 +8,7 @@ import logging
 import re
 import sqlite3
 from collections import defaultdict
+from functools import partial
 from io import BytesIO
 from pathlib import Path
 from pprint import pformat
@@ -136,7 +137,8 @@ class XmlDocToTabular:
         self.validate = validate
         self.continue_on_error = continue_on_error
         self.tables = defaultdict(list)
-        self.table_pk_idx = defaultdict(lambda: defaultdict(int))
+        # lambdas can't be pickled (without dill, at least)
+        self.table_pk_idx = defaultdict(partial(defaultdict, int))
 
     @staticmethod
     def get_text(xpath_result):
