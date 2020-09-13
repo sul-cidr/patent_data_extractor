@@ -129,10 +129,11 @@ class DTDResolver(etree.Resolver):
 
 
 class XmlDocToTabular:
-    def __init__(self, logger, config, parser, continue_on_error):
+    def __init__(self, logger, config, dtd_path, validate, continue_on_error):
         self.logger = logger
         self.config = config
-        self.parser = parser
+        self.dtd_path = dtd_path
+        self.validate = validate
         self.continue_on_error = continue_on_error
         self.tables = defaultdict(list)
         self.table_pk_idx = defaultdict(lambda: defaultdict(int))
@@ -210,7 +211,21 @@ class XmlDocToTabular:
 
     def parse_tree(self, doc):
         doc = replace_missing_ents(doc)
-        return etree.parse(BytesIO(doc.encode("utf8")), self.parser)
+
+        parser_args = {
+            "load_dtd": True,
+            "resolve_entities": True,
+            "ns_clean": True,
+            "huge_tree": True,
+            "collect_ids": False,
+        }
+
+        if self.validate:
+            parser_args["dtd_validation"] = True
+
+        parser = etree.XMLParser(**parser_args)
+        parser.resolvers.add(DTDResolver(self.dtd_path))
+        return etree.parse(BytesIO(doc.encode("utf8")), parser)
 
     def process_path(
         self, tree, path, config, filename, record, parent_entity=None, parent_pk=None
@@ -369,26 +384,9 @@ class XmlCollectionToTabular:
 
         self.config = yaml.safe_load(open(config))
 
-        if kwargs["validate"]:
-            self.parser = etree.XMLParser(
-                load_dtd=True,
-                resolve_entities=True,
-                ns_clean=True,
-                huge_tree=True,
-                dtd_validation=True,
-                collect_ids=False,
-            )
-        else:
-            self.parser = etree.XMLParser(
-                load_dtd=True,
-                resolve_entities=True,
-                ns_clean=True,
-                huge_tree=True,
-                collect_ids=False,
-            )
-
+        self.dtd_path = dtd_path
+        self.validate = kwargs["validate"]
         self.continue_on_error = kwargs["continue_on_error"]
-        self.parser.resolvers.add(DTDResolver(dtd_path))
 
         self.fieldnames = self.get_fieldnames()
         self.get_root_config()
@@ -436,7 +434,8 @@ class XmlCollectionToTabular:
         docParser = XmlDocToTabular(
             self.logger,
             self.config,
-            self.parser,
+            self.dtd_path,
+            self.validate,
             self.continue_on_error,
         )
 
