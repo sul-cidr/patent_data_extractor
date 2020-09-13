@@ -7,6 +7,7 @@ import csv
 import logging
 import re
 import sqlite3
+import sys
 from collections import defaultdict
 from functools import partial
 from io import BytesIO
@@ -24,6 +25,12 @@ except ImportError:
     def colored(text, _color):
         """ Dummy function in case termcolor is not available. """
         return text
+
+
+MIN_PYTHON = (3, 7)
+assert (
+    sys.version_info >= MIN_PYTHON
+), f"requires Python {'.'.join([str(n) for n in MIN_PYTHON])} or newer"
 
 
 def replace_missing_ents(doc):
