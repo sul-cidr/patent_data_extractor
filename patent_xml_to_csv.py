@@ -11,6 +11,7 @@ import sys
 from collections import defaultdict
 from functools import partial
 from io import BytesIO
+from multiprocessing import Pool, cpu_count
 from pathlib import Path
 from pprint import pformat
 
@@ -178,7 +179,8 @@ class XmlDocToTabular:
         # we've only one elem, and it's a simple mapping to a fieldname
         record[fieldname] = self.get_text(elems[0])
 
-    def process_doc(self, filename, linenum, doc):
+    def process_doc(self, payload):
+        filename, linenum, doc = payload
 
         try:
             tree = self.parse_tree(doc)
@@ -395,6 +397,7 @@ class XmlCollectionToTabular:
 
         self.dtd_path = dtd_path
         self.validate = kwargs["validate"]
+        self.processes = kwargs["processes"]
         self.continue_on_error = kwargs["continue_on_error"]
 
         self.fieldnames = self.get_fieldnames()
@@ -452,18 +455,36 @@ class XmlCollectionToTabular:
 
             self.logger.info(colored("Processing %s...", "green"), input_file.resolve())
 
-            for i, (filename, linenum, doc) in enumerate(
-                self.yield_xml_doc(input_file)
+            processes = self.processes or cpu_count() - 1 or 1
+            print(f"{processes =}")
+            # chunk sizes greater than 1 result in duplicate returns because the results
+            #  are pooled on the XmlDocToTabular instance
+            chunksize = 1
+
+            pool = Pool(processes=processes)
+
+            all_tables = defaultdict(list)
+            for i, tables in enumerate(
+                pool.imap(
+                    docParser.process_doc,
+                    self.yield_xml_doc(input_file),
+                    chunksize,
+                )
             ):
+
                 if i % 100 == 0:
                     self.logger.debug(
                         colored("Processing document %d...", "cyan"), i + 1
                     )
-                docParser.process_doc(filename, linenum, doc)
+                for key, value in tables.items():
+                    all_tables[key].extend(value)
 
-            if docParser.tables:
+            pool.close()
+            pool.join()
+
+            if tables:
                 self.logger.info(colored("...%d records processed!", "green"), i + 1)
-                self.flush_to_disk(docParser.tables)
+                self.flush_to_disk(all_tables)
             else:
                 self.logger.warning(
                     colored("No records found! (config file error?)", "red")
@@ -641,6 +662,14 @@ def main():
         action="store",
         default="csv",
         help="output csv files (one per table, default) or a sqlite database",
+    )
+
+    arg_parser.add_argument(
+        "--processes",
+        action="store",
+        type=int,
+        help="number of processes to use for parallel processing of XML documents"
+        " (defaults to num_threads - 1)",
     )
 
     arg_parser.add_argument(
