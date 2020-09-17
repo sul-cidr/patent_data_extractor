@@ -17,7 +17,7 @@ OAK="/oak/stanford/groups/hlwill"
 TEMP="$SCRATCH/sponsorships_temp"
 ZIP_DIR="$OAK/raw/USPTO_grants/data"
 DTDS="$OAK/raw/USPTO_grants/python/patent_processor/config/grants/DTDs"
-OUTPUT="output/grants"
+OUTPUT="output/grants/grants_db.sqlite"
 
 rm -r $TEMP
 rm -r $OUTPUT
@@ -32,9 +32,9 @@ wait
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config config/uspto-grants-0105.yaml \
+        --config config/uspto-grants.2002-2004.yaml \
         --output-path $OUTPUT \
-        --output-type csv \
+        --output-type sqlite \
         --dtd-path $DTDS \
         --continue-on-error
 
@@ -48,9 +48,9 @@ wait
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config config/uspto-grants-0506.yaml \
+        --config config/uspto-grants.2005.yaml \
         --output-path $OUTPUT \
-        --output-type csv \
+        --output-type sqlite \
         --dtd-path $DTDS \
         --continue-on-error
 
@@ -65,9 +65,9 @@ wait
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config config/uspto-grants-0613.yaml \
+        --config config/uspto-grants.2006-20130108.yaml \
         --output-path $OUTPUT \
-        --output-type csv \
+        --output-type sqlite \
         --dtd-path $DTDS \
         --continue-on-error
 
@@ -82,9 +82,9 @@ wait
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config "config/uspto-grants-13+.yaml" \
+        --config "config/uspto-grants20130115+.yaml" \
         --output-path $OUTPUT \
-        --output-type csv \
+        --output-type sqlite \
         --dtd-path $DTDS \
         --continue-on-error
 
