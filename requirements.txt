@@ -1,4 +1,4 @@
 lxml
 pyyaml
-sqlite_utils >= 2.16.1
+sqlite_utils >= 2.18
 termcolor

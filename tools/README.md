@@ -29,6 +29,7 @@ optional arguments:
 * The latter two examples depend upon bash brace expansion -- multiple years can simply be specified in series on the command line in shells where this is not supported (i.e. POSIX shell).
 * Output files that already exist will be skipped and not re-downloaded (so the script will only fetch needed files, but partial or failed downloads will need to be cleared manually).
 * The script does not test the integrity of the downloaded files (this could be added?), and sometimes the USPTO site returns "503 Service Temporarily Unavailable" errors or other malformed file.
+  - `for i in */*.zip; do zip -T "$i" 1> /dev/null; done;` will output only files that fail the integrity check.
 * To extract all the archives to a single folder (e.g. `extracted/`), something like the following can be used:
 
     ```

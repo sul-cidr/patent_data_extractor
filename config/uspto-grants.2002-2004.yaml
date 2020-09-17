@@ -6,7 +6,7 @@ PATDOC:
   # pk is optional -- if supplied, text extracted from the supplied path will be
   #  used for the primary ket of the table (so it must be unique!).  If this key
   #  is not supplied, an auto-incremented integer will be used for the pk.
-  <primary_key>: SDOBI/B200/B210/DNUM
+  <primary_key>: SDOBI/B100/B110/DNUM
 
   # filename_field is optional -- if supplied, the name of the file containing
   #  the XML parsed to make this record will be saved to a field named for the
@@ -229,9 +229,9 @@ PATDOC:
             <enum_type>: reexamination_reissue_merger
           - <fieldname>: relationship
             <enum_type>: parent
-          - "*":
-              <fieldname>: doc_number
-              <joiner>: "|#|"
+          # - "*":
+          #     <fieldname>: doc_number
+          #     <joiner>: "|#|"
 
     SDOBI/B600/B650:
       <entity>: related_document
@@ -389,7 +389,3 @@ PATDOC:
         DOC/DATE: date
         DOC/KIND: kind_code
         DOC/CTRY: country_code
-
-    #Saves the name of the file where the patent was retreived
-    #Note this is not present in the XML; special handling by parser
-    <filename_field>: source_file
