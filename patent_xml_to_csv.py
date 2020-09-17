@@ -456,7 +456,6 @@ class XmlCollectionToTabular:
             self.logger.info(colored("Processing %s...", "green"), input_file.resolve())
 
             processes = self.processes or cpu_count() - 1 or 1
-            print(f"{processes =}")
             # chunk sizes greater than 1 result in duplicate returns because the results
             #  are pooled on the XmlDocToTabular instance
             chunksize = 1
