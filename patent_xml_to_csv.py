@@ -11,12 +11,26 @@ import sys
 from collections import defaultdict
 from functools import partial
 from io import BytesIO
-from multiprocessing import Pool, cpu_count
 from pathlib import Path
 from pprint import pformat
 
 import yaml
 from lxml import etree
+
+
+assert sys.version_info >= (3, 6), "Error: Python 3.6 or newer is required."
+
+if sys.version_info < (3, 7):
+    try:
+        from multiprocess import Pool, cpu_count
+    except ImportError:
+        sys.exit(
+            "Error: If running with Python < 3.7, the multiprocess library is required "
+            "(e.g. pip install multiprocess)."
+        )
+else:
+    from multiprocessing import Pool, cpu_count
+
 
 try:
     from termcolor import colored
@@ -26,12 +40,6 @@ except ImportError:
     def colored(text, _color):
         """ Dummy function in case termcolor is not available. """
         return text
-
-
-MIN_PYTHON = (3, 7)
-assert (
-    sys.version_info >= MIN_PYTHON
-), f"requires Python {'.'.join([str(n) for n in MIN_PYTHON])} or newer"
 
 
 def replace_missing_ents(doc):
