@@ -179,7 +179,9 @@ def main():
     logger.setLevel(log_level)
     logger.addHandler(logging.StreamHandler())
 
-    convertor = XmlCollectionToTabular(**vars(args), logger=logger)
+    convertor = XmlCollectionToTabular(
+        **vars(args), preprocess_doc=replace_missing_ents, logger=logger
+    )
     convertor.convert()
 
 
