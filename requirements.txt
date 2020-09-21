@@ -2,3 +2,4 @@ lxml
 pyyaml
 sqlite_utils >= 2.18
 termcolor
+multiprocess ; python_version < '3.7'
