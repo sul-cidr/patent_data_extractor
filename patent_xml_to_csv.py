@@ -73,14 +73,13 @@ def replace_missing_ents(doc):
 
     ----
 
+    * LeftSkeleton
     * RightSkeleton
 
       Another MathML symbol, but there is a discrepancy here in that
-      https://reference.wolfram.com/language/ref/character/RightSkeleton.html and
-      https://www.mathmlcentral.com/characters/glyphs/RightSkeleton.html use U+F762 and
-      my copy of mmlextra.ent uses U+E851.
-
-      Curiously (?), I have yet to encounter &LeftSkeleton; ...
+      https://reference.wolfram.com/ and https://www.mathmlcentral.com/ use U+F761 and
+      U+F762 for LeftSkeleton and RightSkeleton respectively, and my copy of mmlextra.ent
+      uses U+E850 and U+E851.
 
     ----
 
