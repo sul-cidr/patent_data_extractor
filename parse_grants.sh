@@ -82,7 +82,7 @@ wait
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
         --recurse \
-        --config "config/uspto-grants20130115+.yaml" \
+        --config config/uspto-grants.20130115+.yaml \
         --output-path $OUTPUT \
         --output-type sqlite \
         --dtd-path $DTDS \
