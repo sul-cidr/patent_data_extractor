@@ -1,8 +1,6 @@
 import csv
-import logging
 import re
 import sqlite3
-import sys
 from collections import defaultdict
 from functools import partial
 from io import BytesIO
@@ -12,30 +10,7 @@ from pprint import pformat
 import yaml
 from lxml import etree
 
-from .utils import expand_paths, DTDResolver
-
-assert sys.version_info >= (3, 6), "Error: Python 3.6 or newer is required."
-
-if sys.version_info < (3, 7):
-    try:
-        from multiprocess import Pool, cpu_count
-    except ImportError:
-        sys.exit(
-            "Error: If running with Python < 3.7, the multiprocess library is required "
-            "(e.g. pip install multiprocess)."
-        )
-else:
-    from multiprocessing import Pool, cpu_count
-
-
-try:
-    from termcolor import colored
-except ImportError:
-    logging.debug("termcolor (pip install termcolor) not available")
-
-    def colored(text, _color):
-        """ Dummy function in case termcolor is not available. """
-        return text
+from .utils import expand_paths, DTDResolver, colored, Pool, cpu_count
 
 
 class XmlDocToTabular:
