@@ -39,10 +39,13 @@ except ImportError:
 
 
 class XmlDocToTabular:
-    def __init__(self, logger, config, dtd_path, validate, continue_on_error):
+    def __init__(
+        self, logger, config, dtd_path, preprocess_doc, validate, continue_on_error
+    ):
         self.logger = logger
         self.config = config
         self.dtd_path = dtd_path
+        self.preprocess_doc = preprocess_doc
         self.validate = validate
         self.continue_on_error = continue_on_error
         self.tables = defaultdict(list)
@@ -122,6 +125,9 @@ class XmlDocToTabular:
         return self.tables
 
     def parse_tree(self, doc):
+        if self.preprocess_doc:
+            doc = self.preprocess_doc(doc)
+
         parser_args = {
             "load_dtd": True,
             "resolve_entities": True,
@@ -244,7 +250,15 @@ class XmlDocToTabular:
 
 class XmlCollectionToTabular:
     def __init__(
-        self, xml_input, config, dtd_path, output_path, output_type, logger, **kwargs
+        self,
+        xml_input,
+        config,
+        dtd_path,
+        output_path,
+        output_type,
+        logger,
+        preprocess_doc=False,
+        **kwargs,
     ):
 
         self.logger = logger
@@ -295,6 +309,7 @@ class XmlCollectionToTabular:
         self.config = yaml.safe_load(open(config))
 
         self.dtd_path = dtd_path
+        self.preprocess_doc = preprocess_doc
         self.validate = kwargs["validate"]
         self.processes = kwargs["processes"]
         self.continue_on_error = kwargs["continue_on_error"]
@@ -346,6 +361,7 @@ class XmlCollectionToTabular:
             self.logger,
             self.config,
             self.dtd_path,
+            self.preprocess_doc,
             self.validate,
             self.continue_on_error,
         )
