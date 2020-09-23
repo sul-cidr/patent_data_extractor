@@ -34,7 +34,7 @@ python3 patent_xml_to_csv.py \
         --recurse \
         --config config/uspto-applications-0105.yaml \
         --output-path $OUTPUT \
-        --output-type csv \
+        --output-type sqlite \
         --dtd-path $DTDS \
         --continue-on-error
 
@@ -50,7 +50,7 @@ python3 patent_xml_to_csv.py \
         --recurse \
         --config config/uspto-applications-0506.yaml \
         --output-path $OUTPUT \
-        --output-type csv \
+        --output-type sqlite \
         --dtd-path $DTDS \
         --continue-on-error
 
@@ -67,7 +67,7 @@ python3 patent_xml_to_csv.py \
         --recurse \
         --config config/uspto-applications-0613.yaml \
         --output-path $OUTPUT \
-        --output-type csv \
+        --output-type sqlite \
         --dtd-path $DTDS \
         --continue-on-error
 
@@ -84,10 +84,8 @@ python3 patent_xml_to_csv.py \
         --recurse \
         --config "config/uspto-applications-13+.yaml" \
         --output-path $OUTPUT \
-        --output-type csv \
+        --output-type sqlite \
         --dtd-path $DTDS \
         --continue-on-error
 
 rm -r $TEMP
-mkdir $TEMP
-
