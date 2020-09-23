@@ -17,7 +17,7 @@ OAK="/oak/stanford/groups/hlwill"
 TEMP="$SCRATCH/sponsorships_temp"
 ZIP_DIR="$OAK/raw/USPTO_grants/data"
 DTDS="$OAK/raw/USPTO_grants/python/patent_processor/config/grants/DTDs"
-OUTPUT="output/grants/grants_db.sqlite"
+OUTPUT="output/grants"
 
 rm -r $TEMP
 rm -r $OUTPUT
