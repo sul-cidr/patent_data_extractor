@@ -71,6 +71,12 @@ PATDOC:
       <entity>: assignee
       <fields>:
         B731/PARTY-US/NAM/ONM/STEXT: org_name
+        B731/PARTY-US/ADR/STR/PDAT: street
+        B731/PARTY-US/ADR/CITY/PDAT: city
+        B731/PARTY-US/ADR/CNTY/PDAT: county
+        B731/PARTY-US/ADR/STATE/PDAT: state
+        B731/PARTY-US/ADR/CTRY/PDAT: country
+        B731/PARTY-US/ADR/PCODE/PDAT: postal_code
         B732US: role
 
     SDOBI/B500/B560/B561:

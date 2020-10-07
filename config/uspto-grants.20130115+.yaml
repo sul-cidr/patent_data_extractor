@@ -85,6 +85,12 @@ us-patent-grant:
       <entity>: assignee
       <fields>:
         addressbook/orgname: org_name
+        addressbook/address/street: street
+        addressbook/address/city: city
+        addressbook/address/county: county
+        addressbook/address/state: state
+        addressbook/address/country: country
+        addressbook/address/postcode: postal_code
         addressbook/role: role
 
     us-bibliographic-data-grant/us-references-cited/us-citation:
