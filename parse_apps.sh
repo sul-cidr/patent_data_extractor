@@ -29,7 +29,7 @@ mkdir $OUTPUT
 for i in $ZIP_DIR/pa0[1-4]*.zip; do unzip "$i" -d $TEMP & done
 wait
 
-python3 patent_xml_to_csv.py \
+python3 patent_xml_to_csv.py --verbose \
         --xml-input $TEMP \
         --recurse \
         --config config/uspto-applications-0105.yaml \
@@ -45,7 +45,7 @@ mkdir $TEMP
 for i in $ZIP_DIR/ipa05*.zip; do unzip "$i" -d $TEMP & done
 wait
 
-python3 patent_xml_to_csv.py \
+python3 patent_xml_to_csv.py  --verbose \
         --xml-input $TEMP \
         --recurse \
         --config config/uspto-applications-0506.yaml \
@@ -62,7 +62,7 @@ for i in $ZIP_DIR/ipa0[6-9]*.zip; do unzip "$i" -d $TEMP & done
 for i in $ZIP_DIR/ipa1[0-2]*.zip; do unzip "$i" -d $TEMP & done
 wait
 
-python3 patent_xml_to_csv.py \
+python3 patent_xml_to_csv.py --verbose \
         --xml-input $TEMP \
         --recurse \
         --config config/uspto-applications-0613.yaml \
@@ -79,7 +79,7 @@ for i in $ZIP_DIR/ipa1[3-9]*.zip; do unzip "$i" -d $TEMP & done
 for i in $ZIP_DIR/ipa2*.zip; do unzip "$i" -d $TEMP & done
 wait
 
-python3 patent_xml_to_csv.py \
+python3 patent_xml_to_csv.py --verbose \
         --xml-input $TEMP \
         --recurse \
         --config "config/uspto-applications-13+.yaml" \
