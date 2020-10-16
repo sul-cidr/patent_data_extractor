@@ -601,7 +601,7 @@ class XmlCollectionToTabular:
                 len(rows),
                 tablename,
             )
-            self.db[tablename].insert_all(rows, batch_size=40, **params)
+            self.db[tablename].insert_all(rows, batch_size=10, **params)
 
 
 def main():
