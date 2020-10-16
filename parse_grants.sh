@@ -62,9 +62,14 @@ python3 patent_xml_to_csv.py \
 rm -r $TEMP
 mkdir $TEMP
 
-#2006-2013
+# 2006-2013
 for i in $ZIP_DIR/ipg0[6-9]*.zip; do unzip "$i" -d $TEMP & done
 for i in $ZIP_DIR/ipg1[0-2]*.zip; do unzip "$i" -d $TEMP & done
+
+# These two files use the previous schema. Why? Because.
+unzip $ZIP_DIR/ipg130101.zip -d $TEMP &
+unzip $ZIP_DIR/ipg130108.zip -d $TEMP &
+
 wait
 
 python3 patent_xml_to_csv.py \
@@ -79,10 +84,14 @@ python3 patent_xml_to_csv.py \
 rm -r $TEMP
 mkdir $TEMP
 
-#2013-present
+# 2013-present
 for i in $ZIP_DIR/ipg1[3-9]*.zip; do unzip "$i" -d $TEMP & done
 for i in $ZIP_DIR/ipg2*.zip; do unzip "$i" -d $TEMP & done
 wait
+
+# We parsed these last time
+rm $TEMP/ipg130101.xml
+rm $TEMP/ipg130108.xml
 
 python3 patent_xml_to_csv.py \
         --xml-input $TEMP \
