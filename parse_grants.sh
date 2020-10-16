@@ -11,10 +11,15 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=gsmoore@stanford.edu
 
-module load python/3.6.1
+module load python/3.9.0
+
+# Not sure if these are really needed, but I
+# needed them to install the lxml package
+module load libxml2
+module load libxslt
 
 OAK="/oak/stanford/groups/hlwill"
-TEMP="$SCRATCH/sponsorships_temp"
+TEMP="$SCRATCH/parser_temp"
 ZIP_DIR="$OAK/raw/USPTO_grants/data"
 DTDS="$OAK/raw/USPTO_grants/python/patent_processor/config/grants/DTDs"
 OUTPUT="output/grants"
