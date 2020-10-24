@@ -431,3 +431,5 @@ us-patent-grant:
         type-of-correction: correction_type
         gazette-reference: gazette_reference
         text: correction_text
+
+    abstract: abstract

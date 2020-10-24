@@ -396,3 +396,5 @@ PATDOC:
         DOC/DATE: date
         DOC/KIND: kind_code
         DOC/CTRY: country_code
+
+    SDOAB/BTEXT: abstract
