@@ -20,6 +20,10 @@ def yield_xml_doc(filepath):
                 xml_doc = []
                 start_line = i
             xml_doc.append(line)
+        else:
+            xml_doc.append(line)
+            if xml_doc:
+                yield {"doc": "".join(xml_doc), "start": start_line, "end": i - 1}
 
 
 def main():
