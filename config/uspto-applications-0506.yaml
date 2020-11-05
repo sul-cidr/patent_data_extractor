@@ -32,7 +32,9 @@ us-patent-application:
 
     # Classification Information
     us-bibliographic-data-application/classification-national/main-classification: USPC_class
-    us-bibliographic-data-application/classification-national/further-classification: USPC_subclass
+    us-bibliographic-data-application/classification-national/further-classification:
+      <fieldname>: USPC_subclass
+      <joiner>: "|"
     us-bibliographic-data-application/classification-ipc/edition: IPC_edition
     us-bibliographic-data-application/classification-ipc/main-classification: IPC_main
     us-bibliographic-data-application/classification-ipc/further-classification:
