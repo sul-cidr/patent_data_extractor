@@ -1,6 +1,9 @@
 patent-application-publication:
   <entity>: application
-  <primary_key>: subdoc-bibliographic-information/document-id/doc-number
+  <primary_key>:
+    - subdoc-bibliographic-information/document-id/doc-number
+    - subdoc-bibliographic-information/document-id/kind-code
+    - subdoc-bibliographic-information/document-id/document-date
   <filename_field>: source_file
   <fields>:
     # Bibliographic info
