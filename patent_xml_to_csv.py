@@ -97,9 +97,6 @@ def main():
     arg_parser.add_argument(
         "-v", "--verbose", action="store_true", default=False, help="increase verbosity"
     )
-    arg_parser.add_argument(
-        "-q", "--quiet", action="store_true", default=False, help="quiet operation"
-    )
 
     arg_parser.add_argument(
         "-i",
