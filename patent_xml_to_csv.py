@@ -95,7 +95,11 @@ def main():
     arg_parser = argparse.ArgumentParser(description="Description: {}".format(__file__))
 
     arg_parser.add_argument(
-        "-v", "--verbose", action="store_true", default=False, help="increase verbosity"
+        "-v",
+        "--verbose",
+        action="count",
+        default=0,
+        help="increase verbosity (can be passed multiple times)",
     )
 
     arg_parser.add_argument(
@@ -170,8 +174,7 @@ def main():
 
     args = arg_parser.parse_args()
 
-    log_level = logging.DEBUG if args.verbose else logging.INFO
-    log_level = logging.CRITICAL if args.quiet else log_level
+    log_level = (logging.WARN, logging.INFO, logging.DEBUG)[args.verbose]
     logger = logging.getLogger(__name__)
     logger.setLevel(log_level)
     logger.addHandler(logging.StreamHandler())

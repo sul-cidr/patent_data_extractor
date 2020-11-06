@@ -18,7 +18,7 @@ Description: ./patent_xml_to_csv.py
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         increase verbosity
+  -v, --verbose         increase verbosity  (can be passed multiple times)
   -i XML_INPUT [XML_INPUT ...], --xml-input XML_INPUT [XML_INPUT ...]
                         XML file or directory of XML files (*.{xml,XML}) to parse
                         recursively (multiple arguments can be passed)
