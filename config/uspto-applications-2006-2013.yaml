@@ -1,6 +1,9 @@
 us-patent-application:
   <entity>: application
-  <primary_key>: us-bibliographic-data-application/publication-reference/document-id/doc-number
+  <primary_key>:
+    - us-bibliographic-data-application/publication-reference/document-id/doc-number
+    - us-bibliographic-data-application/publication-reference/document-id/kind
+    - us-bibliographic-data-application/publication-reference/document-id/date
   <filename_field>: source_file
 
   <fields>:
