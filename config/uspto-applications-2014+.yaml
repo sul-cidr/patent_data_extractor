@@ -18,7 +18,7 @@ us-patent-application:
 
     us-bibliographic-data-application/invention-title: title
     description/p:
-      <fieldname>: fullDes
+      <fieldname>: full_description
       <joiner>: "\n"
 
     # Claims
