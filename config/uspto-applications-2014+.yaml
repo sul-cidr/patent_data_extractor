@@ -17,7 +17,7 @@ us-patent-application:
     us-bibliographic-data-application/us-application-series-code: series_code
 
     us-bibliographic-data-application/invention-title: title
-    description/p:
+    description/*:
       <fieldname>: full_description
       <joiner>: "\n"
 
