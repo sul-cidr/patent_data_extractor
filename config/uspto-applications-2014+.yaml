@@ -46,7 +46,9 @@ us-patent-application:
     # Classification Information
     # USPC
     us-bibliographic-data-application/classification-national/main-classification: USPC_class
-    us-bibliographic-data-application/classification-national/further-classification: USPC_subclass
+    us-bibliographic-data-application/classification-national/further-classification:
+      <fieldname>: USPC_subclass
+      <joiner>: "|"
 
     ## IPC
     us-bibliographic-data-application/classifications-ipcr/classification-ipcr/ipc-version-indicator/date:
