@@ -4,7 +4,7 @@
 #SBATCH --output=parse_apps.out
 #
 #SBATCH --partition=hlwill
-#SBATCH --time=7-00:00:00
+#SBATCH --time=5:00:00
 #SBATCH --mem=0
 #SBATCH --cpus-per-task=23
 #
@@ -32,7 +32,7 @@ wait
 python3 patent_xml_to_csv.py --verbose \
         --xml-input $TEMP \
         --recurse \
-        --config config/uspto-applications-0105.yaml \
+        --config config/uspto-applications.2001-2004.yaml \
         --output-path $OUTPUT \
         --output-type sqlite \
         --dtd-path $DTDS \
@@ -48,7 +48,7 @@ wait
 python3 patent_xml_to_csv.py  --verbose \
         --xml-input $TEMP \
         --recurse \
-        --config config/uspto-applications-0506.yaml \
+        --config config/uspto-applications.2005.yaml \
         --output-path $OUTPUT \
         --output-type sqlite \
         --dtd-path $DTDS \
@@ -65,7 +65,7 @@ wait
 python3 patent_xml_to_csv.py --verbose \
         --xml-input $TEMP \
         --recurse \
-        --config config/uspto-applications-0613.yaml \
+        --config config/uspto-applications.2006-2013.yaml \
         --output-path $OUTPUT \
         --output-type sqlite \
         --dtd-path $DTDS \
@@ -82,7 +82,7 @@ wait
 python3 patent_xml_to_csv.py --verbose \
         --xml-input $TEMP \
         --recurse \
-        --config "config/uspto-applications-13+.yaml" \
+        --config config/uspto-applications.2014+.yaml \
         --output-path $OUTPUT \
         --output-type sqlite \
         --dtd-path $DTDS \
