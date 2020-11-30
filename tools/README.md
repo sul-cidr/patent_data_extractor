@@ -39,15 +39,7 @@ optional arguments:
 
 
 ### Document Extraction
-Individual `.xml` files extracted from the USPTO bulk data actually contain many XML documents, so they cannot be parsed by XML parsers until they've been split into individual documents.  In addition, the files are very large which makes inspecting them with a text editor cumbersome at best.  It is useful, therefore, to be able to extract individual documents by document number (`PATDOC/SDOBI/B100/B110/DNUM`) or by line number (i.e. the document that contains the specified line will be returned).  These are simple conveniences, and not intended to be robust to all possible scenarios at this time.
-
-
-#### extract_doc_by_dnum.py
-```
-usage: python 3 extract_doc_by_dnum.py /path/to/input.xml docnum
-```
-
-* e.g. `python 3 extract_doc_by_linenum.py pg030520.xml 08547691 > 08547691.xml`
+Individual `.xml` files extracted from the USPTO bulk data actually contain many XML documents, so they cannot be parsed by XML parsers until they've been split into individual documents.  In addition, the files are very large which makes inspecting them with a text editor cumbersome at best.  It is useful, therefore, to be able to extract individual documents by line number (i.e. the document that contains the specified line will be returned).  These is a simple convenience, and not intended to be robust to all possible scenarios at this time.
 
 
 #### extract_doc_by_linenum.py

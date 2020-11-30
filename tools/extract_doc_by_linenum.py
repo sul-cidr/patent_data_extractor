@@ -14,12 +14,16 @@ def yield_xml_doc(filepath):
     start_line = 0
     with open(filepath, "r") as _fh:
         for i, line in enumerate(_fh):
-            if line.startswith("<?xml"):
+            if line.startswith("<?xml "):
                 if xml_doc:
                     yield {"doc": "".join(xml_doc), "start": start_line, "end": i - 1}
                 xml_doc = []
                 start_line = i
             xml_doc.append(line)
+        else:
+            xml_doc.append(line)
+            if xml_doc:
+                yield {"doc": "".join(xml_doc), "start": start_line, "end": i - 1}
 
 
 def main():
