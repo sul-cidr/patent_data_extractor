@@ -4,7 +4,7 @@
 
 ## DOCUMENTATION
 
-* clone the repo, and run `pip install -r requirements.txt` to install needed packages (`pipenv install` is also an option)
+* clone the repo, and run `pip install -r requirements.txt` to install needed packages (`pipenv install` is also an option).
 
 * Python >= 3.6 is required.
 
