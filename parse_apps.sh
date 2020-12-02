@@ -4,14 +4,20 @@
 #SBATCH --output=parse_apps.out
 #
 #SBATCH --partition=hlwill
-#SBATCH --time=5:00:00
+#SBATCH --time=7-00:00:00
 #SBATCH --mem=0
 #SBATCH --cpus-per-task=23
 #
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=gsmoore@stanford.edu
 
-module load python/3.6.1
+module load python/3.9.0
+
+module load libxml2
+module load libxslt
+
+# Ensure packages are up-to-date
+pip3 install --upgrade -r requrements.txt
 
 OAK="/oak/stanford/groups/hlwill"
 TEMP="$SCRATCH/app_parse_temp"
