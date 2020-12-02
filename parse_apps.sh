@@ -36,7 +36,7 @@ for i in $ZIP_DIR/pa0[1-4]*.zip; do unzip "$i" -d $TEMP & done
 wait
 
 python3 patent_xml_to_csv.py --verbose \
-        --xml-input $TEMP \
+        --xml-input $TEMP/*.{xml,XML} \
         --recurse \
         --config config/uspto-applications.2001-2004.yaml \
         --output-path $OUTPUT \
@@ -52,7 +52,7 @@ for i in $ZIP_DIR/ipa05*.zip; do unzip "$i" -d $TEMP & done
 wait
 
 python3 patent_xml_to_csv.py  --verbose \
-        --xml-input $TEMP \
+        --xml-input $TEMP/*.{xml,XML} \
         --recurse \
         --config config/uspto-applications.2005.yaml \
         --output-path $OUTPUT \
@@ -69,7 +69,7 @@ for i in $ZIP_DIR/ipa1[0-2]*.zip; do unzip "$i" -d $TEMP & done
 wait
 
 python3 patent_xml_to_csv.py --verbose \
-        --xml-input $TEMP \
+        --xml-input $TEMP/*.{xml,XML} \
         --recurse \
         --config config/uspto-applications.2006-2013.yaml \
         --output-path $OUTPUT \
@@ -86,7 +86,7 @@ for i in $ZIP_DIR/ipa2*.zip; do unzip "$i" -d $TEMP & done
 wait
 
 python3 patent_xml_to_csv.py --verbose \
-        --xml-input $TEMP \
+        --xml-input $TEMP/*.{xml,XML} \
         --recurse \
         --config config/uspto-applications.2014+.yaml \
         --output-path $OUTPUT \
