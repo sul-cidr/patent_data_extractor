@@ -175,12 +175,9 @@ def main():
     args = arg_parser.parse_args()
 
     log_level = (logging.WARN, logging.INFO, logging.DEBUG)[args.verbose]
-    logger = logging.getLogger(__name__)
-    logger.setLevel(log_level)
-    logger.addHandler(logging.StreamHandler())
 
     convertor = XmlCollectionToTabular(
-        **vars(args), preprocess_doc=replace_missing_ents, logger=logger
+        **vars(args), preprocess_doc=replace_missing_ents, log_level=log_level
     )
     convertor.convert()
 
