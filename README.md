@@ -4,9 +4,9 @@
 
 ## DOCUMENTATION
 
-* clone the repo, and run `pip install -r requirements.txt` to be sure needed packages are available (`lxml` and `pyyaml` are required -- `termcolor` is optional, and `sqlite-utils` is only required if you make use of the `--output-type sqlite` option).
+* clone the repo, and run `pip install -r requirements.txt` to install needed packages (`pipenv install` is also an option).
 
-* Python >= 3.7 is required.
+* Python >= 3.6 is required.
 
 ```
 usage: patent_xml_to_csv.py [-h] [-v] [-q] -i XML_INPUT [XML_INPUT ...] [-r] -c
