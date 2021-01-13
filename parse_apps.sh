@@ -17,7 +17,7 @@ module load libxml2
 module load libxslt
 
 # Ensure packages are up-to-date
-pip3 install --upgrade -r requrements.txt
+pip3 install --upgrade -r requirements.txt
 
 OAK="/oak/stanford/groups/hlwill"
 TEMP="$SCRATCH/app_parse_temp"
@@ -65,7 +65,7 @@ mkdir $TEMP
 
 #2006-2013
 for i in $ZIP_DIR/ipa0[6-9]*.zip; do unzip "$i" -d $TEMP & done
-for i in $ZIP_DIR/ipa1[0-2]*.zip; do unzip "$i" -d $TEMP & done
+for i in $ZIP_DIR/ipa1[0-3]*.zip; do unzip "$i" -d $TEMP & done
 wait
 
 python3 patent_xml_to_csv.py --verbose \
@@ -81,7 +81,7 @@ rm -r $TEMP
 mkdir $TEMP
 
 #2013-present
-for i in $ZIP_DIR/ipa1[3-9]*.zip; do unzip "$i" -d $TEMP & done
+for i in $ZIP_DIR/ipa1[4-9]*.zip; do unzip "$i" -d $TEMP & done
 for i in $ZIP_DIR/ipa2*.zip; do unzip "$i" -d $TEMP & done
 wait
 
