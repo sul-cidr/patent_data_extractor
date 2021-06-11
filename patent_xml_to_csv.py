@@ -176,6 +176,8 @@ def main():
 
     log_level = (logging.WARN, logging.INFO, logging.DEBUG)[args.verbose]
 
+    del args.verbose
+
     convertor = XmlCollectionToTabular(
         **vars(args),
         preprocess_doc=replace_missing_ents,
