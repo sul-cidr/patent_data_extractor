@@ -12,7 +12,7 @@ patent-application-publication:
     subdoc-bibliographic-information/domestic-filing-data/filing-date: filing_date
     subdoc-bibliographic-information/domestic-filing-data/application-number-series-code: series_code
     subdoc-bibliographic-information/publication-filing-type: filing_type
-    subdoc-bibliographic-information/domestic-filing-data/application_number/doc-number: app_number
+    subdoc-bibliographic-information/domestic-filing-data/application-number/doc-number: app_number
     subdoc-bibliographic-information/document-id/document-date: doc_date
     subdoc-bibliographic-information/document-id/country-code: country_code
 
