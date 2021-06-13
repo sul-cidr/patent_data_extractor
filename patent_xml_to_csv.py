@@ -8,7 +8,7 @@ import logging
 from xmltotabular import XmlCollectionToTabular
 
 
-def replace_missing_ents(doc):
+def replace_missing_entities(doc):
     """
     Substitute out some undefined entities that appear in the XML
 
@@ -91,16 +91,8 @@ def replace_missing_ents(doc):
 
 
 def main():
-    """ Command-line entry-point. """
+    """Command-line entry-point."""
     arg_parser = argparse.ArgumentParser(description="Description: {}".format(__file__))
-
-    arg_parser.add_argument(
-        "-v",
-        "--verbose",
-        action="count",
-        default=0,
-        help="increase verbosity (can be passed multiple times)",
-    )
 
     arg_parser.add_argument(
         "-i",
@@ -108,16 +100,8 @@ def main():
         action="store",
         nargs="+",
         required=True,
-        help="XML file or directory of XML files (*.{xml,XML}) to parse recursively"
+        help="XML file or directory of XML files (*.{xml,XML}) to parse"
         " (multiple arguments can be passed)",
-    )
-
-    arg_parser.add_argument(
-        "-r",
-        "--recurse",
-        action="store_true",
-        help="if supplied, the parser will search subdirectories for"
-        " XML files (*.{xml,XML}) to parse",
     )
 
     arg_parser.add_argument(
@@ -137,12 +121,6 @@ def main():
     )
 
     arg_parser.add_argument(
-        "--validate",
-        action="store_true",
-        help="skip validation of input XML (for speed)",
-    )
-
-    arg_parser.add_argument(
         "-o",
         "--output-path",
         action="store",
@@ -154,8 +132,27 @@ def main():
         "--output-type",
         choices=["csv", "sqlite"],
         action="store",
-        default="csv",
-        help="output csv files (one per table, default) or a sqlite database",
+        default="sqlite",
+        help="output a sqlite database (default) or csv files (one per table)",
+    )
+
+    arg_parser.add_argument(
+        "-r",
+        "--recurse",
+        action="store_true",
+        help="search subdirectories for XML files (*.{xml,XML}) to parse",
+    )
+
+    arg_parser.add_argument(
+        "--validate",
+        action="store_true",
+        help="validate input XML against DTDs",
+    )
+
+    arg_parser.add_argument(
+        "--continue-on-error",
+        action="store_true",
+        help="output errors on parsing failure but don't exit",
     )
 
     arg_parser.add_argument(
@@ -167,9 +164,11 @@ def main():
     )
 
     arg_parser.add_argument(
-        "--continue-on-error",
-        action="store_true",
-        help="output errors on parsing failure but don't exit",
+        "-v",
+        "--verbose",
+        action="count",
+        default=0,
+        help="increase verbosity (can be passed multiple times)",
     )
 
     args = arg_parser.parse_args()
@@ -180,7 +179,7 @@ def main():
 
     convertor = XmlCollectionToTabular(
         **vars(args),
-        preprocess_doc=replace_missing_ents,
+        preprocess_doc=replace_missing_entities,
         log_level=log_level,
         check_doctype=True
     )
