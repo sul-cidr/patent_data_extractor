@@ -137,6 +137,14 @@ def main():
     )
 
     arg_parser.add_argument(
+        "--sqlite-max-vars",
+        action="store",
+        type=int,
+        help="Override the maximum number of host parameters than can be passed in "
+        "a single SQLite statement (defaults to 999)",
+    )
+
+    arg_parser.add_argument(
         "-r",
         "--recurse",
         action="store_true",

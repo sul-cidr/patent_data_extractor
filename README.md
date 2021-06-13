@@ -27,6 +27,9 @@ optional arguments:
                         path to folder in which to save output (will be created if necessary)
   --output-type {csv,sqlite}
                         output a sqlite database (default) or csv files (one per table)
+  --sqlite-max-vars SQLITE_MAX_VARS
+                        Override the maximum number of host parameters than can be passed in
+                        a single SQLite statement (defaults to 999)
   -r, --recurse         search subdirectories for XML files (*.{xml,XML}) to parse
   --validate            validate input XML against DTDs
   --continue-on-error   output errors on parsing failure but don't exit
