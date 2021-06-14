@@ -1,1 +1,1 @@
-xmltotabular
+xmltotabular~=0.7.0
