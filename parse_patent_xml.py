@@ -185,13 +185,13 @@ def main():
 
     del args.verbose
 
-    convertor = XmlCollectionToTabular(
+    collectionTransformer = XmlCollectionToTabular(
         **vars(args),
         preprocess_doc=replace_missing_entities,
         log_level=log_level,
         check_doctype=True
     )
-    convertor.convert()
+    collectionTransformer.convert()
 
 
 if __name__ == "__main__":
