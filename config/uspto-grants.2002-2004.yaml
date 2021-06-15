@@ -62,6 +62,7 @@ PATDOC:
         PARTY-US/NAM/FNM: given_name
         PARTY-US/NAM/ONM/STEXT: org_name
         PARTY-US/ADR/CITY: res_city
+        PARTY-US/ADR/STATE: res_state
         PARTY-US/ADR/CTRY: res_country
 
     SDOBI/B200/B210/DNUM: app_number
@@ -71,6 +72,12 @@ PATDOC:
       <entity>: assignee
       <fields>:
         B731/PARTY-US/NAM/ONM/STEXT: org_name
+        B731/PARTY-US/ADR/STR/PDAT: street
+        B731/PARTY-US/ADR/CITY/PDAT: city
+        B731/PARTY-US/ADR/CNTY/PDAT: county
+        B731/PARTY-US/ADR/STATE/PDAT: state
+        B731/PARTY-US/ADR/CTRY/PDAT: country
+        B731/PARTY-US/ADR/PCODE/PDAT: postal_code
         B732US: role
 
     SDOBI/B500/B560/B561:
@@ -389,3 +396,5 @@ PATDOC:
         DOC/DATE: date
         DOC/KIND: kind_code
         DOC/CTRY: country_code
+
+    SDOAB/BTEXT: abstract

@@ -56,6 +56,7 @@ us-patent-grant:
         first-name: given_name
         orgname: org_name
         address/city: res_city
+        address/state: res_state
         address/country: res_country
 
     us-bibliographic-data-grant/application-reference/document-id/doc-number: app_number
@@ -67,6 +68,12 @@ us-patent-grant:
       <entity>: assignee
       <fields>:
         addressbook/orgname: org_name
+        addressbook/address/street: street
+        addressbook/address/city: city
+        addressbook/address/county: county
+        addressbook/address/state: state
+        addressbook/address/country: country
+        addressbook/address/postcode: postal_code
         addressbook/role: role
 
     us-bibliographic-data-grant/references-cited/citation:
@@ -410,3 +417,5 @@ us-patent-grant:
     #Saves the name of the file where the patent was retreived
     #Note this is not present in the XML; special handling by parser
     <filename_field>: source_file
+
+  abstract: abstract
