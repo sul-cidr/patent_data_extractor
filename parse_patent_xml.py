@@ -63,7 +63,7 @@ def replace_missing_entities(doc):
       isopub.ent, which is the file actually invoked by the DTD specified in the XML
       (double sigh).
 
-      In some of the DTD files the symbols specified for the suits are the white glpyhs
+      In some of the DTD files the symbols specified for the suits are the white glyphs
       (i.e. &#x2661, &#x2662, &#x2664, and &#x2667 for hearts, diamonds, spades and clubs
       respectively), and in others they are the black glyphs (i.e. &#x2665, &#x2666,
       &#x2660, and &#x2663) -- see, e.g.
